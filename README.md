@@ -22,4 +22,5 @@
 * D20 se queda
 * Enemigos: insectos
 * Humor: cosas absurdas?
+
 _mas ideas agregar si es necesario_
