@@ -9,12 +9,12 @@
     * Jose Zapata (rol)
     * Ricardo Guerrero (rol)
     * Nicolas Rivera (rol)
-    * _me falta un nombre xd_ (rol)
+    * Sebastian Richiardi (rol)
 
-## TemÃ¡ticas
+## Temáticas
 
 * Humor
-* DesafÃ­o
+* Desafí­o
 
 ## Ideas
 
@@ -24,23 +24,23 @@
 * Humor: cosas absurdas?
 * Monas chinas? (_Opcional_)
 
-* Supervivencia por rondas. Cada ronda spawnea una cantidad de huevos, aumenta el nÃºmero de ronda cuando se interactÃºe con el Ãºltimo huevo y se derroten a todos los enemigos de la ronda. Mientras mayor sea la ronda, mas huevos spawnean, y cada cierto nÃºmero de rondas los enemigos se vuelven mas fuertes (mayor ataque y hp) (suben de nivel)
+* Supervivencia por rondas. Cada ronda spawnea una cantidad de huevos, aumenta el número de ronda cuando se interactúe con el último huevo y se derroten a todos los enemigos de la ronda. Mientras mayor sea la ronda, mas huevos spawnean, y cada cierto número de rondas los enemigos se vuelven mas fuertes (mayor ataque y hp) (suben de nivel)
 * Objetivo: sobrevivir la mayor cantidad de rondas (estilo CoD Zombies)
-* D20: dependiendo del roll, se obtiene distintos resultados, si el roll es mayor, es mas beneficioso para el jugador, por ejemplo si sale un 20, spawnea solo un enemigo dÃ©bil y se recupera toda su vida y sube de nivel, aumentando su daÃ±o de ataque. Enemigos suben de nivel si sale un 1 o mientras mayor sea el nÃºmero de ronda.
+* D20: dependiendo del roll, se obtiene distintos resultados, si el roll es mayor, es mas beneficioso para el jugador, por ejemplo si sale un 20, spawnea solo un enemigo débil y se recupera toda su vida y sube de nivel, aumentando su daño de ataque. Enemigos suben de nivel si sale un 1 o mientras mayor sea el número de ronda.
 
 _mas ideas agregar si es necesario_
 
 ## Trama
 
-Un cientifico loco que quiere conquistar el mundo decide formar el organismo definitivo paraa lograr dominar el mundo, para esto decide tomar el perfecto organismo para esta tarea: Un sapo creado por el. Este sapo con la capacidad de absorber el ADN de los organismos que consume le permite al cientifico configurar a su antojo el desarrollo del sapo. Â¡Ayuda a este cientifico crear el organismo definitivo!
+Un cientifico loco que quiere conquistar el mundo decide formar el organismo definitivo paraa lograr dominar el mundo, para esto decide tomar el perfecto organismo para esta tarea: Un sapo creado por el. Este sapo con la capacidad de absorber el ADN de los organismos que consume le permite al cientifico configurar a su antojo el desarrollo del sapo. ¡Ayuda a este cientifico crear el organismo definitivo!
 
 ## Entrega 30/10
 
-PresentaciÃ³n con lo siguiente:
+Presentación con lo siguiente:
 
 * Idea del proyecto: que juego desarrollar y como aplicaran las tematicas asignadas sobre este (nombre _placeholder_ para el juego)
-* El equipo: nombre del equipo, logo, integrantes y los roles que tendrÃ¡ cada uno
-* Cronograma/Carta Gantt que detalle como se desarrollarÃ¡ el trabajo
+* El equipo: nombre del equipo, logo, integrantes y los roles que tendrá cada uno
+* Cronograma/Carta Gantt que detalle como se desarrollará el trabajo
 * Al menos 5 referencias que no sean videojuegos
 
 ## Referencias
@@ -53,8 +53,8 @@ PresentaciÃ³n con lo siguiente:
 
 ## Cronograma (Objetivos semanales)
 
-* Semana 30/10
-* Semana 06/11
-* Semana 13/11
-* Semana 20/11
-* Semana 27/11 : **Entrega final**
+* Semana 30/10:
+* Semana 06/11:
+* Semana 13/11:
+* Semana 20/11:
+* Semana 27/11: **Entrega final**
