@@ -7,10 +7,10 @@
 ![1698689316161-2](https://github.com/Pepi74/proyectovideojuegos/assets/110265160/ce71a4e6-87b3-427e-b0a3-adf0aa6bda62)
 * Integrantes:
     * Felipe Brauer (Efectos de sonido y música?)
-    * Esteban Carrasco (rol)
+    * Esteban Carrasco (Programación UI/UX?)
     * Jose Zapata (Narrativa?)
     * Ricardo Guerrero (rol)
-    * Nicolas Rivera (rol)
+    * Nicolas Rivera (Animación)
     * Sebastian Richiardi (rol)
 
 ## Temáticas
