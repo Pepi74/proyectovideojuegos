@@ -2,7 +2,9 @@
 
 * Nombre Equipo: GoldenFrog
 * Nombre Juego: Frog-NG
-* Logo: ![1698689316161-2](https://github.com/Pepi74/proyectovideojuegos/assets/110265160/ce71a4e6-87b3-427e-b0a3-adf0aa6bda62)
+* Logo:
+
+![1698689316161-2](https://github.com/Pepi74/proyectovideojuegos/assets/110265160/ce71a4e6-87b3-427e-b0a3-adf0aa6bda62)
 * Integrantes:
     * Felipe Brauer (rol)
     * Esteban Carrasco (rol)
