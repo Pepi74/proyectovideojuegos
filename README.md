@@ -27,8 +27,13 @@
 * Monas chinas? (_Opcional_)
 
 * Supervivencia por rondas. Cada ronda spawnea una cantidad de huevos, aumenta el número de ronda cuando se interactúe con el último huevo y se derroten a todos los enemigos de la ronda. Mientras mayor sea la ronda, mas huevos spawnean, y cada cierto número de rondas los enemigos se vuelven mas fuertes (mayor ataque y hp) (suben de nivel)
+* Combate tiempo real
+* Tercera persona
+* Loadouts (antes de iniciar partida): 2 armas, una melee y la otra a distancia?
+* Encuentros (objetos interactuables)
 * Objetivo: sobrevivir la mayor cantidad de rondas (estilo CoD Zombies)
-* D20: dependiendo del roll, se obtiene distintos resultados, si el roll es mayor, es mas beneficioso para el jugador, por ejemplo si sale un 20, spawnea solo un enemigo débil y se recupera toda su vida y sube de nivel, aumentando su daño de ataque. Enemigos suben de nivel si sale un 1 o mientras mayor sea el número de ronda.
+* D20: dependiendo del roll, se obtiene distintos resultados, si el roll es mayor, es mas beneficioso para el jugador, por ejemplo si sale un 20, spawnea solo un enemigo débil, se recupera toda su vida y sube de nivel, aumentando su daño de ataque. Enemigos suben de nivel si sale un 1 o mientras mayor sea el número de ronda.
+* Jefe Shrek?
 
 _mas ideas agregar si es necesario_
 
@@ -47,10 +52,10 @@ Presentación con lo siguiente:
 
 ## Referencias
 
-* 
-* 
-* 
-* 
+* Dungeons and Dragons
+* Frogs
+* Frankestein
+* Parasyte
 * 
 
 ## Cronograma (Objetivos semanales)
