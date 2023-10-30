@@ -8,7 +8,7 @@
 * Integrantes:
     * Felipe Brauer (Efectos de sonido y música)
     * Esteban Carrasco (Programación UI/UX)
-    * Jose Zapata (Narrativa)
+    * Jose Zapata (Director Creativo)
     * Ricardo Guerrero (Lead programmer)
     * Nicolas Rivera (Arte y Animación)
     * Sebastian Richiardi (Arte y Animación)
