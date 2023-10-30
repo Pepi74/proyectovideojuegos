@@ -1,7 +1,7 @@
 # Proyecto Videojuegos 2023-02
 
 * Nombre Equipo: GoldenFrog
-* Nombre Juego: _tbd_
+* Nombre Juego: Frog-NG
 * Logo: _tbd_
 * Integrantes:
     * Felipe Brauer (rol)
@@ -18,8 +18,8 @@
 
 ## Ideas
 
-* Jugador es una rana
-* D20 se queda:
+* Jugador es un sapo
+* D20 se queda
 * Enemigos: insectos
 * Humor: cosas absurdas?
 * Monas chinas? (_Opcional_)
