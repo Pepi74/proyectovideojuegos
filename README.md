@@ -9,9 +9,9 @@
     * Felipe Brauer (Efectos de sonido y música)
     * Esteban Carrasco (Programación UI/UX)
     * Jose Zapata (Narrativa)
-    * Ricardo Guerrero (rol)
-    * Nicolas Rivera (Animación)
-    * Sebastian Richiardi (rol)
+    * Ricardo Guerrero (Lead programmer)
+    * Nicolas Rivera (Arte y Animación)
+    * Sebastian Richiardi (Arte y Animación)
 
 ## Temáticas
 
@@ -56,12 +56,12 @@ Presentación con lo siguiente:
 * Frogs
 * Frankestein
 * Parasyte
-* 
+* Shrek
 
 ## Cronograma (Objetivos semanales)
 
 * Semana 30/10:
-* Semana 06/11:
-* Semana 13/11:
-* Semana 20/11:
+* Semana 06/11: 
+* Semana 13/11: 
+* Semana 20/11: 
 * Semana 27/11: **Entrega final**
