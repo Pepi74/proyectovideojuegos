@@ -15,7 +15,7 @@ public class CameraPosition : MonoBehaviour
     {
         cameraRotation = new Vector3(30f,0f,0f);
         transform.eulerAngles = cameraRotation;
-        offset = new Vector3(0,5,-7);
+        offset = new Vector3(3,5,-7);
     }
 
     // Update is called once per frame

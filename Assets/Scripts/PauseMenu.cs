@@ -6,16 +6,17 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
+    public GameObject interactionUI;
 
     private bool isPaused = false;
     private bool isGameOverMenuActive = false; // Flag to track game over menu state
     public CameraPosition cameraRotationScript;
     public PlayerMovement playerMovementScript;
 
-    void Start()
+    /* void Start()
     {
         Cursor.visible = false;
-    }
+    } */
 
     void Update()
     {
@@ -43,6 +44,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         cameraRotationScript.SetCanRotate(true);
         playerMovementScript.SetCanMove(true);
+        interactionUI.SetActive(true);
     }
 
     public void Pause()
@@ -53,6 +55,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         cameraRotationScript.SetCanRotate(false);
         playerMovementScript.SetCanMove(false);
+        interactionUI.SetActive(false);
     }
 
     public void Restart()

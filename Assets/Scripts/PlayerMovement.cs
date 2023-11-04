@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isSprinting;
 
     [SerializeField]
-    private bool canMove; // Add this variable
+    private bool canMove;
 
     void Start()
     {
@@ -45,11 +45,11 @@ public class PlayerMovement : MonoBehaviour
             // Apply the clamped position
             transform.position = newPosition;
 
-            float mouseX = Input.GetAxis("Mouse X");
+            //float mouseX = Input.GetAxis("Mouse X");
             //float mouseY = Input.GetAxis("Mouse Y");
 
-            Vector3 rotation = new Vector3(0f, mouseX, 0f) * rotationSpeed;
-            transform.eulerAngles += rotation;
+            //Vector3 rotation = new Vector3(0f, mouseX, 0f) * rotationSpeed;
+            //transform.eulerAngles += rotation;
         }
         
     }

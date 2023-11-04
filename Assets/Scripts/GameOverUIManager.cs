@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameOverUIManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
+    public GameObject interactionUI;
     public Button restartButton;
     public Button exitButton;
 
@@ -21,14 +22,15 @@ public class GameOverUIManager : MonoBehaviour
     public void ShowGameOverScreen()
     {
         gameOverScreen.SetActive(true);
+        interactionUI.SetActive(false);
         Time.timeScale = 0f;
-        Cursor.visible = true;
         pauseMenu.SetGameOverMenuState(true); // Set game over menu state
     }
 
     public void RestartGame()
     {
         // Restart the current scene
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

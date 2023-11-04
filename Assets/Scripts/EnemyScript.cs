@@ -41,6 +41,10 @@ public class EnemyScript : MonoBehaviour
             PerformEnemyMeleeAttack();
             timeSinceLastAttack = 0.0f; // Reset the timer.
         }
+
+        Vector3 enemyPosition = transform.position;
+        transform.position = checkHeight(enemyPosition);
+        
     }
 
     // Method to customize the enemy's stats based on the D20 roll.
@@ -79,5 +83,18 @@ public class EnemyScript : MonoBehaviour
         {
             playerScript.TakeDamage(attackValue); // Assuming you have a TakeDamage method in the player's script.
         }
+    }
+
+    Vector3 checkHeight(Vector3 enemyPosition)
+    {
+        int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
+        RaycastHit hit;
+        if(Physics.Raycast(enemyPosition, new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
+        {
+            float terrainHeight = hit.point.y;
+            if (enemyPosition.y - terrainHeight <= 2) enemyPosition.y = terrainHeight + 2f;            
+        }
+
+        return enemyPosition;
     }
 }   

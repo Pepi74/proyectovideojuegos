@@ -26,14 +26,17 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 spawnPosition = transform.position;
+        Vector3 spawnPosition;
         TerrainData terrainData = terrain.terrainData;
-        float terrainHeight = terrain.SampleHeight(new Vector3(spawnPosition.x, 0, spawnPosition.z));
+        float centerX = terrainData.size.x / 2f;
+        float centerZ = terrainData.size.z /2f;
+        spawnPosition = new Vector3(centerX, 0, centerZ);
+        float terrainHeight = terrain.SampleHeight(spawnPosition);
         if(spawnPosition.y < terrainHeight)
         {
             spawnPosition.y = terrainHeight + 1f;
-            transform.position = spawnPosition;
         }
+        transform.position = spawnPosition;
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         rb = GetComponent<Rigidbody>();
@@ -42,9 +45,9 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetMouseButtonDown(0))
         {
-            PerformMeleeAttack();
+            Attack();
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -91,36 +94,33 @@ public class PlayerScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void PerformMeleeAttack()
+    void Attack()
     {
+        Vector3 mousePosition = Input.mousePosition;
+
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, transform.forward, out hit, attackRange))
+        if (Physics.Raycast(ray, out hit, 100f))
         {
             // Check if the hit object is an enemy.
             if (hit.collider.CompareTag("Enemy"))
             {
                 // Handle enemy hit. You can call a method on the enemy script to apply damage.
-                EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
-                enemyScript.TakeDamage(attackValue);
+                float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
+                Debug.Log(distance);
+                if (distance <= attackRange)
+                {
+                    EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
+                    enemyScript.TakeDamage(attackValue);
+                }
             }
         }
-
-        /* Collider[] enemyCollider = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
-        if (enemyCollider.Length > 0)
-        {
-            foreach (Collider collider in enemyCollider)
-            {
-                EnemyScript enemyScript = collider.GetComponent<EnemyScript>();
-                enemyScript.TakeDamage(attackValue);
-                break;
-            }
-        } */
     }
 
     void Jump()
     {
-        rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * 20f, ForceMode.Impulse);
     }
 
 }

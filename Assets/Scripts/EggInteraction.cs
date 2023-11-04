@@ -4,51 +4,26 @@ using TMPro;
 
 public class EggInteraction : MonoBehaviour
 {
-    public float interactionRange = 2.0f;
-    public TextMeshProUGUI interactionText; // Reference to the TextMeshPro Text GameObject.
-    public TextMeshProUGUI resultText;
-    public TextMeshProUGUI rollStartText;
-    public GameObject enemyPrefab;
-    public GameObject currentEgg; // This field will store the reference to the egg being interacted with.
-    public PlayerScript playerScript;
+    public float interactionRange = 2.0f; // Rango de interaccion de huevos
+    public TextMeshProUGUI interactionText; // Texto de ui interaccion
+    public TextMeshProUGUI resultText; // Texto de resultado d20
+    public TextMeshProUGUI rollStartText; // Texto "Rolling D20...", iniciado en HandleInteraction
+    public GameObject enemyPrefab; // Prefab del enemigo
+    public GameObject currentEgg; // Huevo que se interactua
+    public PlayerScript playerScript; // Componente PlayerScript del jugador
     [SerializeField]
-    private bool interacting = false;
+    private bool interacting = false; // Booleano que indica si se esta interactuando o no
 
-    public LayerMask eggLayer;
+    public LayerMask eggLayer; // Layer del huevo
 
     void Start()
     {
-        // Make sure the TextMeshPro Text is initially disabled.
         interactionText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        /* Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactionRange))
-        {
-            if (hit.collider.CompareTag("Egg") && !interacting)
-            {
-                ShowInteractionText();
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    // Perform interaction logic when "E" is pressed.
-                    interacting = true;
-                    HandleInteraction(hit.collider.gameObject);
-                }
-            }
-            else
-            {
-                HideInteractionText();
-            }
-        }
-        else
-        {
-            HideInteractionText();
-        } */
-
+        //Spherecast que detecta huevos cercanos al jugador
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRange, eggLayer);
 
         if (hitColliders.Length > 0)
@@ -61,7 +36,7 @@ public class EggInteraction : MonoBehaviour
                     ShowInteractionText();
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        // Perform interaction logic when "E" is pressed.
+                        // Cuando se presiona "E", se maneja la interaccion
                         interacting = true;
                         HandleInteraction(collider.gameObject);
                     }
@@ -80,49 +55,49 @@ public class EggInteraction : MonoBehaviour
             HideInteractionText();
         }
         
-
     }
 
     void ShowInteractionText()
     {
-        // Show the interaction text.
+        // Muestra texto interaccion
         interactionText.gameObject.SetActive(true);
     }
 
     void HideInteractionText()
     {
-        // Hide the interaction text.
+        // Oculta texto interaccion
         interactionText.gameObject.SetActive(false);
     }
 
     void HandleInteraction(GameObject egg)
     {
-        //Debug.Log("Interaction with egg successful!");
-        // Implement your logic for the interaction (e.g., rolling a D20 and spawning enemies).
+        // Manejo de interaccion
 
-        currentEgg = egg; // Assign the current egg reference.
+        currentEgg = egg; // Asigna el huevo interactuado a la variable
 
         rollStartText.text = "Rolling D20...";
-        rollStartText.gameObject.SetActive(true);
+        rollStartText.gameObject.SetActive(true); // Muestra el texto "Rolling D20..."
 
-        // Show random numbers for 2 seconds.
+        // Corutina del manejo del d20
         StartCoroutine(DisplayRandomNumbersAndResult(egg));
     }
 
+    // Numero entero random entre 1 y 20
     int RollD20()
     {
         return Random.Range(1, 21);
     }
 
+    // Manejo del d20 y resultados dependiendo del roll del d20
     IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
     {
-        int randomNumbersDuration = 2; // Display random numbers for 2 seconds.
+        int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
         TextMeshProUGUI textMeshProText = resultText;
         TextMeshProUGUI rollStartTextMeshPro = rollStartText;
 
         textMeshProText.gameObject.SetActive(true);
-        // Display random numbers for the specified duration.
+        // Muestra numeros random antes del resultado final del d20.
         while (Time.time < endTime)
         {
             int randomValue = Random.Range(1, 21);
@@ -130,9 +105,10 @@ public class EggInteraction : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        // Show the final result.
+        // Resultado final.
         int finalResult = RollD20();
         string finalResultString = finalResult.ToString();
+        // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
         string colorPrefix = "";
         string colorSuffix = "";
         int numberOfEnemies = 0;
@@ -141,44 +117,49 @@ public class EggInteraction : MonoBehaviour
         bool healing = false;
         float healingValue = 0f;
         float speed = 0f;
+        // Manejo del roll igual a 1
         if (finalResult == 1)
         {
             colorPrefix = "<color=red>";
             colorSuffix = "</color>";
-            numberOfEnemies = 15;
+            numberOfEnemies = 12;
             attackValue = 5;
             health = 20;
             speed = 10f;
         }
+        // Manejo del roll entre 2 y 7
         if (finalResult > 1 && finalResult <= 7)
         {
             colorPrefix = "<color=orange>";
             colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(10, 15 - finalResult / 2);
+            numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
             attackValue = 4;
             health = 20 - finalResult / 2;
             speed = 8f;
         }
+        // Manejo del roll entre 8 y 13
         if (finalResult > 7 && finalResult <= 13)
         {
             colorPrefix = "<color=yellow>";
             colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(5, 10 - finalResult / 4);
+            numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
             attackValue = 3;
             health = 15 - finalResult / 3;
             speed = 6f;
         }
+        // Manejo del roll entre 14 y 19
         if (finalResult > 13 && finalResult <= 19)
         {
             colorPrefix = "<color=blue>";
             colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(2, 5 - finalResult / 8);
+            numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
             attackValue = 2;
             health = 10 - finalResult / 4;
             healing = true;
             healingValue = 0.3f;
             speed = 4f;
         }
+        // Manejo del roll igual a 20
         if (finalResult == 20)
         {
             colorPrefix = "<color=green>";
@@ -196,7 +177,7 @@ public class EggInteraction : MonoBehaviour
         {
             playerScript.HealP(healingValue);
         }
-        yield return new WaitForSeconds(2.0f); // Display the final result for 2 seconds.
+        yield return new WaitForSeconds(2.0f); // Muestra el resultado final por 2 segundos
 
         // Hide the roll start message.
         rollStartTextMeshPro.gameObject.SetActive(false);
@@ -229,7 +210,7 @@ public class EggInteraction : MonoBehaviour
             if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
             {
                 float terrainHeight = hit.point.y;
-                enemyPosition.y = terrainHeight + 0.5f;
+                enemyPosition.y = terrainHeight + 2f;
             }
 
             // Instantiate the enemy prefab.

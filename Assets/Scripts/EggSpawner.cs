@@ -5,13 +5,16 @@ public class EggSpawner : MonoBehaviour
     public GameObject eggPrefab; // Reference to your egg prefab.
     public Terrain terrain; // Reference to your terrain.
 
+    public int minSpawn = 100;
+    public int maxSpawn = 200;
+
     void Start()
     {
         // Get the terrain data.
         TerrainData terrainData = terrain.terrainData;
 
         // Spawn eggs at random positions on the terrain.
-        for (int i = 0; i < Random.Range(300, 501); i++)
+        for (int i = 0; i < Random.Range(minSpawn, maxSpawn+1); i++)
         {
             float randomX = Random.Range(0f, terrainData.size.x);
             float randomZ = Random.Range(0f, terrainData.size.z);
