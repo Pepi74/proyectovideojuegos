@@ -5,27 +5,27 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
 
-    public int maxHealth = 100;
-    public int currentHealth;
-    public int attackValue = 5;
+    public int maxHealth = 100; // Vida maxima
+    public int currentHealth; // Vida actual
+    public int attackValue = 5; // Danio de ataque
 
-    public float attackRange = 5f;
+    public float attackRange = 5f; // Rango de ataque
 
-    public HealthBar healthBar;
+    public HealthBar healthBar; // Barra de vida
 
-    public GameOverUIManager gameOverUIManager;
+    public GameOverUIManager gameOverUIManager; // UI game over
 
-    public Terrain terrain;
+    public Terrain terrain; // Terreno
 
-    public LayerMask enemyLayer;
+    public LayerMask enemyLayer; // Layer enemigo
 
-    private bool isGrounded = true;
+    private bool isGrounded = true; // Booleano que representa si esta en el piso (aun no lo implemento al script)
 
-    private Rigidbody rb;
+    private Rigidbody rb; // Rigidbody del jugador
 
-    // Start is called before the first frame update
     void Start()
     {
+        // Manejo de spawn inicial al centro del terreno
         Vector3 spawnPosition;
         TerrainData terrainData = terrain.terrainData;
         float centerX = terrainData.size.x / 2f;
@@ -37,65 +37,72 @@ public class PlayerScript : MonoBehaviour
             spawnPosition.y = terrainHeight + 1f;
         }
         transform.position = spawnPosition;
+        // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+        // Componente rigidbody
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Ataque si es que se presiona el click izquierdo del mouse
         if (Input.GetMouseButtonDown(0))
         {
             Attack();
         }
 
+        // Salto
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Jump();
         }
 
+        // Manejo de vida si la vida actual excede la maxima
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
     }
 
+    // Danio al jugador
     public void TakeDamage(int damage)
     {
-        // Reduce enemy's health by the damage amount.
         currentHealth -= damage;
-
         healthBar.SetHealth(currentHealth);
 
-        // Check if the enemy's health reaches zero or below and handle death if needed.
+        // Si la vida es menor o igual a 0, muere
         if (currentHealth <= 0)
         {
             Die();
         }
     }
 
+    // Recuperar vida
     public void Heal(int healing)
     {
         currentHealth += healing;
         healthBar.SetHealth(currentHealth);
     }
 
+    // Recuperar un porcentaje de vida
     public void HealP(float p)
     {
         int healing = (int)(maxHealth * p);
         Heal(healing);
     }
 
+    // Manejo de muerte del jugador
     void Die()
     {
-        // Implement death behavior here, e.g., play death animations, drop loot, etc.
         gameOverUIManager.ShowGameOverScreen();
         Destroy(gameObject);
     }
 
+    // Manejo de ataque
     void Attack()
     {
+        // Raycast desde el centro de la camara con direccion al cursor
         Vector3 mousePosition = Input.mousePosition;
 
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -103,12 +110,13 @@ public class PlayerScript : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 100f))
         {
-            // Check if the hit object is an enemy.
+            // Raycast colisiona con enemigo
             if (hit.collider.CompareTag("Enemy"))
             {
-                // Handle enemy hit. You can call a method on the enemy script to apply damage.
+                // Calcula la distancia entre el jugador y el enemigo
                 float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                Debug.Log(distance);
+                //Debug.Log(distance);
+                // Si la distancia es menor o igual al rango de ataque, el enemigo es daniado
                 if (distance <= attackRange)
                 {
                     EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
@@ -118,6 +126,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    // Manejo de salto
     void Jump()
     {
         rb.AddForce(Vector3.up * 20f, ForceMode.Impulse);

@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class CameraPosition : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public GameObject player;
-    public Vector3 playerPosition;
-    public Vector3 cameraRotation;
-    public Vector3 offset;
+    public GameObject player; // Referencia al jugador
+    public Vector3 playerPosition; // Posicion del jugador
+    public Vector3 cameraRotation; // Rotacion de camara
+    public Vector3 offset; // Offset de posicion de camara
 
-    private bool canRotate = true; // Add this variable
+    // Inicalizacion de variables (se pueden modificar)
     void Start()
     {
         cameraRotation = new Vector3(30f,0f,0f);
@@ -18,23 +17,13 @@ public class CameraPosition : MonoBehaviour
         offset = new Vector3(3,5,-7);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(canRotate)
+        // Si existe un jugador, cambia la posicion respecto al jugador
+        if(player != null)
         {
-            if(player != null)
-            {
-                playerPosition = player.transform.position;
-                transform.position = playerPosition + player.transform.TransformDirection(offset);
-                Vector3 rotation = new Vector3(0, player.transform.eulerAngles.y, 0) + cameraRotation;
-                transform.eulerAngles = rotation;
-            }
+            playerPosition = player.transform.position;
+            transform.position = playerPosition + player.transform.TransformDirection(offset);
         }
-    }
-
-    public void SetCanRotate(bool rotate)
-    {
-        canRotate = rotate;
     }
 }

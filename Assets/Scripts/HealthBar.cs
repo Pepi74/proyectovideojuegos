@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// Script sacado del video de Brackeys de como crear una barra de vida
 public class HealthBar : MonoBehaviour
 {
    public Slider slider;
