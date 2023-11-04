@@ -171,40 +171,42 @@ public class EggInteraction : MonoBehaviour
             healingValue = 1f;
             speed = 2f;
         }
+        // Texto del resultado del d20
         textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
+        // Spawn enemigos
         SpawnEnemy(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
+        // Recupera vida al jugador si healing es true
         if (healing)
         {
             playerScript.HealP(healingValue);
         }
         yield return new WaitForSeconds(2.0f); // Muestra el resultado final por 2 segundos
 
-        // Hide the roll start message.
+        // Oculta el texto del roll start
         rollStartTextMeshPro.gameObject.SetActive(false);
 
-        // Hide the result text.
+        // Oculta el texto del resultado final
         textMeshProText.gameObject.SetActive(false);
 
         interacting = false;
-        // Destroy the current egg GameObject.
+        // Destruye el huevo interactuado
         Destroy(currentEgg);
 
 
-        // Handle other outcomes (e.g., spawning enemies) based on the final result.
+        // TODO: Hacer mas cosas si es necesario con los rolls del d20
     }
 
+    // Manejo spawn de enemigos
     void SpawnEnemy(Vector3 spawnPosition, int rollResult, int numberOfEnemies, int health, int attackValue, float speed)
     {
-        // Calculate the angle between each enemy in the circle.
         float angleStep = 360f / numberOfEnemies;
 
         for (int i = 0; i < numberOfEnemies; i++)
         {
-            // Calculate the position for each enemy in the circle.
             int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
 
             float angle = i * angleStep;
-            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * 2.0f; // Adjust the 2.0f for desired radius.
+            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * 2.0f;
             Vector3 enemyPosition = spawnPosition + offset;
             RaycastHit hit;
             if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
@@ -213,10 +215,8 @@ public class EggInteraction : MonoBehaviour
                 enemyPosition.y = terrainHeight + 2f;
             }
 
-            // Instantiate the enemy prefab.
             GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
 
-            // Get the enemy's script for customization.
             EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
 
             if (enemyScript != null)

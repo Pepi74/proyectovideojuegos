@@ -4,56 +4,46 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed;
-    public float rotationSpeed;
+    public float speed; // Velocidad
 
-    public float sprintMultiplier; // Speed multiplier when sprinting
-    private bool isSprinting;
+    public float sprintMultiplier; // Multiplicador sprint
+    private bool isSprinting; // Booleano que indica si esta esprintando
 
     [SerializeField]
-    private bool canMove;
+    private bool canMove; // Booleano que indica si puede moverse o no
 
+    // Inicializacion de variables
     void Start()
     {
         canMove = true;
         speed = 7f;
-        rotationSpeed = 2f;
         sprintMultiplier = 2f;
         isSprinting = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(canMove)
         {
+            // Movimiento WASD o flechas
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
 
-            // Calculate the player's movement direction based on their rotation
             Vector3 moveDirection = Quaternion.Euler(0, transform.eulerAngles.y, 0) * new Vector3(x, 0, z);
 
-            // Check if the Shift key is held down to sprint
+            // Manejo de sprint
             isSprinting = Input.GetKey(KeyCode.LeftShift);
 
-            // Adjust the speed based on sprinting
             float currentMoveSpeed = speed * (isSprinting ? sprintMultiplier : 1f);
 
-            // Calculate the new position
             Vector3 newPosition = transform.position + moveDirection * currentMoveSpeed * Time.deltaTime;
 
-            // Apply the clamped position
             transform.position = newPosition;
-
-            //float mouseX = Input.GetAxis("Mouse X");
-            //float mouseY = Input.GetAxis("Mouse Y");
-
-            //Vector3 rotation = new Vector3(0f, mouseX, 0f) * rotationSpeed;
-            //transform.eulerAngles += rotation;
         }
         
     }
 
+    // Setea el booleano canMove (usado en el menu de pausa)
     public void SetCanMove(bool move)
     {
         canMove = move;

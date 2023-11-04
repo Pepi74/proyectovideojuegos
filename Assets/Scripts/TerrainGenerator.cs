@@ -1,11 +1,12 @@
 using UnityEngine;
 
+// Script sacado del video de Brackeys en generacion de terreno procedural
 public class TerrainGenerator : MonoBehaviour
 {
-    public int width = 256; //x-axis of the terrain
-    public int height = 256; //z-axis
+    public int width = 256;
+    public int height = 256;
 
-    public int depth = 20; //y-axis
+    public int depth = 20;
 
     public float scale = 20f;
 

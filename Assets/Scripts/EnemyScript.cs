@@ -3,31 +3,31 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     [SerializeField]
-    private float moveSpeed; // Adjust the move speed as needed.
+    private float moveSpeed; // Velocidad de movimiento
     [SerializeField]
-    private int maxHealth;
+    private int maxHealth; // Vida maxima
     [SerializeField]
-    private int currentHealth;
+    private int currentHealth; // Vida actual
     [SerializeField]
-    private int attackValue;
-    private Transform player; // Reference to the player for chasing.
+    private int attackValue; // Danio de ataque
+    private Transform player; // Posicion del jugador
 
-    public float attackCooldown = 1.0f; // Set the cooldown duration in the Inspector.
-    private float timeSinceLastAttack;
+    public float attackCooldown = 1.0f; // Enfriamiento de ataque (implementar mejor esta mecanica)
+    private float timeSinceLastAttack; // Tiempo desde el ultimo ataque
 
-    public float attackRange;
+    public float attackRange; // Rango de ataque
     
-    public HealthBar healthBar;
+    public HealthBar healthBar; // Barra de vida
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Find the player by tag.
+        player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
         attackRange = 3f;
     }
 
     void Update()
     {
-        // Chase the player.
+        // Persigue al jugador
         if (player != null)
         {
             Vector3 playerPosition = player.position;
@@ -35,19 +35,21 @@ public class EnemyScript : MonoBehaviour
             transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
         }
 
+        // Manejo enfriamiento del ataque
         timeSinceLastAttack += Time.deltaTime;
         if (timeSinceLastAttack >= attackCooldown)
         {
-            PerformEnemyMeleeAttack();
-            timeSinceLastAttack = 0.0f; // Reset the timer.
+            PerformEnemyMeleeAttack(); // Ataca
+            timeSinceLastAttack = 0.0f; // Resetea el timer
         }
 
+        // Ajusta su valor Y para estar arriba del terreno (como flotando)
         Vector3 enemyPosition = transform.position;
         transform.position = checkHeight(enemyPosition);
         
     }
 
-    // Method to customize the enemy's stats based on the D20 roll.
+    // Inicializacion de variables (desde las variables del resultado del d20)
     public void SetStats(int health, int attack, float speed)
     {
         moveSpeed = speed;
@@ -57,7 +59,7 @@ public class EnemyScript : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
     }
 
-    // Method for taking damage.
+    // Danio al enemigo
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -68,23 +70,25 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    // Method for enemy death.
+    // Muerte
     void Die()
     {
-        // Implement death behavior here, e.g., play death animations, drop loot, etc.
         Destroy(gameObject);
     }
 
+    // TODO: Mejorar esto!
+    // Manejo ataque del enemigo
     void PerformEnemyMeleeAttack()
     {
         PlayerScript playerScript = player.GetComponent<PlayerScript>();
-        // Check if the player is within the attack range, and apply damage if so.
+        // Verifica si el jugador esta dentro de su rango de ataque, de ser asi lo ataca
         if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
         {
-            playerScript.TakeDamage(attackValue); // Assuming you have a TakeDamage method in the player's script.
+            playerScript.TakeDamage(attackValue); // El jugador es daniado
         }
     }
 
+    // Manejo de la componente Y de la posicion del enemigo
     Vector3 checkHeight(Vector3 enemyPosition)
     {
         int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
