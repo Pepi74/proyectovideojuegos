@@ -23,20 +23,10 @@ public class PlayerScript : MonoBehaviour
 
     private Rigidbody rb; // Rigidbody del jugador
 
+    private bool fixSpawn = true;
+
     void Start()
     {
-        // Manejo de spawn inicial al centro del terreno
-        Vector3 spawnPosition;
-        TerrainData terrainData = terrain.terrainData;
-        float centerX = terrainData.size.x / 2f;
-        float centerZ = terrainData.size.z /2f;
-        spawnPosition = new Vector3(centerX, 0, centerZ);
-        float terrainHeight = terrain.SampleHeight(spawnPosition);
-        if(spawnPosition.y < terrainHeight)
-        {
-            spawnPosition.y = terrainHeight + 1f;
-        }
-        transform.position = spawnPosition;
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -46,6 +36,17 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
+        // Manejo de spawn inicial al centro del terreno
+        if (fixSpawn)
+        {
+            TerrainData terrainData = terrain.terrainData;
+            float centerX = terrainData.size.x / 2f;
+            float centerZ = terrainData.size.z / 2f;
+            float terrainHeight = terrain.SampleHeight(new Vector3(centerX, 0, centerZ));
+            Vector3 spawnPosition = new Vector3(centerX, terrainHeight + 1f, centerZ);
+            transform.position = spawnPosition;
+            fixSpawn = false;
+        }
         // Ataque si es que se presiona el click izquierdo del mouse
         if (Input.GetMouseButtonDown(0))
         {
