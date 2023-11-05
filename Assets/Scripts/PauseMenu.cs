@@ -39,6 +39,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         isPaused = false;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         playerMovementScript.SetCanMove(true);
         interactionUI.SetActive(true);
     }
@@ -50,6 +51,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         isPaused = true;
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         playerMovementScript.SetCanMove(false);
         interactionUI.SetActive(false);
     }

@@ -8,30 +8,41 @@ public class PlayerScript : MonoBehaviour
     public int maxHealth = 100; // Vida maxima
     public int currentHealth; // Vida actual
     public int attackValue = 5; // Danio de ataque
-
     public float attackRange = 5f; // Rango de ataque
-
+    public float jumpForce = 20f; // Fuerza del salto
     public HealthBar healthBar; // Barra de vida
-
     public GameOverUIManager gameOverUIManager; // UI game over
-
     public Terrain terrain; // Terreno
-
     public LayerMask enemyLayer; // Layer enemigo
-
-    private bool isGrounded = true; // Booleano que representa si esta en el piso (aun no lo implemento al script)
-
+    private bool isGrounded = true; // Booleano que representa si esta en el piso
     private Rigidbody rb; // Rigidbody del jugador
 
     private bool fixSpawn = true;
 
     void Start()
     {
+<<<<<<< Updated upstream
+=======
+        // Manejo de spawn inicial al centro del terreno
+        Vector3 spawnPosition;
+        TerrainData terrainData = terrain.terrainData;
+        float centerX = terrainData.size.x / 2f;
+        float centerZ = terrainData.size.z / 2f;
+        spawnPosition = new Vector3(centerX, 0, centerZ);
+        float terrainHeight = terrain.SampleHeight(spawnPosition);
+        if (spawnPosition.y < terrainHeight)
+        {
+            spawnPosition.y = terrainHeight + 1f;
+        }
+        transform.position = spawnPosition;
+>>>>>>> Stashed changes
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
+        // Bloquear el cursor en el centro
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -53,6 +64,11 @@ public class PlayerScript : MonoBehaviour
             Attack();
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            MeleeAttack();
+        }
+
         // Salto
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -66,7 +82,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Danio al jugador
+    // Daño al jugador
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -98,15 +114,15 @@ public class PlayerScript : MonoBehaviour
     {
         gameOverUIManager.ShowGameOverScreen();
         Destroy(gameObject);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     // Manejo de ataque
     void Attack()
     {
-        // Raycast desde el centro de la camara con direccion al cursor
-        Vector3 mousePosition = Input.mousePosition;
-
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        // Raycast desde el centro de la camara hacia donde se apunta.
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100f))
@@ -127,10 +143,24 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    void MeleeAttack()
+    {
+
+    }
+
     // Manejo de salto
     void Jump()
     {
-        rb.AddForce(Vector3.up * 20f, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+    // Checkear si esta en tierra
+    private void OnCollisionEnter()
+    {
+        isGrounded = true;
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == 6) isGrounded = false;
+    }
 }
