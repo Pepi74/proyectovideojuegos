@@ -109,36 +109,6 @@ public class PlayerScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    // Manejo de ataque
-    void Attack()
-    {
-        // Raycast desde el centro de la camara hacia donde se apunta.
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f))
-        {
-            // Raycast colisiona con enemigo
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                // Calcula la distancia entre el jugador y el enemigo
-                float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                //Debug.Log(distance);
-                // Si la distancia es menor o igual al rango de ataque, el enemigo es daniado
-                if (distance <= attackRange)
-                {
-                    EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
-                    enemyScript.TakeDamage(attackValue);
-                }
-            }
-        }
-    }
-
-    void MeleeAttack()
-    {
-
-    }
 
     // Manejo de salto
     void Jump()
