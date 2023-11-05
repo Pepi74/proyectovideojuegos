@@ -14,7 +14,7 @@ public class PlayerScript : MonoBehaviour
     public GameOverUIManager gameOverUIManager; // UI game over
     public Terrain terrain; // Terreno
     public LayerMask enemyLayer; // Layer enemigo
-    private bool isGrounded = true; // Booleano que representa si esta en el piso
+    [SerializeField] private bool isGrounded = true; // Booleano que representa si esta en el piso
     private Rigidbody rb; // Rigidbody del jugador
 
     private bool fixSpawn = true;
@@ -55,13 +55,8 @@ public class PlayerScript : MonoBehaviour
             transform.position = spawnPosition;
             fixSpawn = false;
         }
-        // Ataque si es que se presiona el click izquierdo del mouse
-        if (Input.GetMouseButtonDown(0))
-        {
-            Attack();
-        }
-
-        if (Input.GetMouseButtonDown(0))
+        //ataque a Melee
+        if (Input.GetMouseButtonDown(1))
         {
             MeleeAttack();
         }
@@ -151,9 +146,9 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
     // Checkear si esta en tierra
-    private void OnCollisionEnter()
+    private void OnCollisionEnter(Collision collision)
     {
-        isGrounded = true;
+        if (collision.gameObject.layer == 6) isGrounded = true;
     }
 
     private void OnCollisionExit(Collision collision)
