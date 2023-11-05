@@ -21,8 +21,6 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
-<<<<<<< Updated upstream
-=======
         // Manejo de spawn inicial al centro del terreno
         Vector3 spawnPosition;
         TerrainData terrainData = terrain.terrainData;
@@ -35,7 +33,6 @@ public class PlayerScript : MonoBehaviour
             spawnPosition.y = terrainHeight + 1f;
         }
         transform.position = spawnPosition;
->>>>>>> Stashed changes
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
