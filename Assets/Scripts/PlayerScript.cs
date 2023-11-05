@@ -55,11 +55,6 @@ public class PlayerScript : MonoBehaviour
             transform.position = spawnPosition;
             fixSpawn = false;
         }
-        //ataque a Melee
-        if (Input.GetMouseButtonDown(1))
-        {
-            MeleeAttack();
-        }
 
         // Salto
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
