@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed; // Velocidad
+    public float rotationSpeed;
 
     public float sprintMultiplier; // Multiplicador sprint
     private bool isSprinting; // Booleano que indica si esta esprintando
@@ -17,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     {
         canMove = true;
         speed = 7f;
+        rotationSpeed = 2f;
         sprintMultiplier = 2f;
         isSprinting = false;
     }
@@ -39,6 +41,12 @@ public class PlayerMovement : MonoBehaviour
             Vector3 newPosition = transform.position + moveDirection * currentMoveSpeed * Time.deltaTime;
 
             transform.position = newPosition;
+
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            Vector3 rotation = new Vector3(-mouseY, mouseX, 0f) * rotationSpeed;
+            transform.eulerAngles += rotation;
         }
         
     }

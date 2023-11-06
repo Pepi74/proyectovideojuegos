@@ -7,35 +7,32 @@ public class PlayerScript : MonoBehaviour
 
     public int maxHealth = 100; // Vida maxima
     public int currentHealth; // Vida actual
+    public float maxStamina = 100;
+    public float currentStamina;
     public int attackValue = 5; // Danio de ataque
     public float attackRange = 5f; // Rango de ataque
     public float jumpForce = 20f; // Fuerza del salto
     public HealthBar healthBar; // Barra de vida
+    public StaminaBar staminaBar;
     public GameOverUIManager gameOverUIManager; // UI game over
     public Terrain terrain; // Terreno
     public LayerMask enemyLayer; // Layer enemigo
     private bool isGrounded = true; // Booleano que representa si esta en el piso
+    [SerializeField]
+    private bool isTired = false;
+    [SerializeField]
+    private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
 
     private bool fixSpawn = true;
 
     void Start()
     {
-        // Manejo de spawn inicial al centro del terreno
-        Vector3 spawnPosition;
-        TerrainData terrainData = terrain.terrainData;
-        float centerX = terrainData.size.x / 2f;
-        float centerZ = terrainData.size.z / 2f;
-        spawnPosition = new Vector3(centerX, 0, centerZ);
-        float terrainHeight = terrain.SampleHeight(spawnPosition);
-        if (spawnPosition.y < terrainHeight)
-        {
-            spawnPosition.y = terrainHeight + 1f;
-        }
-        transform.position = spawnPosition;
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+        currentStamina = maxStamina;
+        staminaBar.SetMaxStamina(maxStamina);
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
         // Bloquear el cursor en el centro
@@ -45,6 +42,8 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         // Manejo de spawn inicial al centro del terreno
+        // TODO: cambiar a que el player no este en la jerarquia y que spawnee cuando inicie el juego,
+        // deberia arreglar este problema y dejarlo en la funcion Start.
         if (fixSpawn)
         {
             TerrainData terrainData = terrain.terrainData;
@@ -56,9 +55,10 @@ public class PlayerScript : MonoBehaviour
             fixSpawn = false;
         }
         // Ataque si es que se presiona el click izquierdo del mouse
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canRegen)
         {
             Attack();
+            StaminaChange(-20);
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -73,13 +73,27 @@ public class PlayerScript : MonoBehaviour
         }
 
         // Manejo de vida si la vida actual excede la maxima
-        if (currentHealth > maxHealth)
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+
+        if (isTired)
         {
-            currentHealth = maxHealth;
+            isTired = false;
+            canRegen = false;
+            StartCoroutine(tired(3f));
         }
+
+        if (currentStamina <= 0)
+        {
+            currentStamina = 0;
+            isTired = true;
+        }
+
+        if (currentStamina < maxStamina && canRegen) StaminaRegen(5f);
+
+        if (currentStamina >= maxStamina) currentStamina = maxStamina;            
     }
 
-    // Daño al jugador
+    // DaÃ±o al jugador
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -90,6 +104,18 @@ public class PlayerScript : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void StaminaChange(float value)
+    {
+        currentStamina += value;
+        staminaBar.SetStamina(currentStamina);
+    }
+
+    public void StaminaRegen(float regenRate)
+    {
+        currentStamina += regenRate * Time.deltaTime;
+        staminaBar.SetStamina(currentStamina);
     }
 
     // Recuperar vida
@@ -158,6 +184,18 @@ public class PlayerScript : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == 6) isGrounded = false;
+        isGrounded = false;
+    }
+
+    public void SetCanRegen(bool value)
+    {
+        canRegen = value;
+    }
+
+    IEnumerator tired(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        StaminaChange(maxStamina/2);
+        canRegen = true;
     }
 }

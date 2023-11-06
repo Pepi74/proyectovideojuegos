@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
+// TODO: mejorar este script quizas?
 public class EggInteraction : MonoBehaviour
 {
     public float interactionRange = 2.0f; // Rango de interaccion de huevos
