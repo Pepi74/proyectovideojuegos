@@ -14,6 +14,12 @@ public class PauseMenu : MonoBehaviour
     public CameraPosition cameraRotationScript;
     public PlayerScript playerScript;
 
+    void Awake()
+    {
+        Spawner spawner = FindObjectOfType<Spawner>();
+        spawner.onPlayerSpawned.AddListener(SetPlayerReference);
+    }
+
     void Update()
     {
         // Si el menu de gameover no esta activo, pasa esto
@@ -79,5 +85,11 @@ public class PauseMenu : MonoBehaviour
     public void SetGameOverMenuState(bool isActive)
     {
         isGameOverMenuActive = isActive;
+    }
+
+    void SetPlayerReference(GameObject spawnedPlayer)
+    {
+        playerMovementScript = spawnedPlayer.GetComponent<PlayerMovement>();
+        playerScript = spawnedPlayer.GetComponent<PlayerScript>();
     }
 }

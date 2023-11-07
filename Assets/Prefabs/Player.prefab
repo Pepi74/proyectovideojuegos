@@ -832,13 +832,13 @@ MonoBehaviour:
   interactionText: {fileID: 0}
   resultText: {fileID: 0}
   rollStartText: {fileID: 0}
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 6128340443077888685, guid: c401b1ab116f8d644b0aaad35a42915d, type: 3}
   currentEgg: {fileID: 0}
   playerScript: {fileID: 3688713152168778924}
   interacting: 0
   eggLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!114 &3688713152168778924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -861,10 +861,11 @@ MonoBehaviour:
   healthBar: {fileID: 3534564562207710261}
   staminaBar: {fileID: 631139522715442413}
   gameOverUIManager: {fileID: 0}
-  terrain: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
+  isTired: 0
+  canRegen: 1
 --- !u!1 &6523025557944263402
 GameObject:
   m_ObjectHideFlags: 0

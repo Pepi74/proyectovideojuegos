@@ -19,7 +19,14 @@ public class EggInteraction : MonoBehaviour
 
     void Start()
     {
+        interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
+        interactionText.text = "Press <color=yellow>E</color> to interact";
         interactionText.gameObject.SetActive(false);
+        rollStartText = GameObject.Find("RollStartText").GetComponent<TextMeshProUGUI>();
+        rollStartText.text = "Rolling D20...";
+        rollStartText.gameObject.SetActive(false);
+        resultText = GameObject.Find("ResultText").GetComponent<TextMeshProUGUI>();
+        resultText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -76,7 +83,6 @@ public class EggInteraction : MonoBehaviour
 
         currentEgg = egg; // Asigna el huevo interactuado a la variable
 
-        rollStartText.text = "Rolling D20...";
         rollStartText.gameObject.SetActive(true); // Muestra el texto "Rolling D20..."
 
         // Corutina del manejo del d20

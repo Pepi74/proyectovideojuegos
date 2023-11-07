@@ -15,7 +15,6 @@ public class PlayerScript : MonoBehaviour
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;
     public GameOverUIManager gameOverUIManager; // UI game over
-    public Terrain terrain; // Terreno
     public LayerMask enemyLayer; // Layer enemigo
     private bool isGrounded = true; // Booleano que representa si esta en el piso
     [SerializeField]
@@ -28,6 +27,7 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
+        gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -41,24 +41,11 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        // Manejo de spawn inicial al centro del terreno
-        // TODO: cambiar a que el player no este en la jerarquia y que spawnee cuando inicie el juego,
-        // deberia arreglar este problema y dejarlo en la funcion Start.
-        if (fixSpawn)
-        {
-            TerrainData terrainData = terrain.terrainData;
-            float centerX = terrainData.size.x / 2f;
-            float centerZ = terrainData.size.z / 2f;
-            float terrainHeight = terrain.SampleHeight(new Vector3(centerX, 0, centerZ));
-            Vector3 spawnPosition = new Vector3(centerX, terrainHeight + 1f, centerZ);
-            transform.position = spawnPosition;
-            fixSpawn = false;
-        }
         // Ataque si es que se presiona el click izquierdo del mouse
         if (Input.GetMouseButtonDown(0) && canRegen)
         {
             Attack();
-            StaminaChange(-20);
+            StaminaChange(-10);
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -88,7 +75,7 @@ public class PlayerScript : MonoBehaviour
             isTired = true;
         }
 
-        if (currentStamina < maxStamina && canRegen) StaminaRegen(5f);
+        if (currentStamina < maxStamina && canRegen) StaminaRegen(10f);
 
         if (currentStamina >= maxStamina) currentStamina = maxStamina;            
     }
@@ -195,7 +182,7 @@ public class PlayerScript : MonoBehaviour
     IEnumerator tired(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        StaminaChange(maxStamina/2);
+        StaminaChange(maxStamina/4);
         canRegen = true;
     }
 }

@@ -11,13 +11,18 @@ public class CameraPosition : MonoBehaviour
     public Vector3 cameraRotation; // Rotacion de camara
     public Vector3 offset; // Offset de posicion de camara
     public bool canRotate = true;
-
     // Inicalizacion de variables (se pueden modificar)
     void Start()
     {
         cameraRotation = new Vector3(30f,0f,0f);
         transform.eulerAngles = cameraRotation;
         offset = new Vector3(3,5,-7);
+    }
+
+    void Awake()
+    {
+        Spawner spawner = FindObjectOfType<Spawner>();
+        spawner.onPlayerSpawned.AddListener(SetPlayerReference);
     }
 
     void Update()
@@ -35,5 +40,10 @@ public class CameraPosition : MonoBehaviour
     public void SetCanRotate(bool rotate)
     {
         canRotate = rotate;
+    }
+
+    void SetPlayerReference(GameObject spawnedPlayer)
+    {
+        player = spawnedPlayer;
     }
 }
