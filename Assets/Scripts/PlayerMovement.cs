@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed; // Velocidad
-
-    public float sprintMultiplier; // Multiplicador sprint
-    //private bool isSprinting; // Booleano que indica si esta esprintando
+    private float moveSpeed; // Velocidad
+    public float walkSpeed;
+    public float sprintSpeed;
 
     [SerializeField]
     private bool canMove; // Booleano que indica si puede moverse o no
@@ -31,25 +30,40 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     private bool readyToJump;
 
+    public float maxSlopeAngle;
+    private RaycastHit slopeHit;
+    private bool exitingSlope;
+
     public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+
+    public MovementState state;
+
+    public enum MovementState
+    {
+        Walking,
+        Sprinting,
+        Air
+    }
 
     // Inicializacion de variables
     void Start()
     {
         canMove = true;
-        moveSpeed = 7f;
-        sprintMultiplier = 2f;
-        //isSprinting = false;
+        walkSpeed = 5f;
+        sprintSpeed = 7f;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         jumpForce = 10f;
         jumpCooldown = 0.25f;
         airMultiplier = 0.4f;
         readyToJump = true;
+        maxSlopeAngle = 40f;
     }
 
     void Update()
     {
+
         if(canMove)
         {
             grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayerMask);
@@ -57,30 +71,12 @@ public class PlayerMovement : MonoBehaviour
             // Movimiento WASD o flechas
             MyInput();
             SpeedControl();
+            StateHandler();
 
             if (grounded)
                 rb.drag = groundDrag;
             else
                 rb.drag = 0;
-
-            // Vector3 direction = new Vector3(x, 0f, z).normalized;
-
-            // Vector3 moveDirection = Quaternion.Euler(0, transform.eulerAngles.y, 0) * new Vector3(x, 0, z);
-
-            // Manejo de sprint
-            // isSprinting = Input.GetKey(KeyCode.LeftShift);
-
-            // float currentMoveSpeed = speed * (isSprinting ? sprintMultiplier : 1f);
-
-            // Vector3 newPosition = transform.position + moveDirection * currentMoveSpeed * Time.deltaTime;
-
-            // transform.position = newPosition;
-
-            // float mouseX = Input.GetAxis("Mouse X");
-            // float mouseY = Input.GetAxis("Mouse Y");
-
-            // Vector3 rotation = new Vector3(-mouseY, mouseX, 0f) * rotationSpeed;
-            // transform.eulerAngles += rotation;
         }        
         
     }
@@ -115,26 +111,50 @@ public class PlayerMovement : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (grounded)
+        if(OnSlope())
+        {
+            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+
+            if (rb.velocity.y > 0)
+            {
+                rb.AddForce(Vector3.down * 40f, ForceMode.Force);
+            }
+        }
+
+        else if (grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         else if(!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+        rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if (flatVel.magnitude > moveSpeed)
+        if (OnSlope() && !exitingSlope)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            if (rb.velocity.magnitude > moveSpeed)
+                rb.velocity = rb.velocity.normalized * moveSpeed;
         }
+
+        else
+        {
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            if (flatVel.magnitude > moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
+        }        
     }
 
     private void Jump()
     {
+        exitingSlope = true;
+
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -143,5 +163,43 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+
+        exitingSlope = false;
+    }
+
+    private void StateHandler()
+    {
+        if (grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.Sprinting;
+            moveSpeed = sprintSpeed;
+        }
+
+        else if (grounded)
+        {
+            state = MovementState.Walking;
+            moveSpeed = walkSpeed;
+        }
+
+        else
+        {
+            state = MovementState.Air;
+        }
+    }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 }

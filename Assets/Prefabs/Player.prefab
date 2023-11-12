@@ -744,7 +744,7 @@ Transform:
   m_GameObject: {fileID: 6128340443077888685}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.66, y: 0.66, z: 0.66}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3161860020832714035}
@@ -843,19 +843,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f62836da686f54ca2b0023c89243ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  sprintMultiplier: 0
+  walkSpeed: 0
+  sprintSpeed: 0
   canMove: 0
   orientation: {fileID: 4951483897402403567}
   groundDrag: 5
-  playerHeight: 1
+  playerHeight: 1.32
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 65
   jumpForce: 0
   jumpCooldown: 0
   airMultiplier: 0
+  maxSlopeAngle: 0
   jumpKey: 32
+  sprintKey: 304
+  state: 0
 --- !u!114 &6832873739935731614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -896,8 +899,7 @@ MonoBehaviour:
   maxStamina: 100
   currentStamina: 0
   attackValue: 5
-  attackRange: 5
-  jumpForce: 20
+  attackRange: 10
   healthBar: {fileID: 3534564562207710261}
   staminaBar: {fileID: 631139522715442413}
   gameOverUIManager: {fileID: 0}

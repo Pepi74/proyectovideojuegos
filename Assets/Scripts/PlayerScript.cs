@@ -10,7 +10,7 @@ public class PlayerScript : MonoBehaviour
     public float maxStamina = 100;
     public float currentStamina;
     public int attackValue = 5; // Danio de ataque
-    public float attackRange = 5f; // Rango de ataque
+    public float attackRange = 10f; // Rango de ataque
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;
     public GameOverUIManager gameOverUIManager; // UI game over
@@ -130,8 +130,8 @@ public class PlayerScript : MonoBehaviour
             {
                 // Calcula la distancia entre el jugador y el enemigo
                 float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                //Debug.Log(distance);
-                // Si la distancia es menor o igual al rango de ataque, el enemigo es daniado
+                Debug.Log(distance);
+                // Si la distancia es menor o igual al rango de ataque, el enemigo es dañado
                 if (distance <= attackRange)
                 {
                     EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();

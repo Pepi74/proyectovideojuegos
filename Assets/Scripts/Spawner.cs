@@ -16,8 +16,8 @@ public class Spawner : MonoBehaviour
     // Manejo de spawn de huevos alrededor del terreno y player en el centro del terreno
     void Start()
     {
-        SpawnEggs();
         SpawnPlayer();
+        SpawnEggs();
     }
 
     void SpawnEggs()
