@@ -11,19 +11,15 @@ public class PlayerScript : MonoBehaviour
     public float currentStamina;
     public int attackValue = 5; // Danio de ataque
     public float attackRange = 5f; // Rango de ataque
-    public float jumpForce = 20f; // Fuerza del salto
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;
     public GameOverUIManager gameOverUIManager; // UI game over
     public LayerMask enemyLayer; // Layer enemigo
-    private bool isGrounded = true; // Booleano que representa si esta en el piso
     [SerializeField]
     private bool isTired = false;
     [SerializeField]
     private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
-
-    private bool fixSpawn = true;
 
     void Start()
     {
@@ -35,8 +31,6 @@ public class PlayerScript : MonoBehaviour
         staminaBar.SetMaxStamina(maxStamina);
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
-        // Bloquear el cursor en el centro
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -51,12 +45,6 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             MeleeAttack();
-        }
-
-        // Salto
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            Jump();
         }
 
         // Manejo de vida si la vida actual excede la maxima
@@ -156,22 +144,6 @@ public class PlayerScript : MonoBehaviour
     void MeleeAttack()
     {
 
-    }
-
-    // Manejo de salto
-    void Jump()
-    {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-    }
-    // Checkear si esta en tierra
-    private void OnCollisionEnter()
-    {
-        isGrounded = true;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        isGrounded = false;
     }
 
     public void SetCanRegen(bool value)

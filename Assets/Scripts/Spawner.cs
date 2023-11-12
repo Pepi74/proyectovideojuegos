@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     public int minSpawn = 100; // Cantidad minima de huevos que spawnearan
     public int maxSpawn = 200; // Cantidad maxima de huevos que spawnearan
 
-    // Manejo de spawn de huevos alrededor del terreno
+    // Manejo de spawn de huevos alrededor del terreno y player en el centro del terreno
     void Start()
     {
         SpawnEggs();
@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
         float spawnX = terrainData.size.x / 2;
         float spawnZ = terrainData.size.z / 2;
         float terrainHeight = terrain.SampleHeight(new Vector3(spawnX, 0, spawnZ));
-        Vector3 spawnPosition = new Vector3(spawnX, terrainHeight, spawnZ);
+        Vector3 spawnPosition = new Vector3(spawnX, terrainHeight + 2, spawnZ);
         GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
         onPlayerSpawned.Invoke(player);
     }
