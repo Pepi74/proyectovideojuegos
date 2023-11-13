@@ -38,7 +38,7 @@ public class PlayerScript : MonoBehaviour
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
         levelUpText = transform.Find("PlayerUI").Find("Level").Find("LevelUpText").GetComponent<TextMeshProUGUI>();
-        levelUpText.text = "";
+        levelUpText.gameObject.SetActive(false);
         levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
         levelText.text = "Level: " + playerLevel.ToString();
     }
@@ -186,6 +186,7 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator LevelUpTextDisplay()
     {
+        levelUpText.gameObject.SetActive(true);
         float endTime = Time.time + 2f;
         while(Time.time < endTime)
         {
@@ -194,6 +195,6 @@ public class PlayerScript : MonoBehaviour
             levelUpText.text = "<color=yellow>Level Up!!</color>";
             yield return new WaitForSeconds(0.1f);
         }
-        levelUpText.text = "";
+        levelUpText.gameObject.SetActive(false);
     }
 }

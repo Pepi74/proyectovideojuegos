@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -21,11 +22,18 @@ public class EnemyScript : MonoBehaviour
     [SerializeField]
     private int enemyLevel;
 
+    public TextMeshProUGUI levelText;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
         attackCooldown = Random.Range(0.5f, 1.5f);
         attackRange = 3f;
+    }
+
+    void Awake()
+    {
+        levelText = transform.Find("EnemyUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
@@ -61,6 +69,7 @@ public class EnemyScript : MonoBehaviour
         attackValue = attack;
         healthBar.SetMaxHealth(maxHealth);
         enemyLevel = level;
+        levelText.text = "Lv: " + enemyLevel.ToString();
     }
 
     // Daño al enemigo
