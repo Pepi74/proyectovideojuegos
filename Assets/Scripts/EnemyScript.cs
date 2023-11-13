@@ -2,18 +2,16 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed; // Velocidad de movimiento
-    [SerializeField]
-    private int maxHealth; // Vida maxima
+    public float moveSpeed; // Velocidad de movimiento
+    public int maxHealth; // Vida maxima
     [SerializeField]
     private int currentHealth; // Vida actual
     [SerializeField]
-    private int attackValue; // Danio de ataque
-    private Transform player; // Posicion del jugador
+    public int attackValue; // Danio de ataque
+    public Transform player; // Posicion del jugador
 
     public float attackCooldown = 1.0f; // Enfriamiento de ataque (implementar mejor esta mecanica)
-    private float timeSinceLastAttack; // Tiempo desde el ultimo ataque
+    public float timeSinceLastAttack; // Tiempo desde el ultimo ataque
 
     public float attackRange; // Rango de ataque
     
@@ -39,7 +37,7 @@ public class EnemyScript : MonoBehaviour
         timeSinceLastAttack += Time.deltaTime;
         if (timeSinceLastAttack >= attackCooldown)
         {
-            PerformEnemyMeleeAttack(); // Ataca
+            Debug.Log("Ataca");; // Ataca
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
 

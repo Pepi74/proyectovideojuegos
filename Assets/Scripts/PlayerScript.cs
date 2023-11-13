@@ -69,7 +69,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // Daño al jugador
+    // Daï¿½o al jugador
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
