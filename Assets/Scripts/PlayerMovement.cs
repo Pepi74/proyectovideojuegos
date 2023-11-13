@@ -54,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
         sprintSpeed = 7f;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        playerHeight = transform.localScale.y * 2;
         jumpForce = 10f;
         jumpCooldown = 0.25f;
         airMultiplier = 0.4f;

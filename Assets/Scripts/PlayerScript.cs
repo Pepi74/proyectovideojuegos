@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     public float attackRange = 10f; // Rango de ataque
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;
+    private int staminaRegenRate = 10;
     public GameOverUIManager gameOverUIManager; // UI game over
     public LayerMask enemyLayer; // Layer enemigo
     [SerializeField]
@@ -20,6 +22,10 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
+    [SerializeField]
+    private int playerLevel = 1;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI levelUpText;
 
     void Start()
     {
@@ -31,6 +37,10 @@ public class PlayerScript : MonoBehaviour
         staminaBar.SetMaxStamina(maxStamina);
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
+        levelUpText = transform.Find("PlayerUI").Find("Level").Find("LevelUpText").GetComponent<TextMeshProUGUI>();
+        levelUpText.text = "";
+        levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + playerLevel.ToString();
     }
 
     void Update()
@@ -63,7 +73,7 @@ public class PlayerScript : MonoBehaviour
             isTired = true;
         }
 
-        if (currentStamina < maxStamina && canRegen) StaminaRegen(10f);
+        if (currentStamina < maxStamina && canRegen) StaminaRegen(staminaRegenRate);
 
         if (currentStamina >= maxStamina) currentStamina = maxStamina;            
     }
@@ -100,11 +110,12 @@ public class PlayerScript : MonoBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
-    // Recuperar un porcentaje de vida
+    // Recuperar un porcentaje de vida y stamina
     public void HealP(float p)
     {
         int healing = (int)(maxHealth * p);
         Heal(healing);
+        StaminaChange(maxStamina * (p/2));
     }
 
     // Manejo de muerte del jugador
@@ -130,7 +141,7 @@ public class PlayerScript : MonoBehaviour
             {
                 // Calcula la distancia entre el jugador y el enemigo
                 float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                Debug.Log(distance);
+                //Debug.Log(distance);
                 // Si la distancia es menor o igual al rango de ataque, el enemigo es dañado
                 if (distance <= attackRange)
                 {
@@ -146,15 +157,43 @@ public class PlayerScript : MonoBehaviour
 
     }
 
+    IEnumerator tired(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        StaminaChange(maxStamina / 4);
+        canRegen = true;
+    }
+
     public void SetCanRegen(bool value)
     {
         canRegen = value;
     }
 
-    IEnumerator tired(float seconds)
+    public void LevelUp()
     {
-        yield return new WaitForSeconds(seconds);
-        StaminaChange(maxStamina/4);
-        canRegen = true;
+        playerLevel++;
+        attackValue++;
+        maxHealth += 20;
+        maxStamina += 10;
+        staminaRegenRate += 2;
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+        currentStamina = maxStamina;
+        staminaBar.SetMaxStamina(maxStamina);
+        levelText.text = "Level: " + playerLevel.ToString();
+        StartCoroutine(LevelUpTextDisplay());
+    }
+
+    IEnumerator LevelUpTextDisplay()
+    {
+        float endTime = Time.time + 2f;
+        while(Time.time < endTime)
+        {
+            levelUpText.text = "<color=orange>Level Up!!</color>";
+            yield return new WaitForSeconds(0.1f);
+            levelUpText.text = "<color=yellow>Level Up!!</color>";
+            yield return new WaitForSeconds(0.1f);
+        }
+        levelUpText.text = "";
     }
 }

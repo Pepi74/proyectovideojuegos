@@ -9,19 +9,22 @@ public class EnemyScript : MonoBehaviour
     [SerializeField]
     private int currentHealth; // Vida actual
     [SerializeField]
-    private int attackValue; // Danio de ataque
+    private int attackValue; // Daño de ataque
     private Transform player; // Posicion del jugador
 
-    public float attackCooldown = 1.0f; // Enfriamiento de ataque (implementar mejor esta mecanica)
+    public float attackCooldown; // Enfriamiento de ataque (implementar mejor esta mecanica)
     private float timeSinceLastAttack; // Tiempo desde el ultimo ataque
 
     public float attackRange; // Rango de ataque
     
     public HealthBar healthBar; // Barra de vida
+    [SerializeField]
+    private int enemyLevel;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
+        attackCooldown = Random.Range(0.5f, 1.5f);
         attackRange = 3f;
     }
 
@@ -50,16 +53,17 @@ public class EnemyScript : MonoBehaviour
     }
 
     // Inicializacion de variables (desde las variables del resultado del d20)
-    public void SetStats(int health, int attack, float speed)
+    public void SetStats(int health, int attack, float speed, int level)
     {
         moveSpeed = speed;
         maxHealth = health;
         currentHealth = health;
         attackValue = attack;
         healthBar.SetMaxHealth(maxHealth);
+        enemyLevel = level;
     }
 
-    // Danio al enemigo
+    // Daño al enemigo
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -82,7 +86,7 @@ public class EnemyScript : MonoBehaviour
     {
         PlayerScript playerScript = player.GetComponent<PlayerScript>();
         // Verifica si el jugador esta dentro de su rango de ataque, de ser asi lo ataca
-        if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
+        if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
         {
             playerScript.TakeDamage(attackValue); // El jugador es daniado
         }
@@ -93,7 +97,7 @@ public class EnemyScript : MonoBehaviour
     {
         int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
         RaycastHit hit;
-        if(Physics.Raycast(enemyPosition, new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
+        if(Physics.Raycast(enemyPosition, Vector3.down, out hit, Mathf.Infinity, terrainLayerMask))
         {
             float terrainHeight = hit.point.y;
             if (enemyPosition.y - terrainHeight <= 2) enemyPosition.y = terrainHeight + 2f;            
