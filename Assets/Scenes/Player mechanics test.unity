@@ -2397,6 +2397,10 @@ PrefabInstance:
       propertyPath: gameOverUIManager
       value: 
       objectReference: {fileID: 1520644609}
+    - target: {fileID: 3951479197844572595, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: m_Name
+      value: Attack controller
+      objectReference: {fileID: 0}
     - target: {fileID: 6128340443077888685, guid: b2c6d675712582e42bdf262226d21317, type: 3}
       propertyPath: m_Name
       value: Player
