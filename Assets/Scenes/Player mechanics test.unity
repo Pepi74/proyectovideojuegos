@@ -2528,6 +2528,18 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1531662996}
+    - target: {fileID: 8253097547514415325, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: meleeDamage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253097547514415325, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: meleeeRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8253097547514415325, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: meleeFireRate
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8868000109007409128, guid: b2c6d675712582e42bdf262226d21317, type: 3}
       propertyPath: m_Enabled
       value: 1

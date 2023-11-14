@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tounge : MonoBehaviour
 {
+    public bool canAttack = true; //Variable general que permite al jugador atacar
+
     public Transform toungeBase, cam; //Transform de la base de la lengua en el player y de la camara
     public float toungeRange; //Rango de la lengua (por ahora no se usa)
     public float toungeDelayTime; // delay para que la lengua llegue e su objetivo (por ahora no se usa)
@@ -12,6 +14,11 @@ public class Tounge : MonoBehaviour
     public GameObject toungePrefab; //prefab de la punta de la lengua
     private Transform toungeTip; //prefab de la punta de la lengua
     
+    public float meleeeRange; //Rango de ataque melee
+    public int meleeDamage; // daño de melee
+    public float meleeFireRate; // ratio de ataque melee
+    public float meleeTimer; // variable de conteo para el ataque melee.
+
     private void Start()
     {
         fireTimer = 0; //inicializar timer
@@ -20,19 +27,24 @@ public class Tounge : MonoBehaviour
     private void Update()
     {
         //Iniciar ataque a rango
-        if (Input.GetMouseButton(0) && fireTimer <= 0f)
+        if (Input.GetMouseButton(0) && fireTimer <= 0f && canAttack)
         {
             fireTimer = 1 / fireRate;
+            meleeTimer = 0.3f;
             Attack();
         }
+        //Iniciar ataque Melee
+        if (Input.GetMouseButton(1) && meleeTimer <= 0f && canAttack)
+        {
+            fireTimer = 0.3f;
+            meleeTimer = 1 / meleeFireRate;
+            meleeAttack();
+        }
+
         //Contador de ratio de fuego
         if (fireTimer > 0) fireTimer -= Time.deltaTime;
 
-        //Iniciar ataque Melee
-        if (Input.GetMouseButton(1) && fireTimer <= 0f)
-        {
-
-        }
+        
 
     }
    
@@ -46,6 +58,18 @@ public class Tounge : MonoBehaviour
         if (Physics.Raycast(cam.position,cam.forward,out hit,10f))
         {
             bullet.transform.LookAt(hit.point);
+        }
+    }
+
+    public void meleeAttack()
+    {
+        foreach (Collider other in Physics.OverlapSphere(toungeBase.position, meleeeRange))
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
+                enemyScript.TakeDamage(meleeDamage);
+            }
         }
     }
 }
