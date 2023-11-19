@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 2564030287353074541}
   - component: {fileID: 5780863024583466758}
   - component: {fileID: 2164149911528505469}
-  m_Layer: 0
-  m_Name: EnemyBullet 1
+  m_Layer: 9
+  m_Name: ZorrilloBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 1665946277671209813}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.4}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f23c52a2fa53a4e47b3396ee1218ba45, type: 2}
+  - {fileID: 2100000, guid: 8fca87551fd25fb4da16b92c75d5ac81, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94,7 +94,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665946277671209813}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.2
@@ -111,9 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6a73886c91f4a4681620fca24fd707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  base_speed: 2
-  Damage: 1
-  lifeTime: 4
+  base_speed: 1
+  Damage: 3
+  lifeTime: 2
   shooter: 1
   direction: {x: -1, y: 0, z: 0}
   desviar: 0

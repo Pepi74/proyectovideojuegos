@@ -12,6 +12,7 @@ public class EnemyScript : MonoBehaviour
 
     public float attackCooldown = 1.0f; // Enfriamiento de ataque (implementar mejor esta mecanica)
     public float timeSinceLastAttack; // Tiempo desde el ultimo ataque
+    public bool isGrabbed = false;
 
     public float attackRange; // Rango de ataque
     
@@ -98,5 +99,10 @@ public class EnemyScript : MonoBehaviour
         }
 
         return enemyPosition;
+    }
+
+    public void grabbed()
+    {
+        isGrabbed = true;
     }
 }   

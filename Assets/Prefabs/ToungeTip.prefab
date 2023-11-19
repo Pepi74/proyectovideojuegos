@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5835600897445651166}
   - component: {fileID: 277764439316417926}
   - component: {fileID: -4755755723539337053}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ToungeTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}

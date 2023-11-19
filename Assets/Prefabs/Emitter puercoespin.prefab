@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 854457717809182776}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.95976, y: 0.22437, z: 0.26854}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1014422336063143053}
@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854457717809182776}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &5334826047218638053
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f23c52a2fa53a4e47b3396ee1218ba45, type: 2}
+  - {fileID: 2100000, guid: 7db370e2128a9954882e9bd65dd07ffe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3786691963853601687}
   m_Layer: 0
-  m_Name: Emitter 3
+  m_Name: Emitter puercoespin
   m_TagString: Emitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60f081beca56ab4fbbfb9717e8b6167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shot: {fileID: 5780863024583466758, guid: eb8a36879ead5f14fa86e01f180d22f0, type: 3}
+  Shot: {fileID: 5780863024583466758, guid: 53176acaaae3b6d46bb17e0f6fb6d97b, type: 3}
   ShotSpeed: 12.26
   localOffset: -0
   shotRate: 8.1

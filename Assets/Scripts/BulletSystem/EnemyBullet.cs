@@ -10,7 +10,7 @@ public enum bulletType
 public class EnemyBullet : MonoBehaviour
 {
     public float base_speed = 20f;
-    public int Damage = 5;
+    public int Damage = 1;
     public float lifeTime = 10f;
     public bulletType shooter;
 
@@ -38,21 +38,32 @@ public class EnemyBullet : MonoBehaviour
     void OnBecameVisible(){
         //mesh.enabled = true;
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        PlayerScript playerScript = GameObject.FindGameObjectWithTag("Player").transform.GetComponent<PlayerScript>();
+        if (other.collider.tag == "Player"){
+            playerScript.TakeDamage(Damage);
+            Destroy(gameObject);
+        }
+    }
+
     void OnTriggerEnter(Collider other){
         
-        /*if(other.gameObject.tag=="Player" && shooter == bulletType.enemy)
+        if(other.gameObject.tag=="Player" && shooter == bulletType.enemy)
         {
-            Player cs = other.gameObject.GetComponent<Player>();
-            cs.getDamage(Damage);
+            PlayerScript playerScript = GameObject.FindGameObjectWithTag("Player").transform.GetComponent<PlayerScript>();
+            playerScript.TakeDamage(Damage);
             Destroy(gameObject);
-        } else if (other.gameObject.tag == "Enemy" && shooter == bulletType.player)
-        {
-            Enemy cs = other.gameObject.GetComponent<Enemy>();
-            cs.getDamage(Damage);
         }
-        else if (other.gameObject.tag == "Obstacle") {
-            Destroy(gameObject);
-        }*/
+        // } else if (other.gameObject.tag == "Enemy" && shooter == bulletType.player)
+        // {
+        //     Enemy cs = other.gameObject.GetComponent<Enemy>();
+        //     cs.getDamage(Damage);
+        // }
+        // else if (other.gameObject.tag == "Obstacle") {
+        //     Destroy(gameObject);
+        // }
     }
 
     public void UpdateVector(Vector3 new_vector){
