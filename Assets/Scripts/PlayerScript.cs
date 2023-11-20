@@ -14,8 +14,10 @@ public class PlayerScript : MonoBehaviour
     public GameOverUIManager gameOverUIManager; // UI game over
     public Terrain terrain; // Terreno
     public LayerMask enemyLayer; // Layer enemigo
+    public Animator animator;
     [SerializeField] private bool isGrounded = true; // Booleano que representa si esta en el piso
     private Rigidbody rb; // Rigidbody del jugador
+    
 
     private bool fixSpawn = true;
 
@@ -67,6 +69,9 @@ public class PlayerScript : MonoBehaviour
         {
             currentHealth = maxHealth;
         }
+        animator.SetBool("grounded", isGrounded);
+        animator.SetFloat("y_speed", rb.velocity.y);
+
     }
 
     // Daño al jugador

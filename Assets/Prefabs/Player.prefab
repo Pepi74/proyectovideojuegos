@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17e960246f14cfe4aa2ab872162b64d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canAttack: 1
   toungeBase: {fileID: 6656914717860634944}
   cam: {fileID: 7002786963367852716}
   toungeRange: 5
@@ -625,6 +626,10 @@ MonoBehaviour:
   fireRate: 1
   fireTimer: 0
   toungePrefab: {fileID: 3175139107661817225, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+  meleeeRange: 0
+  meleeDamage: 0
+  meleeFireRate: 0
+  meleeTimer: 0
 --- !u!1 &4940757833533220891
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,7 +753,6 @@ GameObject:
   - component: {fileID: 6128340443077888695}
   - component: {fileID: 821449179892541629}
   - component: {fileID: 6832873739935731614}
-  - component: {fileID: 682613197193907746}
   - component: {fileID: 8778755863440937562}
   m_Layer: 0
   m_Name: Player
@@ -869,6 +873,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   sprintMultiplier: 0
+  animator: {fileID: 8778755863440937562}
   canMove: 0
 --- !u!114 &821449179892541629
 MonoBehaviour:
@@ -893,6 +898,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
+  animator: {fileID: 8778755863440937562}
   isGrounded: 1
 --- !u!114 &6832873739935731614
 MonoBehaviour:
@@ -917,30 +923,6 @@ MonoBehaviour:
   eggLayer:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &682613197193907746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6128340443077888685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd9afe83b9b700b42ac59b1718548fbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  attackValue: 5
-  attackRange: 5
-  jumpForce: 20
-  healthBar: {fileID: 0}
-  gameOverUIManager: {fileID: 0}
-  terrain: {fileID: 0}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  isGrounded: 1
 --- !u!95 &8778755863440937562
 Animator:
   serializedVersion: 5

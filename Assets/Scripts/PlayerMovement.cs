@@ -8,9 +8,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float sprintMultiplier; // Multiplicador sprint
     private bool isSprinting; // Booleano que indica si esta esprintando
-
-    [SerializeField]
-    private bool canMove; // Booleano que indica si puede moverse o no
+    public Animator animator; //controlador de el animador
+    [SerializeField] private bool canMove; // Booleano que indica si puede moverse o no
 
     // Inicializacion de variables
     void Start()
@@ -30,6 +29,9 @@ public class PlayerMovement : MonoBehaviour
             float z = Input.GetAxis("Vertical");
 
             Vector3 moveDirection = Quaternion.Euler(0, transform.eulerAngles.y, 0) * new Vector3(x, 0, z);
+
+            animator.SetFloat("z speed", z);
+            animator.SetFloat("x_speed", x);
 
             // Manejo de sprint
             isSprinting = Input.GetKey(KeyCode.LeftShift);
