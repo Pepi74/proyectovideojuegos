@@ -46,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
         Air
     }
 
+    public PlayerScript playerScript;
+
     // Inicializacion de variables
     void Start()
     {
@@ -60,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
         airMultiplier = 0.4f;
         readyToJump = true;
         maxSlopeAngle = 40f;
+        playerScript = GetComponent<PlayerScript>();
     }
 
     void Update()
@@ -170,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
-        if (grounded && Input.GetKey(sprintKey))
+        if (grounded && Input.GetKey(sprintKey) && (int) playerScript.currentStamina != 0)
         {
             state = MovementState.Sprinting;
             moveSpeed = sprintSpeed;

@@ -17,8 +17,8 @@ public class PlayerScript : MonoBehaviour
     private int staminaRegenRate = 10;
     public GameOverUIManager gameOverUIManager; // UI game over
     public LayerMask enemyLayer; // Layer enemigo
-    [SerializeField]
-    private bool isTired = false;
+    public bool isTired = false;
+    public bool flagTired = false;
     [SerializeField]
     private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
@@ -26,7 +26,11 @@ public class PlayerScript : MonoBehaviour
     private int playerLevel = 1;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI levelUpText;
-
+    [SerializeField]
+    private bool isSprinting = false;
+	public PlayerMovement playerMovement;
+	public PauseMenu pauseMenu;
+	
     void Start()
     {
         gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
@@ -41,12 +45,14 @@ public class PlayerScript : MonoBehaviour
         levelUpText.gameObject.SetActive(false);
         levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
         levelText.text = "Level: " + playerLevel.ToString();
+        playerMovement = GetComponent<PlayerMovement>();
+        pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
     }
 
     void Update()
     {
         // Ataque si es que se presiona el click izquierdo del mouse
-        if (Input.GetMouseButtonDown(0) && canRegen)
+        if (Input.GetMouseButtonDown(0) && (int) currentStamina > 0 && !pauseMenu.isPaused)
         {
             Attack();
             StaminaChange(-10);
@@ -57,23 +63,38 @@ public class PlayerScript : MonoBehaviour
             MeleeAttack();
         }
 
+        if (isTired && !canRegen && flagTired)
+        {
+            flagTired = false;
+            StartCoroutine(tired(3f));
+        }
+        
+        if (Input.GetKey(KeyCode.LeftShift) && playerMovement.state != PlayerMovement.MovementState.Air && (int) currentStamina > 0 && (int) rb.velocity.magnitude != 0)
+        {
+            isSprinting = true;
+			canRegen = false;
+            StaminaRegen(-15);
+        }
+
+        if ((Input.GetKeyUp(KeyCode.LeftShift) && isSprinting) || ((playerMovement.state == PlayerMovement.MovementState.Air || (int) rb.velocity.magnitude == 0) && !isTired))
+        {
+            isSprinting = false;
+			canRegen = true;
+        }
+
         // Manejo de vida si la vida actual excede la maxima
         if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-        if (isTired)
+        if ((int)currentStamina <= 0 && !isTired)
         {
-            isTired = false;
+            isSprinting = false;
             canRegen = false;
-            StartCoroutine(tired(3f));
-        }
-
-        if (currentStamina <= 0)
-        {
-            currentStamina = 0;
             isTired = true;
+            flagTired = true;
+            currentStamina = 0;
         }
 
-        if (currentStamina < maxStamina && canRegen) StaminaRegen(staminaRegenRate);
+        if (currentStamina < maxStamina && canRegen && !isTired) StaminaRegen(staminaRegenRate);
 
         if (currentStamina >= maxStamina) currentStamina = maxStamina;            
     }
@@ -162,6 +183,7 @@ public class PlayerScript : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         StaminaChange(maxStamina / 4);
         canRegen = true;
+        isTired = false;
     }
 
     public void SetCanRegen(bool value)

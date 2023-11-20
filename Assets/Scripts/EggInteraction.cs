@@ -22,7 +22,6 @@ public class EggInteraction : MonoBehaviour
     public int forcedFinalResult; // Para testear cosas y forzar el resultado final
 
     public bool forceResult;
-
     void Start()
     {
         interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
@@ -173,12 +172,12 @@ public class EggInteraction : MonoBehaviour
             health = (8 + (2 * enemyLevel)) - finalResult / 4;
             speed = 4f;
             healing = true;
-            if (finalResult == 14) healingValue = 0.1f;
-            else if (finalResult == 15) healingValue = 0.15f;
-            else if (finalResult == 16) healingValue = 0.2f;
-            else if (finalResult == 17) healingValue = 0.25f;
-            else if (finalResult == 18) healingValue = 0.3f;
-            else if (finalResult == 19) healingValue = 0.35f;
+            if (finalResult == 14) healingValue = 0.15f;
+            else if (finalResult == 15) healingValue = 0.20f;
+            else if (finalResult == 16) healingValue = 0.25f;
+            else if (finalResult == 17) healingValue = 0.30f;
+            else if (finalResult == 18) healingValue = 0.35f;
+            else if (finalResult == 19) healingValue = 0.40f;
         }
         // Manejo del roll igual a 20
         if (finalResult == 20)

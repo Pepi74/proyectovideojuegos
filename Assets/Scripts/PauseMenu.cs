@@ -8,7 +8,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI; // Menu de pausa
     public GameObject interactionUI; // UI de interaccion
 
-    private bool isPaused = false; // Booleano que indica si el juego esta en pausa
+    public bool isPaused = false; // Booleano que indica si el juego esta en pausa
     private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
     public PlayerScript playerScript;
