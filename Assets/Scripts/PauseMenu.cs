@@ -8,9 +8,17 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI; // Menu de pausa
     public GameObject interactionUI; // UI de interaccion
 
-    private bool isPaused = false; // Booleano que indica si el juego esta en pausa
+    public bool isPaused = false; // Booleano que indica si el juego esta en pausa
     private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
+    public PlayerScript playerScript;
+    public GameObject playerCrosshair;
+
+    void Awake()
+    {
+        Spawner spawner = FindObjectOfType<Spawner>();
+        spawner.onPlayerSpawned.AddListener(SetPlayerReference);
+    }
 
     void Update()
     {
@@ -41,6 +49,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         playerMovementScript.SetCanMove(true);
+        playerScript.SetCanRegen(true);
+        playerCrosshair.SetActive(true);
         interactionUI.SetActive(true);
     }
 
@@ -53,6 +63,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         playerMovementScript.SetCanMove(false);
+        playerScript.SetCanRegen(false);
+        playerCrosshair.SetActive(false);
         interactionUI.SetActive(false);
     }
 
@@ -73,5 +85,12 @@ public class PauseMenu : MonoBehaviour
     public void SetGameOverMenuState(bool isActive)
     {
         isGameOverMenuActive = isActive;
+    }
+
+    void SetPlayerReference(GameObject spawnedPlayer)
+    {
+        playerMovementScript = spawnedPlayer.GetComponent<PlayerMovement>();
+        playerScript = spawnedPlayer.GetComponent<PlayerScript>();
+        playerCrosshair = spawnedPlayer.transform.Find("PlayerUI").gameObject.transform.Find("Crosshair").gameObject;
     }
 }
