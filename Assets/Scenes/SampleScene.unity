@@ -3259,7 +3259,7 @@ GameObject:
   - component: {fileID: 1483327840}
   - component: {fileID: 1483327839}
   m_Layer: 0
-  m_Name: treeSpawner
+  m_Name: TreeSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3430,7 +3430,7 @@ GameObject:
   - component: {fileID: 1497371994}
   - component: {fileID: 1497371993}
   m_Layer: 0
-  m_Name: water
+  m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
