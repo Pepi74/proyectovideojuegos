@@ -1,61 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
 
     public int maxHealth = 100; // Vida maxima
     public int currentHealth; // Vida actual
-    public float maxStamina = 100;
-    public float currentStamina;
     public int attackValue = 5; // Danio de ataque
-    public float attackRange = 10f; // Rango de ataque
+    public float attackRange = 5f; // Rango de ataque
+    public float jumpForce = 20f; // Fuerza del salto
     public HealthBar healthBar; // Barra de vida
-    public StaminaBar staminaBar;
-    private int staminaRegenRate = 10;
     public GameOverUIManager gameOverUIManager; // UI game over
+    public Terrain terrain; // Terreno
     public LayerMask enemyLayer; // Layer enemigo
-    public bool isTired = false;
-    public bool flagTired = false;
-    [SerializeField]
-    private bool canRegen = true;
+    private bool isGrounded = true; // Booleano que representa si esta en el piso
     private Rigidbody rb; // Rigidbody del jugador
-    [SerializeField]
-    private int playerLevel = 1;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI levelUpText;
-    [SerializeField]
-    private bool isSprinting = false;
-	public PlayerMovement playerMovement;
-	public PauseMenu pauseMenu;
-	
+
+    private bool fixSpawn = true;
+
     void Start()
     {
-        gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
+        // Manejo de spawn inicial al centro del terreno
+        Vector3 spawnPosition;
+        TerrainData terrainData = terrain.terrainData;
+        float centerX = terrainData.size.x / 2f;
+        float centerZ = terrainData.size.z / 2f;
+        spawnPosition = new Vector3(centerX, 0, centerZ);
+        float terrainHeight = terrain.SampleHeight(spawnPosition);
+        if (spawnPosition.y < terrainHeight)
+        {
+            spawnPosition.y = terrainHeight + 1f;
+        }
+        transform.position = spawnPosition;
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-        currentStamina = maxStamina;
-        staminaBar.SetMaxStamina(maxStamina);
         // Componente rigidbody
         rb = GetComponent<Rigidbody>();
-        levelUpText = transform.Find("PlayerUI").Find("Level").Find("LevelUpText").GetComponent<TextMeshProUGUI>();
-        levelUpText.gameObject.SetActive(false);
-        levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
-        levelText.text = "Level: " + playerLevel.ToString();
-        playerMovement = GetComponent<PlayerMovement>();
-        pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
+        // Bloquear el cursor en el centro
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
+        // Manejo de spawn inicial al centro del terreno
+        if (fixSpawn)
+        {
+            TerrainData terrainData = terrain.terrainData;
+            float centerX = terrainData.size.x / 2f;
+            float centerZ = terrainData.size.z / 2f;
+            float terrainHeight = terrain.SampleHeight(new Vector3(centerX, 0, centerZ));
+            Vector3 spawnPosition = new Vector3(centerX, terrainHeight + 1f, centerZ);
+            transform.position = spawnPosition;
+            fixSpawn = false;
+        }
         // Ataque si es que se presiona el click izquierdo del mouse
-        if (Input.GetMouseButtonDown(0) && (int) currentStamina > 0 && !pauseMenu.isPaused)
+        if (Input.GetMouseButtonDown(0))
         {
             Attack();
-            StaminaChange(-10);
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -63,43 +66,20 @@ public class PlayerScript : MonoBehaviour
             MeleeAttack();
         }
 
-        if (isTired && !canRegen && flagTired)
+        // Salto
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            flagTired = false;
-            StartCoroutine(tired(3f));
-        }
-        
-        if (Input.GetKey(KeyCode.LeftShift) && playerMovement.state != PlayerMovement.MovementState.Air && (int) currentStamina > 0 && (int) rb.velocity.magnitude != 0)
-        {
-            isSprinting = true;
-			canRegen = false;
-            StaminaRegen(-15);
-        }
-
-        if ((Input.GetKeyUp(KeyCode.LeftShift) && isSprinting) || ((playerMovement.state == PlayerMovement.MovementState.Air || (int) rb.velocity.magnitude == 0) && !isTired))
-        {
-            isSprinting = false;
-			canRegen = true;
+            Jump();
         }
 
         // Manejo de vida si la vida actual excede la maxima
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-
-        if ((int)currentStamina <= 0 && !isTired)
+        if (currentHealth > maxHealth)
         {
-            isSprinting = false;
-            canRegen = false;
-            isTired = true;
-            flagTired = true;
-            currentStamina = 0;
+            currentHealth = maxHealth;
         }
-
-        if (currentStamina < maxStamina && canRegen && !isTired) StaminaRegen(staminaRegenRate);
-
-        if (currentStamina >= maxStamina) currentStamina = maxStamina;            
     }
 
-    // Daño al jugador
+    // Da�o al jugador
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -112,18 +92,6 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void StaminaChange(float value)
-    {
-        currentStamina += value;
-        staminaBar.SetStamina(currentStamina);
-    }
-
-    public void StaminaRegen(float regenRate)
-    {
-        currentStamina += regenRate * Time.deltaTime;
-        staminaBar.SetStamina(currentStamina);
-    }
-
     // Recuperar vida
     public void Heal(int healing)
     {
@@ -131,12 +99,11 @@ public class PlayerScript : MonoBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
-    // Recuperar un porcentaje de vida y stamina
+    // Recuperar un porcentaje de vida
     public void HealP(float p)
     {
         int healing = (int)(maxHealth * p);
         Heal(healing);
-        StaminaChange(maxStamina * (p/2));
     }
 
     // Manejo de muerte del jugador
@@ -163,7 +130,7 @@ public class PlayerScript : MonoBehaviour
                 // Calcula la distancia entre el jugador y el enemigo
                 float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
                 //Debug.Log(distance);
-                // Si la distancia es menor o igual al rango de ataque, el enemigo es dañado
+                // Si la distancia es menor o igual al rango de ataque, el enemigo es daniado
                 if (distance <= attackRange)
                 {
                     EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
@@ -178,45 +145,19 @@ public class PlayerScript : MonoBehaviour
 
     }
 
-    IEnumerator tired(float seconds)
+    // Manejo de salto
+    void Jump()
     {
-        yield return new WaitForSeconds(seconds);
-        StaminaChange(maxStamina / 4);
-        canRegen = true;
-        isTired = false;
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+    // Checkear si esta en tierra
+    private void OnCollisionEnter()
+    {
+        isGrounded = true;
     }
 
-    public void SetCanRegen(bool value)
+    private void OnCollisionExit(Collision collision)
     {
-        canRegen = value;
-    }
-
-    public void LevelUp()
-    {
-        playerLevel++;
-        attackValue++;
-        maxHealth += 20;
-        maxStamina += 10;
-        staminaRegenRate += 2;
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-        currentStamina = maxStamina;
-        staminaBar.SetMaxStamina(maxStamina);
-        levelText.text = "Level: " + playerLevel.ToString();
-        StartCoroutine(LevelUpTextDisplay());
-    }
-
-    IEnumerator LevelUpTextDisplay()
-    {
-        levelUpText.gameObject.SetActive(true);
-        float endTime = Time.time + 2f;
-        while(Time.time < endTime)
-        {
-            levelUpText.text = "<color=orange>Level Up!!</color>";
-            yield return new WaitForSeconds(0.1f);
-            levelUpText.text = "<color=yellow>Level Up!!</color>";
-            yield return new WaitForSeconds(0.1f);
-        }
-        levelUpText.gameObject.SetActive(false);
+        if (collision.gameObject.layer == 6) isGrounded = false;
     }
 }
