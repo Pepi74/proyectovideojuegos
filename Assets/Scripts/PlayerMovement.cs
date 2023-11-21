@@ -48,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
 
     public PlayerScript playerScript;
 
+    public Animator animator;
+
     // Inicializacion de variables
     void Start()
     {
@@ -71,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
         if(canMove)
         {
             grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayerMask);
+            animator.SetBool("grounded", grounded);
 
             // Movimiento WASD o flechas
             MyInput();
@@ -100,6 +103,9 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+        
+        animator.SetFloat("z speed", verticalInput);
+        animator.SetFloat("x_speed", horizontalInput);
 
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
@@ -188,6 +194,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             state = MovementState.Air;
+            animator.SetFloat("y_speed", rb.velocity.y);
         }
     }
 
