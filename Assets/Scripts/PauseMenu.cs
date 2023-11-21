@@ -12,7 +12,7 @@ public class PauseMenu : MonoBehaviour
     private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
     public PlayerScript playerScript;
-    //public GameObject playerCrosshair;
+    //public GameObject playerCrosshair; // Por ahora el crosshair esta desactivado
 
     void Awake()
     {
