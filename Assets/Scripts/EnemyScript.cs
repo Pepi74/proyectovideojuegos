@@ -3,30 +3,26 @@ using TMPro;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed; // Velocidad de movimiento
-    [SerializeField]
-    private int maxHealth; // Vida maxima
+    public float moveSpeed; // Velocidad de movimiento
+    public int maxHealth; // Vida maxima
     [SerializeField]
     private int currentHealth; // Vida actual
-    [SerializeField]
-    private int attackValue; // Daño de ataque
-    private Transform player; // Posicion del jugador
+    public int attackValue; // Daño de ataque
+    public Transform player; // Posicion del jugador
 
     public float attackCooldown; // Enfriamiento de ataque (implementar mejor esta mecanica)
-    private float timeSinceLastAttack; // Tiempo desde el ultimo ataque
+    public float timeSinceLastAttack; // Tiempo desde el ultimo ataque
+	public bool isGrabbed = false;
 
     public float attackRange; // Rango de ataque
     
     public HealthBar healthBar; // Barra de vida
-    [SerializeField]
-    private int enemyLevel;
+    public int enemyLevel;
 
     public TextMeshProUGUI levelText;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
         attackCooldown = Random.Range(0.5f, 1.5f);
         attackRange = 3f;
     }
@@ -34,6 +30,7 @@ public class EnemyScript : MonoBehaviour
     void Awake()
     {
         levelText = transform.Find("EnemyUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
+		player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
     }
 
     void Update()
@@ -50,7 +47,8 @@ public class EnemyScript : MonoBehaviour
         timeSinceLastAttack += Time.deltaTime;
         if (timeSinceLastAttack >= attackCooldown)
         {
-            PerformEnemyMeleeAttack(); // Ataca
+            //PerformEnemyMeleeAttack(); // Ataca
+			Debug.Log("Ataca");
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
 
@@ -113,5 +111,10 @@ public class EnemyScript : MonoBehaviour
         }
 
         return enemyPosition;
+    }
+
+	public void grabbed()
+    {
+        isGrabbed = true;
     }
 }   

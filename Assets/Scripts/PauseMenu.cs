@@ -12,7 +12,7 @@ public class PauseMenu : MonoBehaviour
     private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
     public PlayerScript playerScript;
-    public GameObject playerCrosshair;
+    //public GameObject playerCrosshair;
 
     void Awake()
     {
@@ -50,7 +50,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         playerMovementScript.SetCanMove(true);
         playerScript.SetCanRegen(true);
-        playerCrosshair.SetActive(true);
+        //playerCrosshair.SetActive(true);
         interactionUI.SetActive(true);
     }
 
@@ -64,7 +64,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         playerMovementScript.SetCanMove(false);
         playerScript.SetCanRegen(false);
-        playerCrosshair.SetActive(false);
+        //playerCrosshair.SetActive(false);
         interactionUI.SetActive(false);
     }
 
@@ -91,6 +91,6 @@ public class PauseMenu : MonoBehaviour
     {
         playerMovementScript = spawnedPlayer.GetComponent<PlayerMovement>();
         playerScript = spawnedPlayer.GetComponent<PlayerScript>();
-        playerCrosshair = spawnedPlayer.transform.Find("PlayerUI").gameObject.transform.Find("Crosshair").gameObject;
+        //playerCrosshair = spawnedPlayer.transform.Find("PlayerUI").gameObject.transform.Find("Crosshair").gameObject;
     }
 }
