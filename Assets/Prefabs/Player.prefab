@@ -2004,6 +2004,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1547736577294850470}
     m_Modifications:
+    - target: {fileID: -3622510129137169287, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3622510129137169287, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 421365419151667792, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 421365419151667792, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+      propertyPath: terrainLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3175139107661817225, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
       propertyPath: m_Name
       value: ToungeTip
