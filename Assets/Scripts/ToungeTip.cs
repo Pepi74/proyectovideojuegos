@@ -14,8 +14,6 @@ public class ToungeTip : MonoBehaviour
     private Vector3 initialPosition;
     private Vector3 targetPosition;
     private bool returning = false;
-   
-
 
     private void Start()
     {

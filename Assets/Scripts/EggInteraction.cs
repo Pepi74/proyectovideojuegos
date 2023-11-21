@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
+// TODO: mejorar este script quizas?
 public class EggInteraction : MonoBehaviour
 {
     public float interactionRange = 2.0f; // Rango de interaccion de huevos
@@ -16,9 +17,21 @@ public class EggInteraction : MonoBehaviour
 
     public LayerMask eggLayer; // Layer del huevo
 
+    public int enemyLevel = 1;
+
+    public int forcedFinalResult; // Para testear cosas y forzar el resultado final
+
+    public bool forceResult;
     void Start()
     {
+        interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
+        interactionText.text = "Press <color=yellow>E</color> to interact";
         interactionText.gameObject.SetActive(false);
+        rollStartText = GameObject.Find("RollStartText").GetComponent<TextMeshProUGUI>();
+        rollStartText.text = "Rolling D20...";
+        rollStartText.gameObject.SetActive(false);
+        resultText = GameObject.Find("ResultText").GetComponent<TextMeshProUGUI>();
+        resultText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -54,7 +67,7 @@ public class EggInteraction : MonoBehaviour
         {
             HideInteractionText();
         }
-        
+
     }
 
     void ShowInteractionText()
@@ -75,7 +88,6 @@ public class EggInteraction : MonoBehaviour
 
         currentEgg = egg; // Asigna el huevo interactuado a la variable
 
-        rollStartText.text = "Rolling D20...";
         rollStartText.gameObject.SetActive(true); // Muestra el texto "Rolling D20..."
 
         // Corutina del manejo del d20
@@ -107,6 +119,7 @@ public class EggInteraction : MonoBehaviour
 
         // Resultado final.
         int finalResult = RollD20();
+        if (forceResult) finalResult = forcedFinalResult; // Para testear valores del 20 forzados
         string finalResultString = finalResult.ToString();
         // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
         string colorPrefix = "";
@@ -117,15 +130,17 @@ public class EggInteraction : MonoBehaviour
         bool healing = false;
         float healingValue = 0f;
         float speed = 0f;
+        bool playerLevelUp = false;
         // Manejo del roll igual a 1
         if (finalResult == 1)
         {
+            enemyLevel++;
             colorPrefix = "<color=red>";
             colorSuffix = "</color>";
             numberOfEnemies = 12;
-            attackValue = 5;
-            health = 20;
-            speed = 10f;
+            attackValue = 4 + (1 * enemyLevel);
+            health = 18 + (2 * enemyLevel);
+            speed = 9f;
         }
         // Manejo del roll entre 2 y 7
         if (finalResult > 1 && finalResult <= 7)
@@ -133,9 +148,9 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=orange>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
-            attackValue = 4;
-            health = 20 - finalResult / 2;
-            speed = 8f;
+            attackValue = 3 + (1 * enemyLevel);
+            health = (18 + (2 * enemyLevel)) - finalResult / 2;
+            speed = 7f;
         }
         // Manejo del roll entre 8 y 13
         if (finalResult > 7 && finalResult <= 13)
@@ -143,8 +158,8 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=yellow>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
-            attackValue = 3;
-            health = 15 - finalResult / 3;
+            attackValue = 2 + (1 * enemyLevel);
+            health = (13 + (2 * enemyLevel)) - finalResult / 3;
             speed = 6f;
         }
         // Manejo del roll entre 14 y 19
@@ -153,33 +168,38 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=blue>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
-            attackValue = 2;
-            health = 10 - finalResult / 4;
-            healing = true;
-            healingValue = 0.3f;
+            attackValue = 1 + (1 * enemyLevel);
+            health = (8 + (2 * enemyLevel)) - finalResult / 4;
             speed = 4f;
+            healing = true;
+            if (finalResult == 14) healingValue = 0.15f;
+            else if (finalResult == 15) healingValue = 0.20f;
+            else if (finalResult == 16) healingValue = 0.25f;
+            else if (finalResult == 17) healingValue = 0.30f;
+            else if (finalResult == 18) healingValue = 0.35f;
+            else if (finalResult == 19) healingValue = 0.40f;
         }
         // Manejo del roll igual a 20
         if (finalResult == 20)
         {
+            enemyLevel--;
+            if (enemyLevel < 1) enemyLevel = 1;
             colorPrefix = "<color=green>";
             colorSuffix = "</color>";
             numberOfEnemies = 1;
-            health = 5;
-            attackValue = 1;
-            healing = true;
-            healingValue = 1f;
+            health = 3 + (2 * enemyLevel);
+            attackValue = 1 * enemyLevel;
             speed = 2f;
+            playerLevelUp = true;
         }
         // Texto del resultado del d20
         textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
         // Spawn enemigos
         SpawnEnemy(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
         // Recupera vida al jugador si healing es true
-        if (healing)
-        {
-            playerScript.HealP(healingValue);
-        }
+        if (healing) playerScript.HealP(healingValue);
+
+        if (playerLevelUp) playerScript.LevelUp();
         yield return new WaitForSeconds(2.0f); // Muestra el resultado final por 2 segundos
 
         // Oculta el texto del roll start
@@ -221,7 +241,7 @@ public class EggInteraction : MonoBehaviour
 
             if (enemyScript != null)
             {
-                enemyScript.SetStats(health, attackValue, speed);
+                enemyScript.SetStats(health, attackValue, speed, enemyLevel);
             }
         }
     }

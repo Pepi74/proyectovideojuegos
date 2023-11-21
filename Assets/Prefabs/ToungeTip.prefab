@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4638795825994385880}
   - component: {fileID: 4814403356743689060}
   - component: {fileID: 5835600897445651166}
-  - component: {fileID: 277764439316417926}
+  - component: {fileID: 421365419151667792}
   - component: {fileID: -4755755723539337053}
   - component: {fileID: -3622510129137169287}
   m_Layer: 0
@@ -101,7 +101,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &277764439316417926
+--- !u!114 &421365419151667792
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3175139107661817225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39f54294e1ca448479498dc2594e3eae, type: 3}
+  m_Script: {fileID: 11500000, guid: f1a49556b5dd26b4b82ef510ed353c98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tipSpeed: 60
@@ -121,7 +121,7 @@ MonoBehaviour:
   lr: {fileID: -4755755723539337053}
   playerLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 512
 --- !u!120 &-4755755723539337053
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 713e4a407f805a448b172fd5951b7878, type: 2}
+  - {fileID: 2100000, guid: cb7450c323de8414b94388e302807b80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
