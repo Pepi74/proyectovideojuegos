@@ -615,17 +615,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 3951479197844572595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17e960246f14cfe4aa2ab872162b64d0, type: 3}
+  m_Script: {fileID: 11500000, guid: 98e9b7aea92d3514fa7c35b1f59ccee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canAttack: 1
   toungeBase: {fileID: 6656914717860634944}
-  cam: {fileID: 7002786963367852716}
-  toungeRange: 5
-  toungeDelayTime: 1
-  fireRate: 1
+  cam: {fileID: 0}
+  toungeRange: 0
+  toungeDelayTime: 0
+  fireRate: 0
   fireTimer: 0
-  toungePrefab: {fileID: 3175139107661817225, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
+  toungePrefab: {fileID: 0}
   meleeeRange: 0
   meleeDamage: 0
   meleeFireRate: 0
@@ -755,7 +755,7 @@ GameObject:
   - component: {fileID: 6832873739935731614}
   - component: {fileID: 8778755863440937562}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player-mechanics
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -871,10 +871,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f62836da686f54ca2b0023c89243ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  sprintMultiplier: 0
-  animator: {fileID: 8778755863440937562}
+  walkSpeed: 0
+  sprintSpeed: 0
   canMove: 0
+  orientation: {fileID: 0}
+  groundDrag: 0
+  playerHeight: 0
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpForce: 0
+  jumpCooldown: 0
+  airMultiplier: 0
+  maxSlopeAngle: 0
+  jumpKey: 32
+  sprintKey: 304
+  state: 0
+  playerScript: {fileID: 0}
+  animator: {fileID: 8778755863440937562}
 --- !u!114 &821449179892541629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,17 +903,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  maxStamina: 100
+  currentStamina: 0
   attackValue: 5
   attackRange: 5
-  jumpForce: 20
   healthBar: {fileID: 0}
+  staminaBar: {fileID: 0}
   gameOverUIManager: {fileID: 0}
-  terrain: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
-  animator: {fileID: 8778755863440937562}
-  isGrounded: 1
+  isTired: 0
+  flagTired: 0
+  canRegen: 1
+  playerLevel: 1
+  levelText: {fileID: 0}
+  levelUpText: {fileID: 0}
+  isSprinting: 0
+  playerMovement: {fileID: 0}
+  pauseMenu: {fileID: 0}
 --- !u!114 &6832873739935731614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -923,6 +945,9 @@ MonoBehaviour:
   eggLayer:
     serializedVersion: 2
     m_Bits: 0
+  enemyLevel: 1
+  forcedFinalResult: 0
+  forceResult: 0
 --- !u!95 &8778755863440937562
 Animator:
   serializedVersion: 5
