@@ -15,23 +15,27 @@ public class Tounge : MonoBehaviour
     private Transform toungeTip; //prefab de la punta de la lengua
     
     public float meleeeRange; //Rango de ataque melee
-    public int meleeDamage; // daño de melee
+    public int meleeDamage; // daÃ±o de melee
     public float meleeFireRate; // ratio de ataque melee
     public float meleeTimer; // variable de conteo para el ataque melee.
+
+    public PlayerScript playerScript;
 
     private void Start()
     {
         fireTimer = 0; //inicializar timer
+        cam = Camera.main.transform;
     }
 
     private void Update()
     {
         //Iniciar ataque a rango
-        if (Input.GetMouseButton(0) && fireTimer <= 0f && canAttack)
+        if (Input.GetMouseButton(0) && fireTimer <= 0f && canAttack && (int)playerScript.currentStamina > 0)
         {
             fireTimer = 1 / fireRate;
             meleeTimer = 0.3f;
             Attack();
+            playerScript.StaminaChange(-10);
         }
         //Iniciar ataque Melee
         if (Input.GetMouseButton(1) && meleeTimer <= 0f && canAttack)

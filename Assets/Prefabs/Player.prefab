@@ -1408,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1327847206746326552
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1674,7 +1674,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 713e4a407f805a448b172fd5951b7878, type: 2}
+  - {fileID: 2100000, guid: cb7450c323de8414b94388e302807b80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1768,15 +1768,16 @@ MonoBehaviour:
   canAttack: 1
   toungeBase: {fileID: 5506007117217912849}
   cam: {fileID: 0}
-  toungeRange: 0
-  toungeDelayTime: 0
-  fireRate: 0
+  toungeRange: 5
+  toungeDelayTime: 1
+  fireRate: 1
   fireTimer: 0
-  toungePrefab: {fileID: 0}
+  toungePrefab: {fileID: 3175139107661817225, guid: 142b7c7d6bbbb6a409153d2495a352bc, type: 3}
   meleeeRange: 0
   meleeDamage: 0
   meleeFireRate: 0
   meleeTimer: 0
+  playerScript: {fileID: 3688713152168778924}
 --- !u!1 &9187542356438552655
 GameObject:
   m_ObjectHideFlags: 0

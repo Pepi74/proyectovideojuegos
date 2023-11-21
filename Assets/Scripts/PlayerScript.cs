@@ -51,17 +51,6 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        // Ataque si es que se presiona el click izquierdo del mouse
-        if (Input.GetMouseButtonDown(0) && (int) currentStamina > 0 && !pauseMenu.isPaused)
-        {
-            Attack();
-            StaminaChange(-10);
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            MeleeAttack();
-        }
 
         if (isTired && !canRegen && flagTired)
         {
