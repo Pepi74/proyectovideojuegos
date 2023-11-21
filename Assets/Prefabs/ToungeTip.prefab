@@ -117,11 +117,11 @@ MonoBehaviour:
   maxDistance: 20
   returnSpeed: 70
   attackValue: 5
-  player: {fileID: 0}
   lr: {fileID: -4755755723539337053}
-  playerLayer:
+  playerTag: Player
+  terrainLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 64
 --- !u!120 &-4755755723539337053
 LineRenderer:
   m_ObjectHideFlags: 0

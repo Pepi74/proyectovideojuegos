@@ -7,24 +7,18 @@ public class ToungeTip : MonoBehaviour
     public float tipSpeed = 10.0f;
     public float maxDistance = 10.0f;
     public float returnSpeed = 15.0f;
-    public  int attackValue;
-    public Transform player;
+    public int attackValue;
     public LineRenderer lr;
-    public LayerMask playerLayer;
+    public string playerTag = "Player"; // Specify the player tag
+    public LayerMask terrainLayer;
     private Vector3 initialPosition;
-    private Vector3 targetPosition;
+    private Transform player; 
     private bool returning = false;
 
     private void Start()
     {
         initialPosition = transform.position;
-        targetPosition = initialPosition + transform.forward * maxDistance;
-        Collider[] colliders = Physics.OverlapSphere(initialPosition, maxDistance, playerLayer);
-        if (colliders.Length > 0)
-        {
-            player = colliders[0].transform;
-        }
-
+        FindPlayer();
     }
 
     private void Update()
@@ -62,12 +56,28 @@ public class ToungeTip : MonoBehaviour
             EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             enemyScript.TakeDamage(attackValue);
         }
-        if (!other.gameObject.CompareTag("Player") | other.gameObject.CompareTag("Terrain")) StartReturn();
+        if (!other.gameObject.CompareTag("Player") | IsTerrain(other.gameObject)) StartReturn();
     }
 
     private void StartReturn()
     {
         returning = true;
+    }
+    private void FindPlayer()
+    {
+        GameObject playerObject = GameObject.FindWithTag(playerTag);
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        else
+        {
+            Debug.LogWarning("Player not found initially.");
+        }
+    }
+    private bool IsTerrain(GameObject obj)
+    {
+        return ((1 << obj.layer) & terrainLayer) != 0;
     }
 }
 
