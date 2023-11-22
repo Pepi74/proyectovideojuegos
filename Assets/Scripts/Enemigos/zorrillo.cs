@@ -14,7 +14,7 @@ public class zorrillo : EnemyScript
     // Start is called before the first frame update
     void Start()
     {
-        SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+        //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
         controllerMid = this.gameObject.transform.GetChild(1);
         controllerUp = this.gameObject.transform.GetChild(2);
         controllerDown = this.gameObject.transform.GetChild(3);

@@ -41,6 +41,12 @@ public class Spawner : MonoBehaviour
             float randomZ = Random.Range(0f, terrainData.size.z - 2f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+            while (terrainHeight  + 0.5f < water.transform.position.y)
+            {
+                randomX = Random.Range(0f, terrainData.size.x - 2f);
+                randomZ = Random.Range(0f, terrainData.size.z - 2f);
+                terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+            }
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 0.5f, randomZ);
             Instantiate(eggPrefab, spawnPosition, Quaternion.identity);
@@ -103,12 +109,21 @@ public class Spawner : MonoBehaviour
 
         float randomPosX;
         float randomPosZ;
+        
+        int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
+        
+        RaycastHit hit;
 
         for (int i = 0; i < MaxPads; i++)
         {
             randomPosX = Random.Range(minX, maxX);
             randomPosZ = Random.Range(minZ, maxZ);
-            Instantiate(lilyPrefab, new Vector3(randomPosX, water.transform.position.y + 2f, randomPosZ),
+            while (Physics.Raycast(new Vector3(randomPosX, water.transform.position.y + 0.1f, randomPosZ), Vector3.up, out hit, Mathf.Infinity, terrainLayerMask))
+            {
+                randomPosX = Random.Range(minX, maxX);
+                randomPosZ = Random.Range(minZ, maxZ);
+            }
+            Instantiate(lilyPrefab, new Vector3(randomPosX, water.transform.position.y + 0.1f, randomPosZ),
                 Quaternion.identity);
         }
     }
@@ -137,7 +152,7 @@ public class Spawner : MonoBehaviour
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
-            Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 0.5f, randomZ);
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
             Instantiate(treePrefab, spawnPosition, Quaternion.identity);
         }
     }

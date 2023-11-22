@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2564030287353074541}
   - component: {fileID: 5780863024583466758}
   - component: {fileID: 2164149911528505469}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ZorrilloBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

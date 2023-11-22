@@ -7,24 +7,26 @@ public class ToungeTip : MonoBehaviour
     public float tipSpeed = 10.0f;
     public float maxDistance = 10.0f;
     public float returnSpeed = 15.0f;
-    public  int attackValue;
+    public int attackValue;
     public Transform player;
     public LineRenderer lr;
     public LayerMask playerLayer;
     private Vector3 initialPosition;
     private Vector3 targetPosition;
     private bool returning = false;
+    private int terrainLayerMask;
+    private RaycastHit hit;
 
     private void Start()
     {
         initialPosition = transform.position;
         targetPosition = initialPosition + transform.forward * maxDistance;
-        Collider[] colliders = Physics.OverlapSphere(initialPosition, maxDistance, playerLayer);
-        if (colliders.Length > 0)
-        {
-            player = colliders[0].transform;
-        }
+    }
 
+    void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
     }
 
     private void Update()
@@ -34,6 +36,11 @@ public class ToungeTip : MonoBehaviour
             // Mover la punta de la lengua hacia adelante
             transform.Translate(Vector3.forward * tipSpeed * Time.deltaTime);
             if (Vector3.Distance(initialPosition, transform.position) >= maxDistance)
+            {
+                StartReturn();
+            }
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit, 0.7f, terrainLayerMask))
             {
                 StartReturn();
             }
@@ -62,7 +69,7 @@ public class ToungeTip : MonoBehaviour
             EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             enemyScript.TakeDamage(attackValue);
         }
-        if (!other.gameObject.CompareTag("Player") | other.gameObject.CompareTag("Terrain")) StartReturn();
+        if (!other.gameObject.CompareTag("Player")) StartReturn();
     }
 
     private void StartReturn()

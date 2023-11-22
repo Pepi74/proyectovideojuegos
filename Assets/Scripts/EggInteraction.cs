@@ -22,6 +22,11 @@ public class EggInteraction : MonoBehaviour
     public int forcedFinalResult; // Para testear cosas y forzar el resultado final
 
     public bool forceResult;
+    public GameObject duckPrefab;
+    public GameObject crocPrefab;
+    public GameObject porcupinePrefab;
+    public GameObject skunkPrefab;
+
     void Start()
     {
         interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
@@ -235,14 +240,44 @@ public class EggInteraction : MonoBehaviour
                 enemyPosition.y = terrainHeight + 2f;
             }
 
-            GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
+            int rngEnemy = Random.Range(1, 101);
+
+            if (rngEnemy <= 25)
+            {
+                GameObject enemy = Instantiate(duckPrefab, enemyPosition, Quaternion.identity);
+                Pato pato = enemy.GetComponent<Pato>();
+                pato.SetStats(health, attackValue, speed, enemyLevel);
+            }
+            
+            else if (rngEnemy <= 50)
+            {
+                GameObject enemy = Instantiate(crocPrefab, enemyPosition, Quaternion.identity);
+                Cocodrilo cocodrilo = enemy.GetComponent<Cocodrilo>();
+                cocodrilo.SetStats(health, attackValue, speed, enemyLevel);
+            }
+            
+            else if (rngEnemy <= 75)
+            {
+                GameObject enemy = Instantiate(porcupinePrefab, enemyPosition, Quaternion.identity);
+                puercospin puercospin = enemy.GetComponent<puercospin>();
+                puercospin.SetStats(health, attackValue, speed, enemyLevel);
+            }
+            
+            else if (rngEnemy <= 100)
+            {
+                GameObject enemy = Instantiate(skunkPrefab, enemyPosition, Quaternion.identity);
+                zorrillo zorrillo = enemy.GetComponent<zorrillo>();
+                zorrillo.SetStats(health, attackValue, speed, enemyLevel);
+            }
+
+            /*GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
 
             EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
 
             if (enemyScript != null)
             {
                 enemyScript.SetStats(health, attackValue, speed, enemyLevel);
-            }
+            }*/
         }
     }
 }

@@ -58,11 +58,11 @@ public class Tounge : MonoBehaviour
         //iniciar el ataque
         GameObject bullet = Instantiate(toungePrefab, toungeBase.position, cam.rotation);
         //raycast para el ataque
-        RaycastHit hit;
+        /*RaycastHit hit;
         if (Physics.Raycast(cam.position,cam.forward,out hit,10f))
         {
             bullet.transform.LookAt(hit.point);
-        }
+        }*/
     }
 
     public void meleeAttack()
