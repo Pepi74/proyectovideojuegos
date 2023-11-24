@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
         
-        animator.SetFloat("z speed", verticalInput);
+        animator.SetFloat("z_speed", verticalInput);
         animator.SetFloat("x_speed", horizontalInput);
 
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
