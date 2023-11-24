@@ -76,7 +76,7 @@ public class Pato : EnemyScript
 
         } else if (other.collider.tag == "Terrain" && !attackFinish) {
             bool playerInRange = Physics.CheckSphere(transform.position, rangeStomp, whatIsPlayer);
-            playerScript.TakeDamage(attackValue);
+            if (playerInRange) playerScript.TakeDamage(attackValue);
             attackFinish = true;
         }
     }

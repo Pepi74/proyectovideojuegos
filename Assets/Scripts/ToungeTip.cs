@@ -8,19 +8,17 @@ public class ToungeTip : MonoBehaviour
     public float maxDistance = 10.0f;
     public float returnSpeed = 15.0f;
     public int attackValue;
-    public Transform player;
     public LineRenderer lr;
     public LayerMask playerLayer;
-    private Vector3 initialPosition;
-    private Vector3 targetPosition;
-    private bool returning = false;
     private int terrainLayerMask;
+    private Vector3 initialPosition;
+    public Transform player;
+    private bool returning = false;
     private RaycastHit hit;
 
     private void Start()
     {
         initialPosition = transform.position;
-        targetPosition = initialPosition + transform.forward * maxDistance;
     }
 
     void Awake()
@@ -40,7 +38,7 @@ public class ToungeTip : MonoBehaviour
                 StartReturn();
             }
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, 0.7f, terrainLayerMask))
+            if (Physics.SphereCast(transform.position, 0.6f, transform.forward, out hit, 0.1f, terrainLayerMask))
             {
                 StartReturn();
             }
