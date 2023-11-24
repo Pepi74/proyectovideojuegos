@@ -524,10 +524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d893ab5cb4ba9b568879e96f851702b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  maxHealth: 30
-  currentHealth: 30
-  attackValue: 8
+  moveSpeed: 0
+  maxHealth: 12
+  currentHealth: 0
+  attackValue: 3
   player: {fileID: 3960803417264006167}
   attackCooldown: 6
   timeSinceLastAttack: 0

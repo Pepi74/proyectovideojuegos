@@ -16,6 +16,8 @@ public class puercospin : EnemyScript
         controllerMid = this.gameObject.transform.GetChild(1);
         controllerUp = this.gameObject.transform.GetChild(2);
         controllerDown = this.gameObject.transform.GetChild(3);
+		attackCooldown = Random.Range(4.5f, 5.5f);
+		attackRange = 6f;
     }
 
     // Update is called once per frame

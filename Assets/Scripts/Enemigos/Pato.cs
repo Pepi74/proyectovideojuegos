@@ -19,6 +19,8 @@ public class Pato : EnemyScript
         cuerpo = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
         //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+		attackCooldown = Random.Range(5.5f, 6.5f);
+		attackRange = 2f;
     }
 
     // Update is called once per frame

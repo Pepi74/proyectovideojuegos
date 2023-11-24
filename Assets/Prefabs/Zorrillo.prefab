@@ -345,12 +345,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8222316bbc3393b4ebc8d2138b13bf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  maxHealth: 40
-  currentHealth: 40
+  moveSpeed: 0
+  maxHealth: 15
+  currentHealth: 0
   attackValue: 5
   player: {fileID: 0}
-  attackCooldown: 3
+  attackCooldown: 0
   timeSinceLastAttack: 0
   isGrabbed: 0
   attackRange: 9

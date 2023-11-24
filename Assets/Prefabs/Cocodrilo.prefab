@@ -207,10 +207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ce4c38c479c16b46ba252dd79f4f536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  maxHealth: 15
-  currentHealth: 15
-  attackValue: 4
+  moveSpeed: 0
+  maxHealth: 30
+  currentHealth: 0
+  attackValue: 6
   player: {fileID: 0}
   attackCooldown: 5
   timeSinceLastAttack: 0

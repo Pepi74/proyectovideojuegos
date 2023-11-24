@@ -964,7 +964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   maxHealth: 20
-  currentHealth: 20
+  currentHealth: 0
   attackValue: 2
   player: {fileID: 0}
   attackCooldown: 5

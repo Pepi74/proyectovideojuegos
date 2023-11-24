@@ -18,6 +18,8 @@ public class zorrillo : EnemyScript
         controllerMid = this.gameObject.transform.GetChild(1);
         controllerUp = this.gameObject.transform.GetChild(2);
         controllerDown = this.gameObject.transform.GetChild(3);
+		attackCooldown = Random.Range(2.5f, 3.5f);
+		attackRange = 9f;
     }
 
     // Update is called once per frame

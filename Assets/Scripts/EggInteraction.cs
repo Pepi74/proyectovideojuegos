@@ -143,8 +143,6 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=red>";
             colorSuffix = "</color>";
             numberOfEnemies = 12;
-            attackValue = 4 + (1 * enemyLevel);
-            health = 18 + (2 * enemyLevel);
             speed = 9f;
         }
         // Manejo del roll entre 2 y 7
@@ -153,8 +151,6 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=orange>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
-            attackValue = 3 + (1 * enemyLevel);
-            health = (18 + (2 * enemyLevel)) - finalResult / 2;
             speed = 7f;
         }
         // Manejo del roll entre 8 y 13
@@ -163,8 +159,6 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=yellow>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
-            attackValue = 2 + (1 * enemyLevel);
-            health = (13 + (2 * enemyLevel)) - finalResult / 3;
             speed = 6f;
         }
         // Manejo del roll entre 14 y 19
@@ -173,8 +167,6 @@ public class EggInteraction : MonoBehaviour
             colorPrefix = "<color=blue>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
-            attackValue = 1 + (1 * enemyLevel);
-            health = (8 + (2 * enemyLevel)) - finalResult / 4;
             speed = 4f;
             healing = true;
             if (finalResult == 14) healingValue = 0.15f;
@@ -187,20 +179,18 @@ public class EggInteraction : MonoBehaviour
         // Manejo del roll igual a 20
         if (finalResult == 20)
         {
-            enemyLevel--;
-            if (enemyLevel < 1) enemyLevel = 1;
             colorPrefix = "<color=green>";
             colorSuffix = "</color>";
             numberOfEnemies = 1;
-            health = 3 + (2 * enemyLevel);
-            attackValue = 1 * enemyLevel;
             speed = 2f;
             playerLevelUp = true;
         }
+		attackValue = 1 * enemyLevel;
+		health = (2 * enemyLevel) - (finalResult / 2);
         // Texto del resultado del d20
         textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
         // Spawn enemigos
-        SpawnEnemy(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
+        SpawnEnemies(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
         // Recupera vida al jugador si healing es true
         if (healing) playerScript.HealP(healingValue);
 
@@ -222,7 +212,7 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Manejo spawn de enemigos
-    void SpawnEnemy(Vector3 spawnPosition, int rollResult, int numberOfEnemies, int health, int attackValue, float speed)
+    void SpawnEnemies(Vector3 spawnPosition, int rollResult, int numberOfEnemies, int health, int attackValue, float speed)
     {
         float angleStep = 360f / numberOfEnemies;
 

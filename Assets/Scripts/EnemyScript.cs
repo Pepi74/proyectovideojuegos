@@ -21,12 +21,6 @@ public class EnemyScript : MonoBehaviour
 
     public TextMeshProUGUI levelText;
 
-    void Start()
-    {
-        attackCooldown = Random.Range(0.5f, 1.5f);
-        attackRange = 3f;
-    }
-
     void Awake()
     {
         levelText = transform.Find("EnemyUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
@@ -48,7 +42,7 @@ public class EnemyScript : MonoBehaviour
         if (timeSinceLastAttack >= attackCooldown)
         {
             //PerformEnemyMeleeAttack(); // Ataca
-			Debug.Log("Ataca");
+			//Debug.Log("Ataca");
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
 
@@ -62,9 +56,9 @@ public class EnemyScript : MonoBehaviour
     public void SetStats(int health, int attack, float speed, int level)
     {
         moveSpeed = speed;
-        maxHealth = health;
-        currentHealth = health;
-        attackValue = attack;
+        maxHealth += health;
+        currentHealth = maxHealth;
+        attackValue += attack;
         healthBar.SetMaxHealth(maxHealth);
         enemyLevel = level;
         levelText.text = "Lv: " + enemyLevel.ToString();
@@ -95,7 +89,7 @@ public class EnemyScript : MonoBehaviour
         // Verifica si el jugador esta dentro de su rango de ataque, de ser asi lo ataca
         if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
         {
-            playerScript.TakeDamage(attackValue); // El jugador es daniado
+            playerScript.TakeDamage(attackValue); // El jugador es dañado
         }
     }
 

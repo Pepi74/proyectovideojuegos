@@ -15,8 +15,10 @@ public class Cocodrilo : EnemyScript
     void Start()
     {
         cuerpo = GetComponent<Rigidbody>();
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
+        player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag		
         //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+		attackCooldown = Random.Range(4.5f,5.5f);
+		attackRange = 5f;
     }
 
     // Update is called once per frame
