@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -14,7 +12,7 @@ public class GameOverUIManager : MonoBehaviour
     public PauseMenu pauseMenu; // Referencia al script PauseMenu del menu de pausa
 
     // Inicializacion de botones
-    void Start()
+    private void Start()
     {
         restartButton.onClick.AddListener(RestartGame);
         exitButton.onClick.AddListener(ExitGame);
@@ -30,14 +28,14 @@ public class GameOverUIManager : MonoBehaviour
     }
 
     // Metodo para reiniciar el juego
-    public void RestartGame()
+    private static void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Metodo para salir del juego
-    public void ExitGame()
+    private static void ExitGame()
     {
         Application.Quit(); // Exit the game
     }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tounge : MonoBehaviour
@@ -24,7 +22,7 @@ public class Tounge : MonoBehaviour
     private void Start()
     {
         fireTimer = 0; //inicializar timer
-        cam = Camera.main.transform;
+        if (Camera.main != null) cam = Camera.main.transform;
     }
 
     private void Update()
@@ -42,7 +40,7 @@ public class Tounge : MonoBehaviour
         {
             fireTimer = 0.3f;
             meleeTimer = 1 / meleeFireRate;
-            meleeAttack();
+            MeleeAttack();
         }
 
         //Contador de ratio de fuego
@@ -65,15 +63,14 @@ public class Tounge : MonoBehaviour
         }*/
     }
 
-    public void meleeAttack()
+    // ReSharper disable Unity.PerformanceAnalysis
+    public void MeleeAttack()
     {
         foreach (Collider other in Physics.OverlapSphere(toungeBase.position, meleeeRange))
         {
-            if (other.gameObject.CompareTag("Enemy"))
-            {
-                EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
-                enemyScript.TakeDamage(meleeDamage);
-            }
+            if (!other.gameObject.CompareTag("Enemy")) continue;
+            EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
+            enemyScript.TakeDamage(meleeDamage);
         }
     }
 }

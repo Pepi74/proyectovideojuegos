@@ -12,7 +12,7 @@ public class EnemyScript : MonoBehaviour
 
     public float attackCooldown; // Enfriamiento de ataque (implementar mejor esta mecanica)
     public float timeSinceLastAttack; // Tiempo desde el ultimo ataque
-	public bool isGrabbed = false;
+	public bool isGrabbed;
 
     public float attackRange; // Rango de ataque
     
@@ -21,20 +21,20 @@ public class EnemyScript : MonoBehaviour
 
     public TextMeshProUGUI levelText;
 
-    void Awake()
+    private void Awake()
     {
         levelText = transform.Find("EnemyUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
 		player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
     }
 
-    void Update()
+    private void Update()
     {
         // Persigue al jugador
         if (player != null)
         {
             Vector3 playerPosition = player.position;
             Vector3 moveDirection = (playerPosition - transform.position).normalized;
-            transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+            transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));
         }
 
         // Manejo enfriamiento del ataque
@@ -72,13 +72,14 @@ public class EnemyScript : MonoBehaviour
     }
 
     // Muerte
-    void Die()
+    private void Die()
     {
         Destroy(gameObject);
     }
 
     // TODO: Mejorar esto!
     // Manejo ataque del enemigo
+/*
     void PerformEnemyMeleeAttack()
     {
         PlayerScript playerScript = player.GetComponent<PlayerScript>();
@@ -88,33 +89,31 @@ public class EnemyScript : MonoBehaviour
             playerScript.TakeDamage(attackValue); // El jugador es dañado
         }
     }
+*/
 
-	public void grabbed()
+	public void Grabbed()
     {
         isGrabbed = true;
     }
 
-    public void CheckDistance()
+    // ReSharper disable Unity.PerformanceAnalysis
+    protected void CheckDistance()
     {
         // Find all enemies in the scene
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        float minDistance = 5f;
+        const float minDistance = 5f;
 
         foreach (GameObject enemy in enemies)
         {
             // Check if the enemy is not the current one
-            if (enemy != gameObject)
-            {
-                // Calculate the distance between the current enemy and the other enemy
-                float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (enemy == gameObject) continue;
+            // Calculate the distance between the current enemy and the other enemy
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
-                // If the distance is less than the minimum distance, adjust the position
-                if (distance < minDistance)
-                {
-                    Vector3 direction = transform.position - enemy.transform.position;
-                    transform.Translate(direction.normalized * (minDistance - distance) * Time.deltaTime, Space.World);
-                }
-            }
+            // If the distance is less than the minimum distance, adjust the position
+            if (!(distance < minDistance)) continue;
+            Vector3 direction = transform.position - enemy.transform.position;
+            transform.Translate(direction.normalized * ((minDistance - distance) * Time.deltaTime), Space.World);
         }
     }
 }   

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ToungeTip : MonoBehaviour
@@ -13,15 +11,14 @@ public class ToungeTip : MonoBehaviour
     private int terrainLayerMask;
     private Vector3 initialPosition;
     public Transform player;
-    private bool returning = false;
-    private RaycastHit hit;
+    private bool returning;
 
     private void Start()
     {
         initialPosition = transform.position;
     }
 
-    void Awake()
+    private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
@@ -32,13 +29,13 @@ public class ToungeTip : MonoBehaviour
         if (!returning)
         {
             // Mover la punta de la lengua hacia adelante
-            transform.Translate(Vector3.forward * tipSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * (tipSpeed * Time.deltaTime));
             if (Vector3.Distance(initialPosition, transform.position) >= maxDistance)
             {
                 StartReturn();
             }
 
-            if (Physics.SphereCast(transform.position, 0.6f, transform.forward, out hit, 0.1f, terrainLayerMask))
+            if (Physics.SphereCast(transform.position, 0.6f, transform.forward, out _, 0.1f, terrainLayerMask))
             {
                 StartReturn();
             }
@@ -47,7 +44,6 @@ public class ToungeTip : MonoBehaviour
         {
             // Mover la punta de la lengua hacia el player
             transform.position = Vector3.MoveTowards(transform.position, player.position, returnSpeed * Time.deltaTime);
-            if (Vector3.Distance(player.position, transform.position) < 0.1f && returning)
             if (Vector3.Distance(player.position, transform.position) < 0.1f && returning)
             {
                 Destroy(gameObject);

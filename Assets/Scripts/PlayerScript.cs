@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -17,8 +16,8 @@ public class PlayerScript : MonoBehaviour
     private int staminaRegenRate = 10;
     public GameOverUIManager gameOverUIManager; // UI game over
     public LayerMask enemyLayer; // Layer enemigo
-    public bool isTired = false;
-    public bool flagTired = false;
+    public bool isTired;
+    public bool flagTired;
     [SerializeField]
     private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
@@ -27,11 +26,11 @@ public class PlayerScript : MonoBehaviour
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI levelUpText;
     [SerializeField]
-    private bool isSprinting = false;
+    private bool isSprinting;
 	public PlayerMovement playerMovement;
 	public PauseMenu pauseMenu;
-	
-    void Start()
+
+    private void Start()
     {
         gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
         // Inicializacion de vida
@@ -49,13 +48,13 @@ public class PlayerScript : MonoBehaviour
         pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
     }
 
-    void Update()
+    private void Update()
     {
 
         if (isTired && !canRegen && flagTired)
         {
             flagTired = false;
-            StartCoroutine(tired(3f));
+            StartCoroutine(Tired(3f));
         }
         
         if (Input.GetKey(KeyCode.LeftShift) && playerMovement.state != PlayerMovement.MovementState.Air && (int) currentStamina > 0 && (int) rb.velocity.magnitude != 0)
@@ -107,14 +106,14 @@ public class PlayerScript : MonoBehaviour
         staminaBar.SetStamina(currentStamina);
     }
 
-    public void StaminaRegen(float regenRate)
+    private void StaminaRegen(float regenRate)
     {
         currentStamina += regenRate * Time.deltaTime;
         staminaBar.SetStamina(currentStamina);
     }
 
     // Recuperar vida
-    public void Heal(int healing)
+    private void Heal(int healing)
     {
         currentHealth += healing;
         healthBar.SetHealth(currentHealth);
@@ -129,7 +128,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     // Manejo de muerte del jugador
-    void Die()
+    private void Die()
     {
         gameOverUIManager.ShowGameOverScreen();
         Destroy(gameObject);
@@ -137,7 +136,8 @@ public class PlayerScript : MonoBehaviour
     }
 
     // Manejo de ataque
-    void Attack()
+/*
+    private void Attack()
     {
         // Raycast desde el centro de la camara hacia donde se apunta.
         Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
@@ -161,13 +161,16 @@ public class PlayerScript : MonoBehaviour
             }
         }
     }
+*/
 
-    void MeleeAttack()
+/*
+    private void MeleeAttack()
     {
 
     }
+*/
 
-    IEnumerator tired(float seconds)
+    private IEnumerator Tired(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         StaminaChange(maxStamina / 4);
@@ -195,7 +198,7 @@ public class PlayerScript : MonoBehaviour
         StartCoroutine(LevelUpTextDisplay());
     }
 
-    IEnumerator LevelUpTextDisplay()
+    private IEnumerator LevelUpTextDisplay()
     {
         levelUpText.gameObject.SetActive(true);
         float endTime = Time.time + 2f;

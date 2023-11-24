@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,8 +6,8 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI; // Menu de pausa
     public GameObject interactionUI; // UI de interaccion
 
-    public bool isPaused = false; // Booleano que indica si el juego esta en pausa
-    private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
+    public bool isPaused; // Booleano que indica si el juego esta en pausa
+    private bool isGameOverMenuActive; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
     public PlayerScript playerScript;
     //public GameObject playerCrosshair; // Por ahora el crosshair esta desactivado
@@ -55,7 +53,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     // Pausar juego
-    public void Pause()
+    private void Pause()
     {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;

@@ -1244,4 +1244,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1410130056280179913}
-  HPText: {fileID: 821936235522264477}
+  hpText: {fileID: 821936235522264477}

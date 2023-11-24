@@ -1,4 +1,5 @@
 using System.Collections;
+using Enemigos;
 using UnityEngine;
 using TMPro;
 
@@ -13,7 +14,7 @@ public class EggInteraction : MonoBehaviour
     public GameObject currentEgg; // Huevo que se interactua
     public PlayerScript playerScript; // Componente PlayerScript del jugador
     [SerializeField]
-    private bool interacting = false; // Booleano que indica si se esta interactuando o no
+    private bool interacting; // Booleano que indica si se esta interactuando o no
 
     public LayerMask eggLayer; // Layer del huevo
 
@@ -27,8 +28,9 @@ public class EggInteraction : MonoBehaviour
     public GameObject porcupinePrefab;
     public GameObject skunkPrefab;
 
-    void Start()
+    private void Start()
     {
+        interacting = false;
         interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
         interactionText.text = "Press <color=yellow>E</color> to interact";
         interactionText.gameObject.SetActive(false);
@@ -39,7 +41,7 @@ public class EggInteraction : MonoBehaviour
         resultText.gameObject.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
         //Spherecast que detecta huevos cercanos al jugador
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRange, eggLayer);
@@ -47,16 +49,16 @@ public class EggInteraction : MonoBehaviour
         if (hitColliders.Length > 0)
         {
 
-            foreach (Collider collider in hitColliders)
+            foreach (Collider collider1 in hitColliders)
             {
-                if (collider.CompareTag("Egg") && !interacting)
+                if (collider1.CompareTag("Egg") && !interacting)
                 {
                     ShowInteractionText();
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         // Cuando se presiona "E", se maneja la interaccion
                         interacting = true;
-                        HandleInteraction(collider.gameObject);
+                        HandleInteraction(collider1.gameObject);
                     }
                 }
 
@@ -75,19 +77,19 @@ public class EggInteraction : MonoBehaviour
 
     }
 
-    void ShowInteractionText()
+    private void ShowInteractionText()
     {
         // Muestra texto interaccion
         interactionText.gameObject.SetActive(true);
     }
 
-    void HideInteractionText()
+    private void HideInteractionText()
     {
         // Oculta texto interaccion
         interactionText.gameObject.SetActive(false);
     }
 
-    void HandleInteraction(GameObject egg)
+    private void HandleInteraction(GameObject egg)
     {
         // Manejo de interaccion
 
@@ -100,13 +102,13 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Numero entero random entre 1 y 20
-    int RollD20()
+    private static int RollD20()
     {
         return Random.Range(1, 21);
     }
 
     // Manejo del d20 y resultados dependiendo del roll del d20
-    IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
+    private IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
     {
         int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
@@ -130,8 +132,6 @@ public class EggInteraction : MonoBehaviour
         string colorPrefix = "";
         string colorSuffix = "";
         int numberOfEnemies = 0;
-        int attackValue = 0;
-        int health = 0;
         bool healing = false;
         float healingValue = 0f;
         float speed = 0f;
@@ -146,7 +146,7 @@ public class EggInteraction : MonoBehaviour
             speed = 9f;
         }
         // Manejo del roll entre 2 y 7
-        if (finalResult > 1 && finalResult <= 7)
+        if (finalResult is > 1 and <= 7)
         {
             colorPrefix = "<color=orange>";
             colorSuffix = "</color>";
@@ -154,7 +154,7 @@ public class EggInteraction : MonoBehaviour
             speed = 7f;
         }
         // Manejo del roll entre 8 y 13
-        if (finalResult > 7 && finalResult <= 13)
+        if (finalResult is > 7 and <= 13)
         {
             colorPrefix = "<color=yellow>";
             colorSuffix = "</color>";
@@ -162,19 +162,22 @@ public class EggInteraction : MonoBehaviour
             speed = 6f;
         }
         // Manejo del roll entre 14 y 19
-        if (finalResult > 13 && finalResult <= 19)
+        if (finalResult is > 13 and <= 19)
         {
             colorPrefix = "<color=blue>";
             colorSuffix = "</color>";
             numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
             speed = 4f;
             healing = true;
-            if (finalResult == 14) healingValue = 0.15f;
-            else if (finalResult == 15) healingValue = 0.20f;
-            else if (finalResult == 16) healingValue = 0.25f;
-            else if (finalResult == 17) healingValue = 0.30f;
-            else if (finalResult == 18) healingValue = 0.35f;
-            else if (finalResult == 19) healingValue = 0.40f;
+            healingValue = finalResult switch
+            {
+                14 => 0.15f,
+                15 => 0.20f,
+                16 => 0.25f,
+                17 => 0.30f,
+                18 => 0.35f,
+                _ => 0.40f
+            };
         }
         // Manejo del roll igual a 20
         if (finalResult == 20)
@@ -185,12 +188,12 @@ public class EggInteraction : MonoBehaviour
             speed = 2f;
             playerLevelUp = true;
         }
-		attackValue = 1 * enemyLevel;
-		health = (2 * enemyLevel) - (finalResult / 2);
+		int attackValue = 1 * enemyLevel;
+		int health = (2 * enemyLevel) - (finalResult / 2);
         // Texto del resultado del d20
         textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
         // Spawn enemigos
-        SpawnEnemies(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
+        SpawnEnemies(egg.transform.position, numberOfEnemies, health, attackValue, speed);
         // Recupera vida al jugador si healing es true
         if (healing) playerScript.HealP(healingValue);
 
@@ -212,7 +215,7 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Manejo spawn de enemigos
-    void SpawnEnemies(Vector3 spawnPosition, int rollResult, int numberOfEnemies, int health, int attackValue, float speed)
+    private void SpawnEnemies(Vector3 spawnPosition, int numberOfEnemies, int health, int attackValue, float speed)
     {
         float angleStep = 360f / numberOfEnemies;
 
@@ -223,8 +226,7 @@ public class EggInteraction : MonoBehaviour
             float angle = i * angleStep;
             Vector3 offset = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * 2.0f;
             Vector3 enemyPosition = spawnPosition + offset;
-            RaycastHit hit;
-            if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
+            if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out var hit, Mathf.Infinity, terrainLayerMask))
             {
                 float terrainHeight = hit.point.y;
                 enemyPosition.y = terrainHeight + 2f;
@@ -249,14 +251,14 @@ public class EggInteraction : MonoBehaviour
             else if (rngEnemy <= 75)
             {
                 GameObject enemy = Instantiate(porcupinePrefab, enemyPosition, Quaternion.identity);
-                puercospin puercospin = enemy.GetComponent<puercospin>();
+                Puercospin puercospin = enemy.GetComponent<Puercospin>();
                 puercospin.SetStats(health, attackValue, speed, enemyLevel);
             }
             
             else if (rngEnemy <= 100)
             {
                 GameObject enemy = Instantiate(skunkPrefab, enemyPosition, Quaternion.identity);
-                zorrillo zorrillo = enemy.GetComponent<zorrillo>();
+                Zorrillo zorrillo = enemy.GetComponent<Zorrillo>();
                 zorrillo.SetStats(health, attackValue, speed, enemyLevel);
             }
 
