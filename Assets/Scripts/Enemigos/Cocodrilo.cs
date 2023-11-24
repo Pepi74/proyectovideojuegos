@@ -31,7 +31,8 @@ public class Cocodrilo : EnemyScript
 
         if (!playerInRange) chase();
         if (timeSinceLastAttack >= attackCooldown && (playerInRange && attackFinish)) attack(); // Ataca
-    }
+    	CheckDistance();
+	}
 
     void chase()
     {

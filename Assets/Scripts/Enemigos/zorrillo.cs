@@ -39,7 +39,7 @@ public class zorrillo : EnemyScript
             if (playerInRange) attack();
         }
 
-        
+        CheckDistance();
 
 
     }

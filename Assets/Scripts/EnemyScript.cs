@@ -45,10 +45,6 @@ public class EnemyScript : MonoBehaviour
 			//Debug.Log("Ataca");
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
-
-        // Ajusta su valor Y para estar arriba del terreno (como flotando)
-        Vector3 enemyPosition = transform.position;
-        transform.position = checkHeight(enemyPosition);
         
     }
 
@@ -93,22 +89,32 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    // Manejo de la componente Y de la posicion del enemigo
-    Vector3 checkHeight(Vector3 enemyPosition)
-    {
-        int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
-        RaycastHit hit;
-        if(Physics.Raycast(enemyPosition, Vector3.down, out hit, Mathf.Infinity, terrainLayerMask))
-        {
-            float terrainHeight = hit.point.y;
-            if (enemyPosition.y - terrainHeight <= 2) enemyPosition.y = terrainHeight + 2f;            
-        }
-
-        return enemyPosition;
-    }
-
 	public void grabbed()
     {
         isGrabbed = true;
+    }
+
+    public void CheckDistance()
+    {
+        // Find all enemies in the scene
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = 5f;
+
+        foreach (GameObject enemy in enemies)
+        {
+            // Check if the enemy is not the current one
+            if (enemy != gameObject)
+            {
+                // Calculate the distance between the current enemy and the other enemy
+                float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+                // If the distance is less than the minimum distance, adjust the position
+                if (distance < minDistance)
+                {
+                    Vector3 direction = transform.position - enemy.transform.position;
+                    transform.Translate(direction.normalized * (minDistance - distance) * Time.deltaTime, Space.World);
+                }
+            }
+        }
     }
 }   

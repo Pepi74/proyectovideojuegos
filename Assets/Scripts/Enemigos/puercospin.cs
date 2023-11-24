@@ -27,7 +27,7 @@ public class puercospin : EnemyScript
 
         if (!playerInRange) chase();
         if (playerInRange) attack();
-
+		CheckDistance();
 
     }
     // Emitter amount cantidad de emisores

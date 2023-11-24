@@ -33,7 +33,8 @@ public class Pato : EnemyScript
 
         if (!playerInRange) chase();
         if (timeSinceLastAttack >= attackCooldown && (playerInRange || attackFinish)) attack(); // Ataca
-    }
+    	CheckDistance();
+	}
 
     void chase()
     {
