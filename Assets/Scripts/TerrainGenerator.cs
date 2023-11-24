@@ -17,11 +17,9 @@ public class TerrainGenerator : MonoBehaviour
     {
         offsetX = Random.Range(0f, 9999f);
         offsetY = Random.Range(0f, 9999f);
-        Terrain terrain = GetComponent<Terrain>();
-        terrain.terrainData = GenerateTerrain(terrain.terrainData);
     }
 
-    private TerrainData GenerateTerrain (TerrainData terrainData)
+    public TerrainData GenerateTerrain (TerrainData terrainData)
     {
         terrainData.heightmapResolution = width + 1;
         terrainData.size = new Vector3(width, depth, height);

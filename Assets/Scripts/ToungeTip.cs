@@ -21,6 +21,7 @@ public class ToungeTip : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        attackValue = player.GetComponent<PlayerScript>().attackValue;
         terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
     }
 

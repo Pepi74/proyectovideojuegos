@@ -9,7 +9,7 @@ public class PlayerScript : MonoBehaviour
     public int currentHealth; // Vida actual
     public float maxStamina = 100;
     public float currentStamina;
-    public int attackValue = 5; // Danio de ataque
+    public int attackValue; // Daño de ataque
     public float attackRange = 10f; // Rango de ataque
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;

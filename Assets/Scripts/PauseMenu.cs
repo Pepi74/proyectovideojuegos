@@ -12,29 +12,25 @@ public class PauseMenu : MonoBehaviour
     public PlayerScript playerScript;
     //public GameObject playerCrosshair; // Por ahora el crosshair esta desactivado
 
-    void Awake()
+    private void Awake()
     {
         Spawner spawner = FindObjectOfType<Spawner>();
         spawner.onPlayerSpawned.AddListener(SetPlayerReference);
     }
 
-    void Update()
+    private void Update()
     {
         // Si el menu de gameover no esta activo, pasa esto
-        if(!isGameOverMenuActive)
+        if (isGameOverMenuActive) return;
+        // Presionando "Esc" abre el menu de pausa
+        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+        if (isPaused)
         {
-            // Presionando "Esc" abre el menu de pausa
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (isPaused)
-                {
-                    Resume();
-                }
-                else
-                {
-                    Pause();
-                }
-            }
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
 
@@ -85,7 +81,7 @@ public class PauseMenu : MonoBehaviour
         isGameOverMenuActive = isActive;
     }
 
-    void SetPlayerReference(GameObject spawnedPlayer)
+    private void SetPlayerReference(GameObject spawnedPlayer)
     {
         playerMovementScript = spawnedPlayer.GetComponent<PlayerMovement>();
         playerScript = spawnedPlayer.GetComponent<PlayerScript>();

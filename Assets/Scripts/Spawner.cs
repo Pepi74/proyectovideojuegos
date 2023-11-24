@@ -11,27 +11,18 @@ public class Spawner : MonoBehaviour
     public readonly PlayerSpawnEvent onPlayerSpawned = new PlayerSpawnEvent();
     public GameObject boundaryPrefab;
 
-    public int minSpawn = 100; // Cantidad minima de huevos que spawnearan
-    public int maxSpawn = 200; // Cantidad maxima de huevos que spawnearan
+    public int minSpawn; // Cantidad minima de huevos que spawnearan
+    public int maxSpawn; // Cantidad maxima de huevos que spawnearan
 
     public GameObject water;
     public GameObject lilyPrefab;
-    public int maxPads = 200;
+    public int maxPads;
 
     public GameObject treePrefab; // The tree prefab you want to add
-    public int numberOfTrees = 100;
+    public int numberOfTrees;
 
     // Manejo de spawn de huevos alrededor del terreno y player en el centro del terreno
-    private void Start()
-    {
-        SpawnBoundaries();
-        SpawnPlayer();
-        SpawnEggs();
-        SpawnLilyPads();
-        SpawnTrees();
-    }
-
-    private void SpawnEggs()
+    public void SpawnEggs()
     {
         TerrainData terrainData = terrain.terrainData;
 
@@ -53,7 +44,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnPlayer()
+    public void SpawnPlayer()
     {
         TerrainData terrainData = terrain.terrainData;
 
@@ -65,7 +56,7 @@ public class Spawner : MonoBehaviour
         onPlayerSpawned.Invoke(player);
     }
 
-    private void SpawnBoundaries()
+    public void SpawnBoundaries()
     {
         var data = terrain.terrainData;
         Vector3 terrainSize = data.size;
@@ -93,7 +84,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnLilyPads()
+    public void SpawnLilyPads()
     {
         Renderer waterRenderer = water.GetComponent<Renderer>();
         // Get the bounds of the water in world space
@@ -121,7 +112,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnTrees()
+    public void SpawnTrees()
     {
         if (terrain == null || treePrefab == null)
         {
