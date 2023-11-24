@@ -54,12 +54,10 @@ public class EggInteraction : MonoBehaviour
                 if (collider1.CompareTag("Egg") && !interacting)
                 {
                     ShowInteractionText();
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        // Cuando se presiona "E", se maneja la interaccion
-                        interacting = true;
-                        HandleInteraction(collider1.gameObject);
-                    }
+                    if (!Input.GetKeyDown(KeyCode.E)) continue;
+                    // Cuando se presiona "E", se maneja la interaccion
+                    interacting = true;
+                    HandleInteraction(collider1.gameObject);
                 }
 
                 else
@@ -108,9 +106,10 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Manejo del d20 y resultados dependiendo del roll del d20
+    // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
     {
-        int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
+        const int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
         TextMeshProUGUI textMeshProText = resultText;
         TextMeshProUGUI rollStartTextMeshPro = rollStartText;
@@ -129,69 +128,61 @@ public class EggInteraction : MonoBehaviour
         if (forceResult) finalResult = forcedFinalResult; // Para testear valores del 20 forzados
         string finalResultString = finalResult.ToString();
         // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
-        string colorPrefix = "";
-        string colorSuffix = "";
         int numberOfEnemies = 0;
         bool healing = false;
         float healingValue = 0f;
         float speed = 0f;
         bool playerLevelUp = false;
-        // Manejo del roll igual a 1
-        if (finalResult == 1)
+        switch (finalResult)
         {
-            enemyLevel++;
-            colorPrefix = "<color=red>";
-            colorSuffix = "</color>";
-            numberOfEnemies = 12;
-            speed = 9f;
+            // Manejo del roll igual a 1
+            case 1:
+                enemyLevel++;
+                textMeshProText.color = Color.red;
+                numberOfEnemies = 12;
+                speed = 9f;
+                break;
+            // Manejo del roll entre 2 y 7
+            case > 1 and <= 7:
+                textMeshProText.color = new Color(1.0f, 0.44f, 0.0f);
+                numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
+                speed = 7f;
+                break;
+            // Manejo del roll entre 8 y 13
+            case > 7 and <= 13:
+                textMeshProText.color = Color.yellow;
+                numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
+                speed = 6f;
+                break;
+            // Manejo del roll entre 14 y 19
+            case > 13 and <= 19:
+                textMeshProText.color = Color.blue;
+                numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
+                speed = 4f;
+                healing = true;
+                healingValue = finalResult switch
+                {
+                    14 => 0.15f,
+                    15 => 0.20f,
+                    16 => 0.25f,
+                    17 => 0.30f,
+                    18 => 0.35f,
+                    _ => 0.40f
+                };
+                break;
+            // Manejo del roll igual a 20
+            case 20:
+                textMeshProText.color = Color.green;
+                numberOfEnemies = 1;
+                speed = 2f;
+                playerLevelUp = true;
+                break;
         }
-        // Manejo del roll entre 2 y 7
-        if (finalResult is > 1 and <= 7)
-        {
-            colorPrefix = "<color=orange>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
-            speed = 7f;
-        }
-        // Manejo del roll entre 8 y 13
-        if (finalResult is > 7 and <= 13)
-        {
-            colorPrefix = "<color=yellow>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
-            speed = 6f;
-        }
-        // Manejo del roll entre 14 y 19
-        if (finalResult is > 13 and <= 19)
-        {
-            colorPrefix = "<color=blue>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
-            speed = 4f;
-            healing = true;
-            healingValue = finalResult switch
-            {
-                14 => 0.15f,
-                15 => 0.20f,
-                16 => 0.25f,
-                17 => 0.30f,
-                18 => 0.35f,
-                _ => 0.40f
-            };
-        }
-        // Manejo del roll igual a 20
-        if (finalResult == 20)
-        {
-            colorPrefix = "<color=green>";
-            colorSuffix = "</color>";
-            numberOfEnemies = 1;
-            speed = 2f;
-            playerLevelUp = true;
-        }
-		int attackValue = 1 * enemyLevel;
+
+        int attackValue = 1 * enemyLevel;
 		int health = (2 * enemyLevel) - (finalResult / 2);
         // Texto del resultado del d20
-        textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
+        textMeshProText.text = finalResultString;
         // Spawn enemigos
         SpawnEnemies(egg.transform.position, numberOfEnemies, health, attackValue, speed);
         // Recupera vida al jugador si healing es true
@@ -234,42 +225,37 @@ public class EggInteraction : MonoBehaviour
 
             int rngEnemy = Random.Range(1, 101);
 
-            if (rngEnemy <= 25)
+            switch (rngEnemy)
             {
-                GameObject enemy = Instantiate(duckPrefab, enemyPosition, Quaternion.identity);
-                Pato pato = enemy.GetComponent<Pato>();
-                pato.SetStats(health, attackValue, speed, enemyLevel);
+                case <= 25:
+                {
+                    GameObject enemy = Instantiate(duckPrefab, enemyPosition, Quaternion.identity);
+                    Pato pato = enemy.GetComponent<Pato>();
+                    pato.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 50:
+                {
+                    GameObject enemy = Instantiate(crocPrefab, enemyPosition, Quaternion.identity);
+                    Cocodrilo cocodrilo = enemy.GetComponent<Cocodrilo>();
+                    cocodrilo.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 75:
+                {
+                    GameObject enemy = Instantiate(porcupinePrefab, enemyPosition, Quaternion.identity);
+                    Puercospin puercospin = enemy.GetComponent<Puercospin>();
+                    puercospin.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 100:
+                {
+                    GameObject enemy = Instantiate(skunkPrefab, enemyPosition, Quaternion.identity);
+                    Zorrillo zorrillo = enemy.GetComponent<Zorrillo>();
+                    zorrillo.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
             }
-            
-            else if (rngEnemy <= 50)
-            {
-                GameObject enemy = Instantiate(crocPrefab, enemyPosition, Quaternion.identity);
-                Cocodrilo cocodrilo = enemy.GetComponent<Cocodrilo>();
-                cocodrilo.SetStats(health, attackValue, speed, enemyLevel);
-            }
-            
-            else if (rngEnemy <= 75)
-            {
-                GameObject enemy = Instantiate(porcupinePrefab, enemyPosition, Quaternion.identity);
-                Puercospin puercospin = enemy.GetComponent<Puercospin>();
-                puercospin.SetStats(health, attackValue, speed, enemyLevel);
-            }
-            
-            else if (rngEnemy <= 100)
-            {
-                GameObject enemy = Instantiate(skunkPrefab, enemyPosition, Quaternion.identity);
-                Zorrillo zorrillo = enemy.GetComponent<Zorrillo>();
-                zorrillo.SetStats(health, attackValue, speed, enemyLevel);
-            }
-
-            /*GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
-
-            EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
-
-            if (enemyScript != null)
-            {
-                enemyScript.SetStats(health, attackValue, speed, enemyLevel);
-            }*/
         }
     }
 }
