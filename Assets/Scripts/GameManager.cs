@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     public bool reSpawning;
     public GameObject player;
     public EggInteraction eggInteraction;
+    public TextMeshProUGUI roundText;
 
     private void Start()
     {
@@ -22,6 +24,9 @@ public class GameManager : MonoBehaviour
         spawner.SpawnTrees();
         player = GameObject.FindGameObjectWithTag("Player");
         eggInteraction = player.GetComponent<EggInteraction>();
+        roundText = transform.Find("RoundUI").Find("RoundText").GetComponent<TextMeshProUGUI>();
+        roundText.color = Color.red;
+        roundText.text = "Round: " + roundNumber;
     }
 
     private void Update()
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
         ReSpawnObjects();
         reSpawning = false;
         roundNumber++;
+        roundText.text = "Round: " + roundNumber;
         eggInteraction.enemyLevel++;
     }
 

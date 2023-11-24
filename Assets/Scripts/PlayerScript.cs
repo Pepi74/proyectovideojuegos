@@ -29,6 +29,7 @@ public class PlayerScript : MonoBehaviour
     private bool isSprinting;
 	public PlayerMovement playerMovement;
 	public PauseMenu pauseMenu;
+    public GameObject roundUI;
 
     private void Start()
     {
@@ -46,6 +47,7 @@ public class PlayerScript : MonoBehaviour
         levelText.text = "Level: " + playerLevel.ToString();
         playerMovement = GetComponent<PlayerMovement>();
         pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
+        roundUI = GameObject.Find("RoundUI");
     }
 
     private void Update()
@@ -131,6 +133,7 @@ public class PlayerScript : MonoBehaviour
     private void Die()
     {
         gameOverUIManager.ShowGameOverScreen();
+        roundUI.SetActive(false);
         Destroy(gameObject);
         Cursor.lockState = CursorLockMode.None;
     }
