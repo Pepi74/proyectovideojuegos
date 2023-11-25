@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI roundText;
     public PlayerScript playerScript;
     public UpgradeManager upgradeManager;
+    public TextMeshProUGUI nextRoundText;
 
     private void Start()
     {
@@ -33,12 +34,15 @@ public class GameManager : MonoBehaviour
         roundText.text = "Round: " + roundNumber;
         upgradeManager = GameObject.Find("UI").GetComponent<UpgradeManager>();
         upgradeManager.RandomizeUpgrades();
+        nextRoundText = GameObject.Find("NextRoundText").GetComponent<TextMeshProUGUI>();
+        nextRoundText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
         if (!AreAllEnemiesAndEggsDestroyed() || reSpawning) return;
         reSpawning = true;
+        StartCoroutine(StartRoundCountdown(5f));
         StartCoroutine(NextRound());
     }
     
@@ -104,5 +108,25 @@ public class GameManager : MonoBehaviour
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
+    }
+    
+    private IEnumerator StartRoundCountdown(float countdownDuration)
+    {
+        float timer = countdownDuration;
+        nextRoundText.gameObject.SetActive(true);
+
+        while (timer > 0f)
+        {
+            UpdateRoundCountdownText(timer);
+            yield return new WaitForSeconds(1f);  // Wait for one second
+            timer--;
+        }
+        
+        nextRoundText.gameObject.SetActive(false);
+    }
+    
+    private void UpdateRoundCountdownText(float timeRemaining)
+    {
+        nextRoundText.text = "Next round in: " + ((int) timeRemaining);
     }
 }
