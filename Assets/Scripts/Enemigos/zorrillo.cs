@@ -7,6 +7,7 @@ public class zorrillo : EnemyScript
     public int cantidadEmitters;
     public float aguante = 20;
     public LayerMask whatIsPlayer;
+    public Animator animator;
     private Transform controllerUp;
     private Transform controllerMid;
     private Transform controllerDown;
@@ -30,11 +31,13 @@ public class zorrillo : EnemyScript
         if (attackStarted) {
             if (timeSinceLastAttack >= aguante){
                 chase();
-                timeSinceLastAttack = 0;
             } 
         } else {
             if (!playerInRange) chase();
             if (playerInRange) attack();
+
+            timeSinceLastAttack = 0;
+
         }
 
         
@@ -48,11 +51,13 @@ public class zorrillo : EnemyScript
     {
         Vector3 playerPosition = player.position;
         Vector3 moveDirection = (playerPosition - transform.position).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);        
+        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        animator.SetBool("atk", false);
     }
 
     void attack() 
     {
+        
         BS_Controller up = controllerUp.GetComponent<BS_Controller>();
         BS_Controller middle = controllerMid.GetComponent<BS_Controller>();
         BS_Controller down = controllerDown.GetComponent<BS_Controller>();
@@ -60,7 +65,7 @@ public class zorrillo : EnemyScript
         up.emitterAmount = cantidadEmitters;
         middle.emitterAmount = cantidadEmitters;
         down.emitterAmount = cantidadEmitters;
-        
+        animator.SetBool("atk", true);
         attackStarted = true;
 
     }

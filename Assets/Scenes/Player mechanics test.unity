@@ -2516,6 +2516,14 @@ PrefabInstance:
       propertyPath: playerScript
       value: 
       objectReference: {fileID: 2023789418}
+    - target: {fileID: 6192645722751005909, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6192645722751005909, guid: b2c6d675712582e42bdf262226d21317, type: 3}
+      propertyPath: m_TagString
+      value: ToungeBase
+      objectReference: {fileID: 0}
     - target: {fileID: 6455783384200491082, guid: b2c6d675712582e42bdf262226d21317, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1.5200195
@@ -2555,7 +2563,7 @@ PrefabInstance:
     - target: {fileID: 7067373733553503226, guid: b2c6d675712582e42bdf262226d21317, type: 3}
       propertyPath: cam
       value: 
-      objectReference: {fileID: 1531662996}
+      objectReference: {fileID: 1148767790}
     - target: {fileID: 8201701776010803262, guid: b2c6d675712582e42bdf262226d21317, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

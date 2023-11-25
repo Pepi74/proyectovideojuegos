@@ -6,9 +6,8 @@ public class Cocodrilo : EnemyScript
 {
     Rigidbody cuerpo;
     public float impulseForce = 80;
-
     public LayerMask whatIsPlayer;
-
+    public Animator animator;
     private bool attackFinish = true;
     private Vector3 attackPoint;
     // Start is called before the first frame update
@@ -37,6 +36,7 @@ public class Cocodrilo : EnemyScript
         Vector3 moveDirection = (playerPosition - transform.position).normalized;
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
         attackFinish = true;
+        animator.SetBool("atk", false);
 
     }
 
@@ -46,6 +46,7 @@ public class Cocodrilo : EnemyScript
         cuerpo.AddForce((player.position - transform.position + new Vector3(0,1,0)).normalized * impulseForce, ForceMode.Impulse);
         timeSinceLastAttack = 0f;
         attackFinish = false;
+        animator.SetBool("atk", true);
 
     }
 

@@ -6,6 +6,7 @@ public class puercospin : EnemyScript
 {
     public int cantidadEspinas;
     public LayerMask whatIsPlayer;
+    public Animator animator;
     private Transform controllerUp;
     private Transform controllerMid;
     private Transform controllerDown;
@@ -35,7 +36,9 @@ public class puercospin : EnemyScript
     {
         Vector3 playerPosition = player.position;
         Vector3 moveDirection = (playerPosition - transform.position).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);        
+        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        animator.SetBool("atk", false);
+        
     }
 
     void attack() 
@@ -47,6 +50,7 @@ public class puercospin : EnemyScript
         up.emitterAmount = cantidadEspinas;
         middle.emitterAmount = cantidadEspinas;
         down.emitterAmount = cantidadEspinas;
+        animator.SetBool("atk", true);
 
     }
 }
