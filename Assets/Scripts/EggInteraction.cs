@@ -1,4 +1,5 @@
 using System.Collections;
+using Enemigos;
 using UnityEngine;
 using TMPro;
 
@@ -13,7 +14,7 @@ public class EggInteraction : MonoBehaviour
     public GameObject currentEgg; // Huevo que se interactua
     public PlayerScript playerScript; // Componente PlayerScript del jugador
     [SerializeField]
-    private bool interacting = false; // Booleano que indica si se esta interactuando o no
+    private bool interacting; // Booleano que indica si se esta interactuando o no
 
     public LayerMask eggLayer; // Layer del huevo
 
@@ -22,8 +23,14 @@ public class EggInteraction : MonoBehaviour
     public int forcedFinalResult; // Para testear cosas y forzar el resultado final
 
     public bool forceResult;
-    void Start()
+    public GameObject duckPrefab;
+    public GameObject crocPrefab;
+    public GameObject porcupinePrefab;
+    public GameObject skunkPrefab;
+
+    private void Start()
     {
+        interacting = false;
         interactionText = GameObject.Find("InteractText").GetComponent<TextMeshProUGUI>();
         interactionText.text = "Press <color=yellow>E</color> to interact";
         interactionText.gameObject.SetActive(false);
@@ -34,7 +41,7 @@ public class EggInteraction : MonoBehaviour
         resultText.gameObject.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
         //Spherecast que detecta huevos cercanos al jugador
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactionRange, eggLayer);
@@ -42,17 +49,15 @@ public class EggInteraction : MonoBehaviour
         if (hitColliders.Length > 0)
         {
 
-            foreach (Collider collider in hitColliders)
+            foreach (Collider collider1 in hitColliders)
             {
-                if (collider.CompareTag("Egg") && !interacting)
+                if (collider1.CompareTag("Egg") && !interacting)
                 {
                     ShowInteractionText();
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        // Cuando se presiona "E", se maneja la interaccion
-                        interacting = true;
-                        HandleInteraction(collider.gameObject);
-                    }
+                    if (!Input.GetKeyDown(KeyCode.E)) continue;
+                    // Cuando se presiona "E", se maneja la interaccion
+                    interacting = true;
+                    HandleInteraction(collider1.gameObject);
                 }
 
                 else
@@ -70,19 +75,19 @@ public class EggInteraction : MonoBehaviour
 
     }
 
-    void ShowInteractionText()
+    private void ShowInteractionText()
     {
         // Muestra texto interaccion
         interactionText.gameObject.SetActive(true);
     }
 
-    void HideInteractionText()
+    private void HideInteractionText()
     {
         // Oculta texto interaccion
         interactionText.gameObject.SetActive(false);
     }
 
-    void HandleInteraction(GameObject egg)
+    private void HandleInteraction(GameObject egg)
     {
         // Manejo de interaccion
 
@@ -95,17 +100,19 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Numero entero random entre 1 y 20
-    int RollD20()
+    private static int RollD20()
     {
         return Random.Range(1, 21);
     }
 
     // Manejo del d20 y resultados dependiendo del roll del d20
-    IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
+    // ReSharper disable Unity.PerformanceAnalysis
+    private IEnumerator DisplayRandomNumbersAndResult(GameObject egg)
     {
-        int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
+        const int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
         TextMeshProUGUI textMeshProText = resultText;
+        textMeshProText.color = Color.white;
         TextMeshProUGUI rollStartTextMeshPro = rollStartText;
 
         textMeshProText.gameObject.SetActive(true);
@@ -122,80 +129,63 @@ public class EggInteraction : MonoBehaviour
         if (forceResult) finalResult = forcedFinalResult; // Para testear valores del 20 forzados
         string finalResultString = finalResult.ToString();
         // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
-        string colorPrefix = "";
-        string colorSuffix = "";
         int numberOfEnemies = 0;
-        int attackValue = 0;
-        int health = 0;
         bool healing = false;
         float healingValue = 0f;
         float speed = 0f;
         bool playerLevelUp = false;
-        // Manejo del roll igual a 1
-        if (finalResult == 1)
+        switch (finalResult)
         {
-            enemyLevel++;
-            colorPrefix = "<color=red>";
-            colorSuffix = "</color>";
-            numberOfEnemies = 12;
-            attackValue = 4 + (1 * enemyLevel);
-            health = 18 + (2 * enemyLevel);
-            speed = 9f;
+            // Manejo del roll igual a 1
+            case 1:
+                enemyLevel++;
+                textMeshProText.color = Color.red;
+                numberOfEnemies = 12;
+                speed = 9f;
+                break;
+            // Manejo del roll entre 2 y 7
+            case > 1 and <= 7:
+                textMeshProText.color = new Color(1.0f, 0.44f, 0.0f);
+                numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
+                speed = 7f;
+                break;
+            // Manejo del roll entre 8 y 13
+            case > 7 and <= 13:
+                textMeshProText.color = Color.yellow;
+                numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
+                speed = 6f;
+                break;
+            // Manejo del roll entre 14 y 19
+            case > 13 and <= 19:
+                textMeshProText.color = Color.blue;
+                numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
+                speed = 4f;
+                healing = true;
+                healingValue = finalResult switch
+                {
+                    14 => 0.15f,
+                    15 => 0.20f,
+                    16 => 0.25f,
+                    17 => 0.30f,
+                    18 => 0.35f,
+                    _ => 0.40f
+                };
+                break;
+            // Manejo del roll igual a 20
+            case 20:
+                textMeshProText.color = Color.green;
+                numberOfEnemies = 1;
+                speed = 2f;
+                playerLevelUp = true;
+                break;
         }
-        // Manejo del roll entre 2 y 7
-        if (finalResult > 1 && finalResult <= 7)
-        {
-            colorPrefix = "<color=orange>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
-            attackValue = 3 + (1 * enemyLevel);
-            health = (18 + (2 * enemyLevel)) - finalResult / 2;
-            speed = 7f;
-        }
-        // Manejo del roll entre 8 y 13
-        if (finalResult > 7 && finalResult <= 13)
-        {
-            colorPrefix = "<color=yellow>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
-            attackValue = 2 + (1 * enemyLevel);
-            health = (13 + (2 * enemyLevel)) - finalResult / 3;
-            speed = 6f;
-        }
-        // Manejo del roll entre 14 y 19
-        if (finalResult > 13 && finalResult <= 19)
-        {
-            colorPrefix = "<color=blue>";
-            colorSuffix = "</color>";
-            numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
-            attackValue = 1 + (1 * enemyLevel);
-            health = (8 + (2 * enemyLevel)) - finalResult / 4;
-            speed = 4f;
-            healing = true;
-            if (finalResult == 14) healingValue = 0.15f;
-            else if (finalResult == 15) healingValue = 0.20f;
-            else if (finalResult == 16) healingValue = 0.25f;
-            else if (finalResult == 17) healingValue = 0.30f;
-            else if (finalResult == 18) healingValue = 0.35f;
-            else if (finalResult == 19) healingValue = 0.40f;
-        }
-        // Manejo del roll igual a 20
-        if (finalResult == 20)
-        {
-            enemyLevel--;
-            if (enemyLevel < 1) enemyLevel = 1;
-            colorPrefix = "<color=green>";
-            colorSuffix = "</color>";
-            numberOfEnemies = 1;
-            health = 3 + (2 * enemyLevel);
-            attackValue = 1 * enemyLevel;
-            speed = 2f;
-            playerLevelUp = true;
-        }
+
+        int attackValue = 1 * enemyLevel;
+		int health = (2 * enemyLevel) - (finalResult / 2);
         // Texto del resultado del d20
-        textMeshProText.text = colorPrefix + finalResultString + colorSuffix;
+        textMeshProText.text = finalResultString;
         // Spawn enemigos
-        SpawnEnemy(egg.transform.position, finalResult, numberOfEnemies, health, attackValue, speed);
+        SpawnEnemies(egg.transform.position, numberOfEnemies, health, attackValue, speed);
         // Recupera vida al jugador si healing es true
         if (healing) playerScript.HealP(healingValue);
 
@@ -217,7 +207,7 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Manejo spawn de enemigos
-    void SpawnEnemy(Vector3 spawnPosition, int rollResult, int numberOfEnemies, int health, int attackValue, float speed)
+    private void SpawnEnemies(Vector3 spawnPosition, int numberOfEnemies, int health, int attackValue, float speed)
     {
         float angleStep = 360f / numberOfEnemies;
 
@@ -228,20 +218,44 @@ public class EggInteraction : MonoBehaviour
             float angle = i * angleStep;
             Vector3 offset = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * 2.0f;
             Vector3 enemyPosition = spawnPosition + offset;
-            RaycastHit hit;
-            if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out hit, Mathf.Infinity, terrainLayerMask))
+            if(Physics.Raycast(new Vector3(enemyPosition.x, enemyPosition.y + 100f, enemyPosition.z), new Vector3(0,-1,0), out var hit, Mathf.Infinity, terrainLayerMask))
             {
                 float terrainHeight = hit.point.y;
                 enemyPosition.y = terrainHeight + 2f;
             }
 
-            GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
+            int rngEnemy = Random.Range(1, 101);
 
-            EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
-
-            if (enemyScript != null)
+            switch (rngEnemy)
             {
-                enemyScript.SetStats(health, attackValue, speed, enemyLevel);
+                case <= 25:
+                {
+                    GameObject enemy = Instantiate(duckPrefab, enemyPosition, Quaternion.identity);
+                    Pato pato = enemy.GetComponent<Pato>();
+                    pato.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 50:
+                {
+                    GameObject enemy = Instantiate(crocPrefab, enemyPosition, Quaternion.identity);
+                    Cocodrilo cocodrilo = enemy.GetComponent<Cocodrilo>();
+                    cocodrilo.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 75:
+                {
+                    GameObject enemy = Instantiate(porcupinePrefab, enemyPosition, Quaternion.identity);
+                    Puercospin puercospin = enemy.GetComponent<Puercospin>();
+                    puercospin.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
+                case <= 100:
+                {
+                    GameObject enemy = Instantiate(skunkPrefab, enemyPosition, Quaternion.identity);
+                    Zorrillo zorrillo = enemy.GetComponent<Zorrillo>();
+                    zorrillo.SetStats(health, attackValue, speed, enemyLevel);
+                    break;
+                }
             }
         }
     }

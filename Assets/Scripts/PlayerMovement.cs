@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -49,9 +47,21 @@ public class PlayerMovement : MonoBehaviour
     public PlayerScript playerScript;
 
     public Animator animator;
+    public ParticleSystem smokeEffect;
+
+    private AudioSource audioSc;
+    public AudioClip []jumpSound;
+    public AudioClip []walkSounds;
+    public AudioClip landSound;
+    
+    private  bool wasGrounded;
+    private static readonly int Grounded = Animator.StringToHash("grounded");
+    private static readonly int ZSpeed = Animator.StringToHash("z_speed");
+    private static readonly int XSpeed = Animator.StringToHash("x_speed");
+    private static readonly int YSpeed = Animator.StringToHash("y_speed");
 
     // Inicializacion de variables
-    void Start()
+    private void Start()
     {
         canMove = true;
         walkSpeed = 5f;
@@ -65,56 +75,69 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         maxSlopeAngle = 40f;
         playerScript = GetComponent<PlayerScript>();
+        audioSc = GetComponent<AudioSource>();
+        wasGrounded=false;
     }
 
-    void Update()
+    private void Update()
     {
+        if (!canMove) return;
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayerMask);
+        animator.SetBool(Grounded, grounded);
 
-        if(canMove)
-        {
-            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayerMask);
-            animator.SetBool("grounded", grounded);
+        if(grounded && !wasGrounded){
+            audioSc.PlayOneShot(landSound);
+            wasGrounded = true;
+        }
+        if (!grounded && wasGrounded){
+            wasGrounded = false;
+        }
+        // Movimiento WASD o flechas
+        MyInput();
+        SpeedControl();
+        StateHandler();
 
-            // Movimiento WASD o flechas
-            MyInput();
-            SpeedControl();
-            StateHandler();
-
-            if (grounded)
-                rb.drag = groundDrag;
-            else
-                rb.drag = 0;
-        }        
-        
+        if (grounded) rb.drag = groundDrag;
+        else rb.drag = 0;
     }
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (!canMove)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        else
+        {
+            MovePlayer();
+        }
+    }
+    public void PlayWalkSoundEffect(){
+        audioSc.PlayOneShot(walkSounds[Random.Range(0,walkSounds.Length)]);
     }
 
-    // Setea el booleano canMove (usado en el menu de pausa)
+    // Setea el booleano canMove
     public void SetCanMove(bool move)
     {
         canMove = move;
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private void MyInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+        
+        animator.SetFloat(ZSpeed, verticalInput);
+        animator.SetFloat(XSpeed, horizontalInput);
 
-        animator.SetFloat("z_speed", verticalInput);
-        animator.SetFloat("x_speed", horizontalInput);
+        if (!Input.GetKey(jumpKey) || !readyToJump || !grounded) return;
+        readyToJump = false;
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
-        {
-            readyToJump = false;
+        Jump();
 
-            Jump();
-
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
+        Invoke(nameof(ResetJump), jumpCooldown);
     }
 
     private void MovePlayer()
@@ -123,19 +146,23 @@ public class PlayerMovement : MonoBehaviour
 
         if(OnSlope())
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
-
+            
+            rb.AddForce(GetSlopeMoveDirection() * (moveSpeed * 20f), ForceMode.Force);
+            
             if (rb.velocity.y > 0)
             {
                 rb.AddForce(Vector3.down * 40f, ForceMode.Force);
             }
         }
-
-        else if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-
-        else if(!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        else switch (grounded)
+        {   
+            case true:
+                rb.AddForce(moveDirection.normalized * (moveSpeed * 10f), ForceMode.Force);
+                break;
+            case false:
+                rb.AddForce(moveDirection.normalized * (moveSpeed * 10f * airMultiplier), ForceMode.Force);
+                break;
+        }
 
         rb.useGravity = !OnSlope();
     }
@@ -151,13 +178,12 @@ public class PlayerMovement : MonoBehaviour
 
         else
         {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            var velocity = rb.velocity;
+            Vector3 flatVel = new Vector3(velocity.x, 0f, velocity.z);
 
-            if (flatVel.magnitude > moveSpeed)
-            {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-            }
+            if (!(flatVel.magnitude > moveSpeed)) return;
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }        
     }
 
@@ -165,9 +191,15 @@ public class PlayerMovement : MonoBehaviour
     {
         exitingSlope = true;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        var velocity = rb.velocity;
+        velocity = new Vector3(velocity.x, 0f, velocity.z);
+        rb.velocity = velocity;
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        int selectedJumpSound = Random.Range(0,jumpSound.Length);
+        
+        audioSc.PlayOneShot(jumpSound[selectedJumpSound]);
+        Instantiate(smokeEffect, transform);
     }
 
     private void ResetJump()
@@ -179,34 +211,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
-        if (grounded && Input.GetKey(sprintKey) && (int) playerScript.currentStamina != 0)
+        switch (grounded)
         {
-            state = MovementState.Sprinting;
-            moveSpeed = sprintSpeed;
-        }
-
-        else if (grounded)
-        {
-            state = MovementState.Walking;
-            moveSpeed = walkSpeed;
-        }
-
-        else
-        {
-            state = MovementState.Air;
-            animator.SetFloat("y_speed", rb.velocity.y);
+            case true when Input.GetKey(sprintKey) && (int) playerScript.currentStamina != 0:
+                state = MovementState.Sprinting;
+                moveSpeed = sprintSpeed;
+                break;
+            case true:
+                state = MovementState.Walking;
+                moveSpeed = walkSpeed;
+                break;
+            default:
+                state = MovementState.Air;
+                animator.SetFloat(YSpeed, rb.velocity.y);
+                break;
         }
     }
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
-        {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
-        }
+        if (!Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f)) return false;
+        float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+        return angle < maxSlopeAngle && angle != 0;
 
-        return false;
     }
 
     private Vector3 GetSlopeMoveDirection()

@@ -7,21 +7,24 @@ TagManager:
   - Enemy
   - Egg
   - Terrain
-  - ToungeBase
   - Emitter
+  - ToungeBase
+  - Tree
+  - Lily
+  - Boundary
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
   - Terrain
   - Egg
   - Enemy
   - Player
-  - 
-  - 
+  - Tounge
+  - Bullet
   - 
   - 
   - 

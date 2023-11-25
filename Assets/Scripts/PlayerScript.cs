@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -10,15 +11,15 @@ public class PlayerScript : MonoBehaviour
     public int currentHealth; // Vida actual
     public float maxStamina = 100;
     public float currentStamina;
-    public int attackValue = 5; // Danio de ataque
+    public int attackValue; // Daño de ataque
     public float attackRange = 10f; // Rango de ataque
     public HealthBar healthBar; // Barra de vida
     public StaminaBar staminaBar;
     private int staminaRegenRate = 10;
     public GameOverUIManager gameOverUIManager; // UI game over
     public LayerMask enemyLayer; // Layer enemigo
-    public bool isTired = false;
-    public bool flagTired = false;
+    public bool isTired;
+    public bool flagTired;
     [SerializeField]
     private bool canRegen = true;
     private Rigidbody rb; // Rigidbody del jugador
@@ -27,13 +28,25 @@ public class PlayerScript : MonoBehaviour
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI levelUpText;
     [SerializeField]
-    private bool isSprinting = false;
+    private bool isSprinting;
 	public PlayerMovement playerMovement;
 	public PauseMenu pauseMenu;
-	
-    void Start()
+    public GameObject roundUI;
+    public int upgradePoints;
+    public TextMeshProUGUI upgradeText;
+    public GameObject upgradeUI;
+    public bool upgradeUIOpen;
+    public UpgradeManager upgradeManager;
+    private static readonly int ZSpeed = Animator.StringToHash("z_speed");
+    private static readonly int XSpeed = Animator.StringToHash("x_speed");
+    public ThirdPersonCamera thirdPersonCamera;
+
+    public ParticleSystem getHurtParticles;
+    private AudioSource audioSc;
+    public AudioClip []getHurtSound;
+    private void Start()
     {
-        gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
+        gameOverUIManager = GameObject.Find("UI").GetComponent<GameOverUIManager>();
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -44,18 +57,68 @@ public class PlayerScript : MonoBehaviour
         levelUpText = transform.Find("PlayerUI").Find("Level").Find("LevelUpText").GetComponent<TextMeshProUGUI>();
         levelUpText.gameObject.SetActive(false);
         levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
-        levelText.text = "Level: " + playerLevel.ToString();
+        levelText.text = "Level: " + playerLevel;
         playerMovement = GetComponent<PlayerMovement>();
-        pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
+        pauseMenu = GameObject.Find("UI").GetComponent<PauseMenu>();
+        roundUI = GameObject.Find("RoundUI");
+        upgradePoints = 0;
+        upgradeText = GameObject.Find("UpgradeText").GetComponent<TextMeshProUGUI>();
+        upgradeText.gameObject.SetActive(false);
+        upgradeUI = GameObject.Find("UpgradeMenu");
+        upgradeUI.SetActive(false);
+        upgradeManager = GameObject.Find("UI").GetComponent<UpgradeManager>();
+        if (Camera.main != null) thirdPersonCamera = Camera.main.GetComponent<ThirdPersonCamera>();
+        audioSc = GetComponent<AudioSource>();
     }
 
-    void Update()
+    private void Update()
     {
+        switch (upgradePoints)
+        {
+            case > 0 when !upgradeUIOpen:
+                upgradeText.gameObject.SetActive(true);
+                upgradeText.text = upgradePoints == 1 ? $"You have <color=green>{upgradePoints}</color> point available\nPress <color=yellow>Q</color> to open the upgrade menu!" : $"You have <color=green>{upgradePoints}</color> points available\nPress <color=yellow>Q</color> to open the upgrade menu!";
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    upgradeUIOpen = true;
+                    upgradeText.gameObject.SetActive(false);
+                    upgradeUI.SetActive(true);
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                    playerMovement.SetCanMove(false);
+                    playerMovement.animator.SetFloat(ZSpeed,0f);
+                    playerMovement.animator.SetFloat(XSpeed,0f);
+                    thirdPersonCamera.SetCanMoveCamera(false);
+                }
+                break;
+            
+                case <= 0 when upgradeUIOpen:
+                    upgradeUIOpen = false;
+                    upgradeUI.SetActive(false);
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                    playerMovement.SetCanMove(true);
+                    thirdPersonCamera.SetCanMoveCamera(true);
+                    break;
+        }
+
+        if (upgradeUIOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                upgradeUIOpen = false;
+                upgradeUI.SetActive(false);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                playerMovement.SetCanMove(true);
+                thirdPersonCamera.SetCanMoveCamera(true);
+            }
+        }
 
         if (isTired && !canRegen && flagTired)
         {
             flagTired = false;
-            StartCoroutine(tired(3f));
+            StartCoroutine(Tired(3f));
         }
         
         if (Input.GetKey(KeyCode.LeftShift) && playerMovement.state != PlayerMovement.MovementState.Air && (int) currentStamina > 0 && (int) rb.velocity.magnitude != 0)
@@ -93,7 +156,8 @@ public class PlayerScript : MonoBehaviour
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
-
+        audioSc.PlayOneShot(getHurtSound[Random.Range(0,getHurtSound.Length)]);
+        Instantiate(getHurtParticles, transform);
         // Si la vida es menor o igual a 0, muere
         if (currentHealth <= 0)
         {
@@ -107,14 +171,14 @@ public class PlayerScript : MonoBehaviour
         staminaBar.SetStamina(currentStamina);
     }
 
-    public void StaminaRegen(float regenRate)
+    private void StaminaRegen(float regenRate)
     {
         currentStamina += regenRate * Time.deltaTime;
         staminaBar.SetStamina(currentStamina);
     }
 
     // Recuperar vida
-    public void Heal(int healing)
+    private void Heal(int healing)
     {
         currentHealth += healing;
         healthBar.SetHealth(currentHealth);
@@ -129,45 +193,15 @@ public class PlayerScript : MonoBehaviour
     }
 
     // Manejo de muerte del jugador
-    void Die()
+    private void Die()
     {
         gameOverUIManager.ShowGameOverScreen();
+        roundUI.SetActive(false);
         Destroy(gameObject);
         Cursor.lockState = CursorLockMode.None;
     }
 
-    // Manejo de ataque
-    void Attack()
-    {
-        // Raycast desde el centro de la camara hacia donde se apunta.
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f))
-        {
-            // Raycast colisiona con enemigo
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                // Calcula la distancia entre el jugador y el enemigo
-                float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                //Debug.Log(distance);
-                // Si la distancia es menor o igual al rango de ataque, el enemigo es dañado
-                if (distance <= attackRange)
-                {
-                    EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
-                    enemyScript.TakeDamage(attackValue);
-                }
-            }
-        }
-    }
-
-    void MeleeAttack()
-    {
-
-    }
-
-    IEnumerator tired(float seconds)
+    private IEnumerator Tired(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         StaminaChange(maxStamina / 4);
@@ -195,7 +229,7 @@ public class PlayerScript : MonoBehaviour
         StartCoroutine(LevelUpTextDisplay());
     }
 
-    IEnumerator LevelUpTextDisplay()
+    private IEnumerator LevelUpTextDisplay()
     {
         levelUpText.gameObject.SetActive(true);
         float endTime = Time.time + 2f;
@@ -207,5 +241,46 @@ public class PlayerScript : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         levelUpText.gameObject.SetActive(false);
+    }
+
+    public void SetUpgradeUIOpen(bool value)
+    {
+        upgradeUIOpen = value;
+    }
+
+    public void ApplyUpgrade(Upgrade upgrade)
+    {
+        switch (upgrade.type)
+        {
+            case UpgradeType.LevelIncrease:
+                LevelUp();
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.MaxHpIncrease:
+                maxHealth += upgrade.value;
+                healthBar.SetMaxHealth(maxHealth);
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.MaxStaminaIncrease:
+                maxStamina += upgrade.value;
+                staminaBar.SetMaxStamina(maxStamina);
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.StaminaRegenIncrease:
+                staminaRegenRate += upgrade.value;
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.AttackDamageIncrease:
+                attackValue += upgrade.value;
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,18 +6,18 @@ using TMPro;
 public class HealthBar : MonoBehaviour
 {
    public Slider slider;
-   public TextMeshProUGUI HPText;
+   public TextMeshProUGUI hpText;
 
    public void SetMaxHealth(int health)
    {
         slider.maxValue = health;
         slider.value = health;
-        HPText.text = health.ToString() + "/" + health.ToString();
+        hpText.text = health + "/" + health;
    }
 
    public void SetHealth(int health)
    {
         slider.value = health;
-        HPText.text = slider.value.ToString() + "/" + slider.maxValue.ToString();
+        hpText.text = slider.value + "/" + slider.maxValue;
    }
 }

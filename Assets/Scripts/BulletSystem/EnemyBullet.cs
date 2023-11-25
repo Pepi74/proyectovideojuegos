@@ -24,11 +24,14 @@ public class EnemyBullet : MonoBehaviour
     public bool desviar;
     public Vector3 desviar_dir = new Vector3(1f,0,0);
 
+    private float duration;
+
     void Start()
     {
         RB = GetComponent<Rigidbody>();
         Destroy(gameObject, lifeTime);
         mesh = GetComponent<Renderer>();
+        duration = Time.time + 2f;
     }
 
     void OnBecameInvisible(){   // selfdestroy
@@ -40,17 +43,22 @@ public class EnemyBullet : MonoBehaviour
     }
     void OnTriggerEnter(Collider other){
         
-        /*if(other.gameObject.tag=="Player" && shooter == bulletType.enemy)
+        if(other.gameObject.tag == "Player" && shooter == bulletType.enemy)
         {
-            Player cs = other.gameObject.GetComponent<Player>();
-            cs.getDamage(Damage);
+            PlayerScript playerScript = other.gameObject.GetComponent<PlayerScript>();
+            playerScript.TakeDamage(Damage);
             Destroy(gameObject);
-        } else if (other.gameObject.tag == "Enemy" && shooter == bulletType.player)
+        } /*else if (other.gameObject.tag == "Enemy" && shooter == bulletType.player)
         {
             Enemy cs = other.gameObject.GetComponent<Enemy>();
             cs.getDamage(Damage);
+        }*/
+        
+        /*else if (other.gameObject.tag == "Terrain")
+        {
+            
         }
-        else if (other.gameObject.tag == "Obstacle") {
+        else{
             Destroy(gameObject);
         }*/
     }
@@ -66,6 +74,11 @@ public class EnemyBullet : MonoBehaviour
         // Desviar
         if(desviar){
             transform.Rotate(desviar_dir * Time.deltaTime);
+        }
+
+        if (Time.time >= duration)
+        {
+            Destroy(this);
         }
     }
 }

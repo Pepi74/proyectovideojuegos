@@ -1,84 +1,88 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Pato : EnemyScript
+namespace Enemigos
 {
-    Rigidbody cuerpo;
-
-    public float rangeStomp = 2;
-
-    public LayerMask whatIsPlayer;
-
-    private bool attackFinish = true;
-    private bool attackPointSet = false;
-    private Vector3 attackPoint;
-    // Start is called before the first frame update
-    void Start()
+    public class Pato : EnemyScript
     {
-        cuerpo = GetComponent<Rigidbody>();
-        player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
-        SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
-    }
+        private Rigidbody cuerpo;
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Manejo enfriamiento del ataque
-        timeSinceLastAttack += Time.deltaTime;
+        public float rangeStomp = 2;
 
-        bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        public LayerMask whatIsPlayer;
 
-        if (!playerInRange) chase();
-        if (timeSinceLastAttack >= attackCooldown && (playerInRange || attackFinish)) attack(); // Ataca
-    }
-
-    void chase()
-    {
-        Vector3 playerPosition = player.position;
-        Vector3 moveDirection = (playerPosition - transform.position).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-
-    }
-
-    void attack()
-    {   
-        if (!attackPointSet) {
-            attackPoint = player.position + new Vector3(0,10,0);
-            attackPointSet = true;
+        private bool attackFinish = true;
+        private bool attackPointSet;
+        private Vector3 attackPoint;
+        // Start is called before the first frame update
+        private void Start()
+        {
+            cuerpo = GetComponent<Rigidbody>();
+            player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
+            //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+            attackCooldown = Random.Range(5.5f, 6.5f);
+            attackRange = 2f;
         }
+
+        // Update is called once per frame
+        private void Update()
+        {
+            // Manejo enfriamiento del ataque
+            timeSinceLastAttack += Time.deltaTime;
+
+            bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+
+            if (!playerInRange) Chase();
+            if (timeSinceLastAttack >= attackCooldown && (playerInRange || attackFinish)) Attack(); // Ataca
+            CheckDistance();
+        }
+
+        private void Chase()
+        {
+            Vector3 playerPosition = player.position;
+            Vector3 moveDirection = (playerPosition - transform.position).normalized;
+            transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));
+
+        }
+
+        private void Attack()
+        {   
+            if (!attackPointSet) {
+                attackPoint = player.position + new Vector3(0,10,0);
+                attackPointSet = true;
+            }
         
-        if (attackPointSet) {
-            cuerpo.useGravity = false; cuerpo.isKinematic = true;
-            transform.position = Vector3.MoveTowards(transform.position,attackPoint,10 * Time.deltaTime);
-        }
+            if (attackPointSet) {
+                cuerpo.useGravity = false; cuerpo.isKinematic = true;
+                transform.position = Vector3.MoveTowards(transform.position,attackPoint,10 * Time.deltaTime);
+            }
 
-        Vector3 distanceToPlayer = transform.position - attackPoint;
+            Vector3 distanceToPlayer = transform.position - attackPoint;
 
-        if (distanceToPlayer.magnitude < 1f){
-            cuerpo.useGravity = true; cuerpo.isKinematic = false;
-            cuerpo.AddForce(-transform.up * 50);
-            attackPointSet = false;
-            attackFinish = false;
+            if (distanceToPlayer.magnitude < 1f){
+                cuerpo.useGravity = true; cuerpo.isKinematic = false;
+                cuerpo.AddForce(-transform.up * 50);
+                attackPointSet = false;
+                attackFinish = false;
             
-            timeSinceLastAttack = 0.0f; // Resetea el timer
+                timeSinceLastAttack = 0.0f; // Resetea el timer
+
+            }
 
         }
 
-    }
+        private void OnCollisionEnter(Collision other)
+        {
+            PlayerScript playerScript = player.GetComponent<PlayerScript>();
+            if (other.collider.CompareTag("Player")){
+                playerScript.TakeDamage((int)(attackValue * 1.2f));
+                attackFinish = true;
 
-    void OnCollisionEnter(Collision other)
-    {
-        PlayerScript playerScript = player.GetComponent<PlayerScript>();
-        if (other.collider.tag == "Player"){
-            playerScript.TakeDamage((int)(attackValue * 1.2f));
-            attackFinish = true;
-
-        } else if (other.collider.tag == "Terrain" && !attackFinish) {
-            bool playerInRange = Physics.CheckSphere(transform.position, rangeStomp, whatIsPlayer);
-            playerScript.TakeDamage(attackValue);
-            attackFinish = true;
+            } else if (other.collider.CompareTag("Terrain") && !attackFinish) {
+                bool playerInRange = Physics.CheckSphere(transform.position, rangeStomp, whatIsPlayer);
+                if (playerInRange) playerScript.TakeDamage(attackValue);
+                attackFinish = true;
+            }
         }
-    }
 
+    }
 }

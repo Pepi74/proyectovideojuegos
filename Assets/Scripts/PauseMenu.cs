@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,35 +6,31 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI; // Menu de pausa
     public GameObject interactionUI; // UI de interaccion
 
-    public bool isPaused = false; // Booleano que indica si el juego esta en pausa
-    private bool isGameOverMenuActive = false; // Booleano que indica si el menu de game over esta activo
+    public bool isPaused; // Booleano que indica si el juego esta en pausa
+    private bool isGameOverMenuActive; // Booleano que indica si el menu de game over esta activo
     public PlayerMovement playerMovementScript; // Referencia a script PlayerMovement del jugador
     public PlayerScript playerScript;
     //public GameObject playerCrosshair; // Por ahora el crosshair esta desactivado
 
-    void Awake()
+    private void Awake()
     {
         Spawner spawner = FindObjectOfType<Spawner>();
         spawner.onPlayerSpawned.AddListener(SetPlayerReference);
     }
 
-    void Update()
+    private void Update()
     {
         // Si el menu de gameover no esta activo, pasa esto
-        if(!isGameOverMenuActive)
+        if (isGameOverMenuActive) return;
+        // Presionando "Esc" abre el menu de pausa
+        if (!Input.GetKeyDown(KeyCode.Escape) || playerScript.upgradeUIOpen) return;
+        if (isPaused)
         {
-            // Presionando "Esc" abre el menu de pausa
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (isPaused)
-                {
-                    Resume();
-                }
-                else
-                {
-                    Pause();
-                }
-            }
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
 
@@ -55,7 +49,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     // Pausar juego
-    public void Pause()
+    private void Pause()
     {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
@@ -87,7 +81,7 @@ public class PauseMenu : MonoBehaviour
         isGameOverMenuActive = isActive;
     }
 
-    void SetPlayerReference(GameObject spawnedPlayer)
+    private void SetPlayerReference(GameObject spawnedPlayer)
     {
         playerMovementScript = spawnedPlayer.GetComponent<PlayerMovement>();
         playerScript = spawnedPlayer.GetComponent<PlayerScript>();

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,18 +6,18 @@ using TMPro;
 public class StaminaBar : MonoBehaviour
 {
    public Slider slider;
-   public TextMeshProUGUI StaminaText;
+   public TextMeshProUGUI staminaText;
 
    public void SetMaxStamina(float stamina)
    {
         slider.maxValue = (int) stamina;
         slider.value = (int) stamina;
-        StaminaText.text = stamina.ToString() + "/" + stamina.ToString();
+        staminaText.text = stamina + "/" + stamina;
    }
 
    public void SetStamina(float stamina)
    {
         slider.value = (int) stamina;
-        StaminaText.text = slider.value.ToString() + "/" + slider.maxValue.ToString();
+        staminaText.text = slider.value + "/" + slider.maxValue;
    }
 }
