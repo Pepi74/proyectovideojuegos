@@ -30,7 +30,9 @@ public class PlayerScript : MonoBehaviour
 	public PlayerMovement playerMovement;
 	public PauseMenu pauseMenu;
     public GameObject roundUI;
-
+    public ParticleSystem getHurtParticles;
+    private AudioSource audioSc;
+    public AudioClip []getHurtSound;
     private void Start()
     {
         gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
@@ -48,6 +50,7 @@ public class PlayerScript : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
         roundUI = GameObject.Find("RoundUI");
+        audioSc = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -94,7 +97,8 @@ public class PlayerScript : MonoBehaviour
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
-
+        audioSc.PlayOneShot(getHurtSound[Random.Range(0,getHurtSound.Length)]);
+        Instantiate(getHurtParticles, transform);
         // Si la vida es menor o igual a 0, muere
         if (currentHealth <= 0)
         {

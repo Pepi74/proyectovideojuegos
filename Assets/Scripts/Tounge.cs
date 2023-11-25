@@ -16,11 +16,14 @@ public class Tounge : MonoBehaviour
     public int meleeDamage; // daño de melee
     public float meleeFireRate; // ratio de ataque melee
     public float meleeTimer; // variable de conteo para el ataque melee.
+    private AudioSource audioSc;
+    public AudioClip rangeAttackSound;
 
     public PlayerScript playerScript;
 
     private void Start()
     {
+        audioSc = GetComponent<AudioSource>();
         fireTimer = 0; //inicializar timer
         if (Camera.main != null) cam = Camera.main.transform;
     }
@@ -33,6 +36,7 @@ public class Tounge : MonoBehaviour
             fireTimer = 1 / fireRate;
             meleeTimer = 0.3f;
             Attack();
+            audioSc.PlayOneShot(rangeAttackSound);
             playerScript.StaminaChange(-10);
         }
         //Iniciar ataque Melee
