@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     {
         roundNumber = 1;
         terrainGenerator.GenerateTerrain(terrain.terrainData);
+        spawner.SpawnBoundaries();
         spawner.SpawnPlayer();
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
@@ -27,10 +28,10 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerScript>();
         eggInteraction = player.GetComponent<EggInteraction>();
-        roundText = transform.Find("RoundUI").Find("RoundText").GetComponent<TextMeshProUGUI>();
+        roundText = GameObject.Find("RoundText").GetComponent<TextMeshProUGUI>();
         roundText.color = Color.red;
         roundText.text = "Round: " + roundNumber;
-        upgradeManager = GameObject.Find("UpgradeMenu").GetComponent<UpgradeManager>();
+        upgradeManager = GameObject.Find("UI").GetComponent<UpgradeManager>();
         upgradeManager.RandomizeUpgrades();
     }
 

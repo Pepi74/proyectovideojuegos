@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject roundUI;
     public int upgradePoints;
     public TextMeshProUGUI upgradeText;
+    public GameObject upgradeUI;
     public bool upgradeUIOpen;
     public UpgradeManager upgradeManager;
     private static readonly int ZSpeed = Animator.StringToHash("z_speed");
@@ -44,7 +46,7 @@ public class PlayerScript : MonoBehaviour
     public AudioClip []getHurtSound;
     private void Start()
     {
-        gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
+        gameOverUIManager = GameObject.Find("UI").GetComponent<GameOverUIManager>();
         // Inicializacion de vida
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -57,13 +59,14 @@ public class PlayerScript : MonoBehaviour
         levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
         levelText.text = "Level: " + playerLevel;
         playerMovement = GetComponent<PlayerMovement>();
-        pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
+        pauseMenu = GameObject.Find("UI").GetComponent<PauseMenu>();
         roundUI = GameObject.Find("RoundUI");
         upgradePoints = 0;
         upgradeText = GameObject.Find("UpgradeText").GetComponent<TextMeshProUGUI>();
         upgradeText.gameObject.SetActive(false);
-        upgradeManager = GameObject.Find("UpgradeMenu").GetComponent<UpgradeManager>();
-        upgradeManager.gameObject.SetActive(false);
+        upgradeUI = GameObject.Find("UpgradeMenu");
+        upgradeUI.SetActive(false);
+        upgradeManager = GameObject.Find("UI").GetComponent<UpgradeManager>();
         if (Camera.main != null) thirdPersonCamera = Camera.main.GetComponent<ThirdPersonCamera>();
         audioSc = GetComponent<AudioSource>();
     }
@@ -79,7 +82,7 @@ public class PlayerScript : MonoBehaviour
                 {
                     upgradeUIOpen = true;
                     upgradeText.gameObject.SetActive(false);
-                    upgradeManager.gameObject.SetActive(true);
+                    upgradeUI.SetActive(true);
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                     playerMovement.SetCanMove(false);
@@ -88,15 +91,15 @@ public class PlayerScript : MonoBehaviour
                     thirdPersonCamera.SetCanMoveCamera(false);
                 }
                 break;
-            case <= 0:
-                upgradeText.gameObject.SetActive(false);
-                upgradeUIOpen = false;
-                upgradeManager.gameObject.SetActive(false);
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                playerMovement.SetCanMove(true);
-                thirdPersonCamera.SetCanMoveCamera(true);
-                break;
+            
+                case <= 0 when upgradeUIOpen:
+                    upgradeUIOpen = false;
+                    upgradeUI.SetActive(false);
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                    playerMovement.SetCanMove(true);
+                    thirdPersonCamera.SetCanMoveCamera(true);
+                    break;
         }
 
         if (upgradeUIOpen)
@@ -104,7 +107,7 @@ public class PlayerScript : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 upgradeUIOpen = false;
-                upgradeManager.gameObject.SetActive(false);
+                upgradeUI.SetActive(false);
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
                 playerMovement.SetCanMove(true);
