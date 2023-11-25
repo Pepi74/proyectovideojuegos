@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class zorrillo : EnemyScript
+public class Zorrillo : EnemyScript
 {
     public int cantidadEmitters;
     public float aguante = 20;
