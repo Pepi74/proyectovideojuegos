@@ -47,7 +47,14 @@ public class PlayerMovement : MonoBehaviour
     public PlayerScript playerScript;
 
     public Animator animator;
+    public ParticleSystem smokeEffect;
+
+    private AudioSource audioSc;
+    public AudioClip []jumpSound;
+    public AudioClip []walkSounds;
+    public AudioClip landSound;
     
+    private  bool wasGrounded;
     private static readonly int Grounded = Animator.StringToHash("grounded");
     private static readonly int ZSpeed = Animator.StringToHash("z_speed");
     private static readonly int XSpeed = Animator.StringToHash("x_speed");
@@ -68,6 +75,8 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         maxSlopeAngle = 40f;
         playerScript = GetComponent<PlayerScript>();
+        audioSc = GetComponent<AudioSource>();
+        wasGrounded=false;
     }
 
     private void Update()
@@ -76,6 +85,13 @@ public class PlayerMovement : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayerMask);
         animator.SetBool(Grounded, grounded);
 
+        if(grounded && !wasGrounded){
+            audioSc.PlayOneShot(landSound);
+            wasGrounded = true;
+        }
+        if (!grounded && wasGrounded){
+            wasGrounded = false;
+        }
         // Movimiento WASD o flechas
         MyInput();
         SpeedControl();
@@ -96,6 +112,9 @@ public class PlayerMovement : MonoBehaviour
         {
             MovePlayer();
         }
+    }
+    public void PlayWalkSoundEffect(){
+        audioSc.PlayOneShot(walkSounds[Random.Range(0,walkSounds.Length)]);
     }
 
     // Setea el booleano canMove
@@ -127,16 +146,16 @@ public class PlayerMovement : MonoBehaviour
 
         if(OnSlope())
         {
+            
             rb.AddForce(GetSlopeMoveDirection() * (moveSpeed * 20f), ForceMode.Force);
-
+            
             if (rb.velocity.y > 0)
             {
                 rb.AddForce(Vector3.down * 40f, ForceMode.Force);
             }
         }
-
         else switch (grounded)
-        {
+        {   
             case true:
                 rb.AddForce(moveDirection.normalized * (moveSpeed * 10f), ForceMode.Force);
                 break;
@@ -177,6 +196,10 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = velocity;
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        int selectedJumpSound = Random.Range(0,jumpSound.Length);
+        
+        audioSc.PlayOneShot(jumpSound[selectedJumpSound]);
+        Instantiate(smokeEffect, transform);
     }
 
     private void ResetJump()

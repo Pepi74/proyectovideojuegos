@@ -39,6 +39,9 @@ public class PlayerScript : MonoBehaviour
     private static readonly int XSpeed = Animator.StringToHash("x_speed");
     public ThirdPersonCamera thirdPersonCamera;
 
+    public ParticleSystem getHurtParticles;
+    private AudioSource audioSc;
+    public AudioClip []getHurtSound;
     private void Start()
     {
         gameOverUIManager = GameObject.Find("GameOverUI").GetComponent<GameOverUIManager>();
@@ -62,6 +65,7 @@ public class PlayerScript : MonoBehaviour
         upgradeManager = GameObject.Find("UpgradeMenu").GetComponent<UpgradeManager>();
         upgradeManager.gameObject.SetActive(false);
         if (Camera.main != null) thirdPersonCamera = Camera.main.GetComponent<ThirdPersonCamera>();
+        audioSc = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -149,7 +153,8 @@ public class PlayerScript : MonoBehaviour
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
-
+        audioSc.PlayOneShot(getHurtSound[Random.Range(0,getHurtSound.Length)]);
+        Instantiate(getHurtParticles, transform);
         // Si la vida es menor o igual a 0, muere
         if (currentHealth <= 0)
         {
