@@ -112,6 +112,7 @@ public class EggInteraction : MonoBehaviour
         const int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
         TextMeshProUGUI textMeshProText = resultText;
+        textMeshProText.color = Color.white;
         TextMeshProUGUI rollStartTextMeshPro = rollStartText;
 
         textMeshProText.gameObject.SetActive(true);
