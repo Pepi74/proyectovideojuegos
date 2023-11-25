@@ -1242,16 +1242,18 @@ MonoBehaviour:
   flagTired: 0
   canRegen: 1
   playerLevel: 1
-  levelText: {fileID: 0}
-  levelUpText: {fileID: 0}
+  levelText: {fileID: 2303243085340940353}
+  levelUpText: {fileID: 4556485509282927641}
   isSprinting: 0
-  playerMovement: {fileID: 0}
+  playerMovement: {fileID: 6128340443077888695}
   pauseMenu: {fileID: 0}
   roundUI: {fileID: 0}
   upgradePoints: 0
   upgradeText: {fileID: 0}
+  upgradeUI: {fileID: 0}
   upgradeUIOpen: 0
   upgradeManager: {fileID: 0}
+  thirdPersonCamera: {fileID: 0}
   getHurtParticles: {fileID: 4870819199789482992, guid: 77fb354c0fc879449afd598f304ed6ce, type: 3}
   getHurtSound:
   - {fileID: 8300000, guid: 6d6f66c0e66283244bcee2787fbd0a47, type: 3}
@@ -1385,7 +1387,7 @@ GameObject:
   - component: {fileID: 5506007117217912849}
   m_Layer: 0
   m_Name: toungeBase
-  m_TagString: Untagged
+  m_TagString: ToungeBase
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
