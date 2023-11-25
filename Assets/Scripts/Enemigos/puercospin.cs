@@ -1,56 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class puercospin : EnemyScript
+namespace Enemigos
 {
-    public int cantidadEspinas;
-    public LayerMask whatIsPlayer;
-    public Animator animator;
-    private Transform controllerUp;
-    private Transform controllerMid;
-    private Transform controllerDown;
-    // Start is called before the first frame update
-    void Start()
+    public class Puercospin : EnemyScript
     {
-        SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
-        controllerMid = this.gameObject.transform.GetChild(1);
-        controllerUp = this.gameObject.transform.GetChild(2);
-        controllerDown = this.gameObject.transform.GetChild(3);
-    }
+        public int cantidadEspinas;
+        public LayerMask whatIsPlayer;
+        private Transform controllerUp;
+        private Transform controllerMid;
+        private Transform controllerDown;
+        // Start is called before the first frame update
+        private void Start()
+        {
+            //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+            controllerMid = this.gameObject.transform.GetChild(1);
+            controllerUp = this.gameObject.transform.GetChild(2);
+            controllerDown = this.gameObject.transform.GetChild(3);
+            attackCooldown = Random.Range(4.5f, 5.5f);
+            attackRange = 6f;
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        // Update is called once per frame
+        private void Update()
+        {
+            bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInRange) chase();
-        if (playerInRange) attack();
+            switch (playerInRange)
+            {
+                case false:
+                    Chase();
+                    break;
+                case true:
+                    Attack();
+                    break;
+            }
 
+            CheckDistance();
 
-    }
-    // Emitter amount cantidad de emisores
-    // 
+        }
+        // Emitter amount cantidad de emisores
+        // 
 
-    void chase() 
-    {
-        Vector3 playerPosition = player.position;
-        Vector3 moveDirection = (playerPosition - transform.position).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-        animator.SetBool("atk", false);
-        
-    }
+        private void Chase() 
+        {
+            Vector3 playerPosition = player.position;
+            Vector3 moveDirection = (playerPosition - transform.position).normalized;
+            transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));        
+        }
 
-    void attack() 
-    {
-        BS_Controller up = controllerUp.GetComponent<BS_Controller>();
-        BS_Controller middle = controllerMid.GetComponent<BS_Controller>();
-        BS_Controller down = controllerDown.GetComponent<BS_Controller>();
+        // ReSharper disable Unity.PerformanceAnalysis
+        private void Attack() 
+        {
+            BS_Controller up = controllerUp.GetComponent<BS_Controller>();
+            BS_Controller middle = controllerMid.GetComponent<BS_Controller>();
+            BS_Controller down = controllerDown.GetComponent<BS_Controller>();
 
-        up.emitterAmount = cantidadEspinas;
-        middle.emitterAmount = cantidadEspinas;
-        down.emitterAmount = cantidadEspinas;
-        animator.SetBool("atk", true);
+            up.emitterAmount = cantidadEspinas;
+            middle.emitterAmount = cantidadEspinas;
+            down.emitterAmount = cantidadEspinas;
 
+        }
     }
 }
