@@ -12,7 +12,7 @@ public class EnemyScript : MonoBehaviour
 
     public float attackCooldown; // Enfriamiento de ataque (implementar mejor esta mecanica)
     public float timeSinceLastAttack; // Tiempo desde el ultimo ataque
-	public bool isGrabbed = false;
+	public bool isGrabbed;
 
     public float attackRange; // Rango de ataque
     
@@ -21,26 +21,20 @@ public class EnemyScript : MonoBehaviour
 
     public TextMeshProUGUI levelText;
 
-    void Start()
-    {
-        attackCooldown = Random.Range(0.5f, 1.5f);
-        attackRange = 3f;
-    }
-
-    void Awake()
+    private void Awake()
     {
         levelText = transform.Find("EnemyUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
 		player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
     }
 
-    void Update()
+    private void Update()
     {
         // Persigue al jugador
         if (player != null)
         {
             Vector3 playerPosition = player.position;
             Vector3 moveDirection = (playerPosition - transform.position).normalized;
-            transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+            transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));
         }
 
         // Manejo enfriamiento del ataque
@@ -48,13 +42,9 @@ public class EnemyScript : MonoBehaviour
         if (timeSinceLastAttack >= attackCooldown)
         {
             //PerformEnemyMeleeAttack(); // Ataca
-			Debug.Log("Ataca");
+			//Debug.Log("Ataca");
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
-
-        // Ajusta su valor Y para estar arriba del terreno (como flotando)
-        Vector3 enemyPosition = transform.position;
-        transform.position = checkHeight(enemyPosition);
         
     }
 
@@ -62,9 +52,9 @@ public class EnemyScript : MonoBehaviour
     public void SetStats(int health, int attack, float speed, int level)
     {
         moveSpeed = speed;
-        maxHealth = health;
-        currentHealth = health;
-        attackValue = attack;
+        maxHealth += health;
+        currentHealth = maxHealth;
+        attackValue += attack;
         healthBar.SetMaxHealth(maxHealth);
         enemyLevel = level;
         levelText.text = "Lv: " + enemyLevel.ToString();
@@ -82,39 +72,48 @@ public class EnemyScript : MonoBehaviour
     }
 
     // Muerte
-    void Die()
+    private void Die()
     {
         Destroy(gameObject);
     }
 
     // TODO: Mejorar esto!
     // Manejo ataque del enemigo
+/*
     void PerformEnemyMeleeAttack()
     {
         PlayerScript playerScript = player.GetComponent<PlayerScript>();
         // Verifica si el jugador esta dentro de su rango de ataque, de ser asi lo ataca
         if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
         {
-            playerScript.TakeDamage(attackValue); // El jugador es daniado
+            playerScript.TakeDamage(attackValue); // El jugador es dañado
         }
     }
+*/
 
-    // Manejo de la componente Y de la posicion del enemigo
-    Vector3 checkHeight(Vector3 enemyPosition)
-    {
-        int terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
-        RaycastHit hit;
-        if(Physics.Raycast(enemyPosition, Vector3.down, out hit, Mathf.Infinity, terrainLayerMask))
-        {
-            float terrainHeight = hit.point.y;
-            if (enemyPosition.y - terrainHeight <= 2) enemyPosition.y = terrainHeight + 2f;            
-        }
-
-        return enemyPosition;
-    }
-
-	public void grabbed()
+	public void Grabbed()
     {
         isGrabbed = true;
+    }
+
+    // ReSharper disable Unity.PerformanceAnalysis
+    protected void CheckDistance()
+    {
+        // Find all enemies in the scene
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        const float minDistance = 5f;
+
+        foreach (GameObject enemy in enemies)
+        {
+            // Check if the enemy is not the current one
+            if (enemy == gameObject) continue;
+            // Calculate the distance between the current enemy and the other enemy
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+            // If the distance is less than the minimum distance, adjust the position
+            if (!(distance < minDistance)) continue;
+            Vector3 direction = transform.position - enemy.transform.position;
+            transform.Translate(direction.normalized * ((minDistance - distance) * Time.deltaTime), Space.World);
+        }
     }
 }   

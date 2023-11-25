@@ -596,10 +596,14 @@ MonoBehaviour:
   maxHealth: 10
   currentHealth: 0
   attackValue: 2
+  player: {fileID: 0}
   attackCooldown: 1
+  timeSinceLastAttack: 0
+  isGrabbed: 0
   attackRange: 2
   healthBar: {fileID: 3100944702465745177}
   enemyLevel: 0
+  levelText: {fileID: 0}
 --- !u!1 &6522090459689975330
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,7 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 8381081919296799037}
-  HPText: {fileID: 8354036145224328525}
+  hpText: {fileID: 8354036145224328525}
 --- !u!1 &8993712364501690865
 GameObject:
   m_ObjectHideFlags: 0

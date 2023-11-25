@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Cinemachine;
 
@@ -10,7 +9,6 @@ public class ThirdPersonCamera : MonoBehaviour
     private CinemachineFreeLook combatCamFreeLook;
 
     public Transform orientation;
-    public Rigidbody rb;
 
     public float rotationSpeed;
 
@@ -21,22 +19,26 @@ public class ThirdPersonCamera : MonoBehaviour
 
     public CameraStyle currentStyle;
 
+    public bool canMoveCamera;
+    public CinemachineFreeLook freeLookCamera;
+
     public enum CameraStyle
     {
         Basic,
         Combat
     }
 
-    void Start()
+    private void Start()
     {
         rotationSpeed = 5f;
         SwitchCameraStyle(CameraStyle.Combat);
         // Bloquear el cursor en el centro
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        canMoveCamera = true;
     }
 
-    void Awake()
+    private void Awake()
     {
         thrdCamFreeLook = thrdPersonCam.GetComponent<CinemachineFreeLook>();
         combatCamFreeLook = combatCam.GetComponent<CinemachineFreeLook>();
@@ -44,22 +46,24 @@ public class ThirdPersonCamera : MonoBehaviour
         spawner.onPlayerSpawned.AddListener(SetPlayerReference);
     }
 
-    void Update()
+    private void Update()
     {
+        if (!canMoveCamera) return;
+        if (player == null) return;
+        var position = player.transform.position;
+        var camPosition = transform.position;
+        Vector3 viewDir = position - new Vector3(camPosition.x, position.y, camPosition.z);
+        orientation.transform.forward = viewDir.normalized;
 
-        if (player != null)
+        // if (horizontalInput == 0 && verticalInput == 0)
+        //     SwitchCameraStyle(CameraStyle.Basic);
+        // else if (horizontalInput != 0 || verticalInput != 0)
+        //     SwitchCameraStyle(CameraStyle.Combat);
+
+        switch (currentStyle)
         {
-            Vector3 viewDir = player.transform.position - new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
-            orientation.transform.forward = viewDir.normalized;
-
-            // if (horizontalInput == 0 && verticalInput == 0)
-            //     SwitchCameraStyle(CameraStyle.Basic);
-            // else if (horizontalInput != 0 || verticalInput != 0)
-            //     SwitchCameraStyle(CameraStyle.Combat);
-
-            if (currentStyle == CameraStyle.Basic)
-            {       
-
+            case CameraStyle.Basic:
+            {
                 float horizontalInput = Input.GetAxis("Horizontal");
                 float verticalInput = Input.GetAxis("Vertical"); 
                 Vector3 inputDir = orientation.transform.forward * verticalInput + orientation.right * horizontalInput;
@@ -67,24 +71,29 @@ public class ThirdPersonCamera : MonoBehaviour
                 if (inputDir != Vector3.zero)
                 {
                     player.transform.forward = Vector3.Slerp(player.transform.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
-                } 
-            }
+                }
 
-            else if (currentStyle == CameraStyle.Combat)
+                break;
+            }
+            case CameraStyle.Combat:
             {
-                Vector3 dirToCombatLookAt = combatLookAt.position - new Vector3(transform.position.x, combatLookAt.position.y, transform.position.z);
+                var combatLookAtPosition = combatLookAt.position;
+                camPosition = transform.position;
+                Vector3 dirToCombatLookAt = combatLookAtPosition - new Vector3(camPosition.x, combatLookAtPosition.y, camPosition.z);
                 orientation.transform.forward = dirToCombatLookAt.normalized;
 
                 player.transform.forward = dirToCombatLookAt.normalized;
+                break;
             }
-            
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    void SetPlayerReference(GameObject spawnedPlayer)
+    private void SetPlayerReference(GameObject spawnedPlayer)
     {
         player = spawnedPlayer;
-        rb = player.GetComponent<Rigidbody>();
+        player.GetComponent<Rigidbody>();
         orientation = player.transform.Find("Orientation").gameObject.transform;
         combatLookAt = player.transform.Find("Orientation").gameObject.transform.Find("CombatLookAt").gameObject.transform;
 
@@ -100,9 +109,24 @@ public class ThirdPersonCamera : MonoBehaviour
         combatCam.SetActive(false);
         thrdPersonCam.SetActive(false);
 
-        if(newStyle == CameraStyle.Basic) thrdPersonCam.SetActive(true);
-        if(newStyle == CameraStyle.Combat) combatCam.SetActive(true);
+        switch (newStyle)
+        {
+            case CameraStyle.Basic:
+                thrdPersonCam.SetActive(true);
+                break;
+            case CameraStyle.Combat:
+                combatCam.SetActive(true);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newStyle), newStyle, null);
+        }
 
         currentStyle = newStyle;
+    }
+    
+    public void SetCanMoveCamera(bool canMove)
+    {
+        canMoveCamera = canMove;
+        freeLookCamera.enabled = canMove;
     }
 }

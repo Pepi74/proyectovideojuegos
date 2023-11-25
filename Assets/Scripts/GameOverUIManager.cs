@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -10,14 +9,17 @@ public class GameOverUIManager : MonoBehaviour
     public GameObject interactionUI; // UI interaccion
     public Button restartButton; // Boton reiniciar
     public Button exitButton; // Boton salir
+    public int roundNumber;
+    public TextMeshProUGUI roundText;
 
     public PauseMenu pauseMenu; // Referencia al script PauseMenu del menu de pausa
 
     // Inicializacion de botones
-    void Start()
+    private void Start()
     {
         restartButton.onClick.AddListener(RestartGame);
         exitButton.onClick.AddListener(ExitGame);
+        roundNumber = GameObject.Find("GameManager").GetComponent<GameManager>().roundNumber;
     }
 
     // Muestra la pantalla de game over
@@ -27,17 +29,22 @@ public class GameOverUIManager : MonoBehaviour
         interactionUI.SetActive(false);
         Time.timeScale = 0f;
         pauseMenu.SetGameOverMenuState(true);
+        roundText.color = Color.red;
+        if(roundNumber == 1) roundText.text = "You have survived " + roundNumber + " round!";
+        else roundText.text = "You have survived " + roundNumber + " rounds!";
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     // Metodo para reiniciar el juego
-    public void RestartGame()
+    private static void RestartGame()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Metodo para salir del juego
-    public void ExitGame()
+    private static void ExitGame()
     {
         Application.Quit(); // Exit the game
     }
