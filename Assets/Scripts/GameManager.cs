@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public EggInteraction eggInteraction;
     public TextMeshProUGUI roundText;
+    public PlayerScript playerScript;
+    public UpgradeManager upgradeManager;
 
     private void Start()
     {
@@ -23,10 +25,13 @@ public class GameManager : MonoBehaviour
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
         player = GameObject.FindGameObjectWithTag("Player");
+        playerScript = player.GetComponent<PlayerScript>();
         eggInteraction = player.GetComponent<EggInteraction>();
         roundText = transform.Find("RoundUI").Find("RoundText").GetComponent<TextMeshProUGUI>();
         roundText.color = Color.red;
         roundText.text = "Round: " + roundNumber;
+        upgradeManager = GameObject.Find("UpgradeMenu").GetComponent<UpgradeManager>();
+        upgradeManager.RandomizeUpgrades();
     }
 
     private void Update()
@@ -56,6 +61,7 @@ public class GameManager : MonoBehaviour
         roundNumber++;
         roundText.text = "Round: " + roundNumber;
         eggInteraction.enemyLevel++;
+        if (roundNumber % 2 == 1 && roundNumber != 1) playerScript.upgradePoints++;
     }
 
     private void NextRoundChanges()

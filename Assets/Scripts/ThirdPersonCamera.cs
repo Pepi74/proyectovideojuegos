@@ -19,6 +19,9 @@ public class ThirdPersonCamera : MonoBehaviour
 
     public CameraStyle currentStyle;
 
+    public bool canMoveCamera;
+    public CinemachineFreeLook freeLookCamera;
+
     public enum CameraStyle
     {
         Basic,
@@ -32,6 +35,7 @@ public class ThirdPersonCamera : MonoBehaviour
         // Bloquear el cursor en el centro
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        canMoveCamera = true;
     }
 
     private void Awake()
@@ -44,6 +48,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void Update()
     {
+        if (!canMoveCamera) return;
         if (player == null) return;
         var position = player.transform.position;
         var camPosition = transform.position;
@@ -117,5 +122,11 @@ public class ThirdPersonCamera : MonoBehaviour
         }
 
         currentStyle = newStyle;
+    }
+    
+    public void SetCanMoveCamera(bool canMove)
+    {
+        canMoveCamera = canMove;
+        freeLookCamera.enabled = canMove;
     }
 }

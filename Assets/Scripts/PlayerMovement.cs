@@ -81,19 +81,24 @@ public class PlayerMovement : MonoBehaviour
         SpeedControl();
         StateHandler();
 
-        if (grounded)
-            rb.drag = groundDrag;
-        else
-            rb.drag = 0;
-
+        if (grounded) rb.drag = groundDrag;
+        else rb.drag = 0;
     }
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (!canMove)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        else
+        {
+            MovePlayer();
+        }
     }
 
-    // Setea el booleano canMove (usado en el menu de pausa)
+    // Setea el booleano canMove
     public void SetCanMove(bool move)
     {
         canMove = move;

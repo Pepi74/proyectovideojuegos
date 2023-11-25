@@ -23,7 +23,7 @@ public class PauseMenu : MonoBehaviour
         // Si el menu de gameover no esta activo, pasa esto
         if (isGameOverMenuActive) return;
         // Presionando "Esc" abre el menu de pausa
-        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+        if (!Input.GetKeyDown(KeyCode.Escape) || playerScript.upgradeUIOpen) return;
         if (isPaused)
         {
             Resume();

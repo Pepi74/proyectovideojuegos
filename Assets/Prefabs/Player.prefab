@@ -1236,6 +1236,11 @@ MonoBehaviour:
   isSprinting: 0
   playerMovement: {fileID: 0}
   pauseMenu: {fileID: 0}
+  roundUI: {fileID: 0}
+  upgradePoints: 0
+  upgradeText: {fileID: 0}
+  upgradeUIOpen: 0
+  upgradeManager: {fileID: 0}
 --- !u!95 &572175950871794000
 Animator:
   serializedVersion: 5

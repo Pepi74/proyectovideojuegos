@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using TMPro;
@@ -30,6 +31,13 @@ public class PlayerScript : MonoBehaviour
 	public PlayerMovement playerMovement;
 	public PauseMenu pauseMenu;
     public GameObject roundUI;
+    public int upgradePoints;
+    public TextMeshProUGUI upgradeText;
+    public bool upgradeUIOpen;
+    public UpgradeManager upgradeManager;
+    private static readonly int ZSpeed = Animator.StringToHash("z_speed");
+    private static readonly int XSpeed = Animator.StringToHash("x_speed");
+    public ThirdPersonCamera thirdPersonCamera;
 
     private void Start()
     {
@@ -44,14 +52,61 @@ public class PlayerScript : MonoBehaviour
         levelUpText = transform.Find("PlayerUI").Find("Level").Find("LevelUpText").GetComponent<TextMeshProUGUI>();
         levelUpText.gameObject.SetActive(false);
         levelText = transform.Find("PlayerUI").Find("Level").Find("LevelText").GetComponent<TextMeshProUGUI>();
-        levelText.text = "Level: " + playerLevel.ToString();
+        levelText.text = "Level: " + playerLevel;
         playerMovement = GetComponent<PlayerMovement>();
         pauseMenu = GameObject.Find("PauseUI").GetComponent<PauseMenu>();
         roundUI = GameObject.Find("RoundUI");
+        upgradePoints = 0;
+        upgradeText = GameObject.Find("UpgradeText").GetComponent<TextMeshProUGUI>();
+        upgradeText.gameObject.SetActive(false);
+        upgradeManager = GameObject.Find("UpgradeMenu").GetComponent<UpgradeManager>();
+        upgradeManager.gameObject.SetActive(false);
+        if (Camera.main != null) thirdPersonCamera = Camera.main.GetComponent<ThirdPersonCamera>();
     }
 
     private void Update()
     {
+        switch (upgradePoints)
+        {
+            case > 0 when !upgradeUIOpen:
+                upgradeText.gameObject.SetActive(true);
+                upgradeText.text = upgradePoints == 1 ? $"You have <color=green>{upgradePoints}</color> point available\nPress <color=yellow>Q</color> to open the upgrade menu!" : $"You have <color=green>{upgradePoints}</color> points available\nPress <color=yellow>Q</color> to open the upgrade menu!";
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    upgradeUIOpen = true;
+                    upgradeText.gameObject.SetActive(false);
+                    upgradeManager.gameObject.SetActive(true);
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                    playerMovement.SetCanMove(false);
+                    playerMovement.animator.SetFloat(ZSpeed,0f);
+                    playerMovement.animator.SetFloat(XSpeed,0f);
+                    thirdPersonCamera.SetCanMoveCamera(false);
+                }
+                break;
+            case <= 0:
+                upgradeText.gameObject.SetActive(false);
+                upgradeUIOpen = false;
+                upgradeManager.gameObject.SetActive(false);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                playerMovement.SetCanMove(true);
+                thirdPersonCamera.SetCanMoveCamera(true);
+                break;
+        }
+
+        if (upgradeUIOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                upgradeUIOpen = false;
+                upgradeManager.gameObject.SetActive(false);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                playerMovement.SetCanMove(true);
+                thirdPersonCamera.SetCanMoveCamera(true);
+            }
+        }
 
         if (isTired && !canRegen && flagTired)
         {
@@ -138,41 +193,6 @@ public class PlayerScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    // Manejo de ataque
-/*
-    private void Attack()
-    {
-        // Raycast desde el centro de la camara hacia donde se apunta.
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100f))
-        {
-            // Raycast colisiona con enemigo
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                // Calcula la distancia entre el jugador y el enemigo
-                float distance = Vector3.Distance(transform.position, hit.collider.transform.position);
-                //Debug.Log(distance);
-                // Si la distancia es menor o igual al rango de ataque, el enemigo es dañado
-                if (distance <= attackRange)
-                {
-                    EnemyScript enemyScript = hit.collider.GetComponent<EnemyScript>();
-                    enemyScript.TakeDamage(attackValue);
-                }
-            }
-        }
-    }
-*/
-
-/*
-    private void MeleeAttack()
-    {
-
-    }
-*/
-
     private IEnumerator Tired(float seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -213,5 +233,46 @@ public class PlayerScript : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         levelUpText.gameObject.SetActive(false);
+    }
+
+    public void SetUpgradeUIOpen(bool value)
+    {
+        upgradeUIOpen = value;
+    }
+
+    public void ApplyUpgrade(Upgrade upgrade)
+    {
+        switch (upgrade.type)
+        {
+            case UpgradeType.LevelIncrease:
+                LevelUp();
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.MaxHpIncrease:
+                maxHealth += upgrade.value;
+                healthBar.SetMaxHealth(maxHealth);
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.MaxStaminaIncrease:
+                maxStamina += upgrade.value;
+                staminaBar.SetMaxStamina(maxStamina);
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.StaminaRegenIncrease:
+                staminaRegenRate += upgrade.value;
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            case UpgradeType.AttackDamageIncrease:
+                attackValue += upgrade.value;
+                upgradeManager.RandomizeUpgrades();
+                upgradePoints--;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
