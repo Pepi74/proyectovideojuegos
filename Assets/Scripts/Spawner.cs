@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
     public GameObject playerPrefab;
     public Terrain terrain; // Referencia al terreno
     public readonly PlayerSpawnEvent onPlayerSpawned = new PlayerSpawnEvent();
-    public GameObject boundaryPrefab;
+    //public GameObject boundaryPrefab;
 
     public int minSpawn; // Cantidad minima de huevos que spawnearan
     public int maxSpawn; // Cantidad maxima de huevos que spawnearan
@@ -33,14 +33,14 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < Random.Range(minSpawn, maxSpawn + 1); i++)
         {
-            float randomX = Random.Range(0f, terrainData.size.x - 2f);
-            float randomZ = Random.Range(0f, terrainData.size.z - 2f);
+            float randomX = Random.Range(15f, terrainData.size.x - 15f);
+            float randomZ = Random.Range(15f, terrainData.size.z - 15f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
             while (terrainHeight  + 0.5f < water.transform.position.y)
             {
-                randomX = Random.Range(0f, terrainData.size.x - 2f);
-                randomZ = Random.Range(0f, terrainData.size.z - 2f);
+                randomX = Random.Range(15f, terrainData.size.x - 15f);
+                randomZ = Random.Range(15f, terrainData.size.z - 15f);
                 terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
             }
 
@@ -61,7 +61,7 @@ public class Spawner : MonoBehaviour
         onPlayerSpawned.Invoke(player);
     }
 
-    public void SpawnBoundaries()
+    /*public void SpawnBoundaries()
     {
         var data = terrain.terrainData;
         Vector3 terrainSize = data.size;
@@ -87,7 +87,7 @@ public class Spawner : MonoBehaviour
             GameObject boundary = Instantiate(boundaryPrefab, position, Quaternion.identity);
             boundary.transform.localScale = position.z != terrainSize.z / 2 ? new Vector3(terrainSize.x, 50f, 4) : new Vector3(4, 50f, terrainSize.z);
         }
-    }
+    }*/
 
     public void SpawnLilyPads()
     {
@@ -136,8 +136,8 @@ public class Spawner : MonoBehaviour
         {
 
             // Choose a position for the tree within the terrain size
-            float randomX = Random.Range(0f, terrainData.size.x);
-            float randomZ = Random.Range(0f, terrainData.size.z);
+            float randomX = Random.Range(15f, terrainData.size.x - 15f);
+            float randomZ = Random.Range(15f, terrainData.size.z - 15f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
@@ -190,12 +190,7 @@ public class Spawner : MonoBehaviour
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight - 0.5f, randomZ);
-            if (i % 2 == 1) {
-                Instantiate(rockPrefab_large, spawnPosition, Quaternion.identity);
-            } else {
-                Instantiate(rockPrefab_small, spawnPosition, Quaternion.identity);
-            }
-            
+            Instantiate(i % 2 == 1 ? rockPrefab_large : rockPrefab_small, spawnPosition, Quaternion.identity);
         }
     }
 

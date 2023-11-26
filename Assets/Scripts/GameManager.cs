@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         roundNumber = 1;
         terrainGenerator.GenerateTerrain(terrain.terrainData);
-        spawner.SpawnBoundaries();
+        //spawner.SpawnBoundaries();
         spawner.SpawnPlayer();
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         DestroyPreviousObject("Lily");
         DestroyPreviousObject("Boundary");
         terrainGenerator.GenerateTerrain(terrain.terrainData);
-        spawner.SpawnBoundaries();
+        //spawner.SpawnBoundaries();
     }
 
     private static void DestroyPreviousObject(string objectTag)
