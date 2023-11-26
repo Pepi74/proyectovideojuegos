@@ -12,7 +12,8 @@ public class ToungeTip : MonoBehaviour
     private Vector3 initialPosition;
     public Transform player;
     private bool returning;
-
+    public AudioSource audioSc;
+    public AudioClip hitEnemySound;
     private void Start()
     {
         initialPosition = transform.position;
@@ -21,6 +22,7 @@ public class ToungeTip : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        audioSc = player.GetComponent<AudioSource>();
         attackValue = player.GetComponent<PlayerScript>().attackValue;
         terrainLayerMask = 1 << LayerMask.NameToLayer("Terrain");
     }
@@ -63,11 +65,13 @@ public class ToungeTip : MonoBehaviour
         {
             EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             enemyScript.TakeDamage(attackValue);
+            audioSc.PlayOneShot(hitEnemySound);
         }
         if (other.gameObject.CompareTag("Boss"))
         {
             EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             enemyScript.TakeDamage(attackValue);
+            audioSc.PlayOneShot(hitEnemySound);
         }
         if (!other.gameObject.CompareTag("Player")) StartReturn();
     }

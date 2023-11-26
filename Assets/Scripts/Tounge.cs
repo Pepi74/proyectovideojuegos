@@ -18,7 +18,6 @@ public class Tounge : MonoBehaviour
     public float meleeTimer; // variable de conteo para el ataque melee.
     private AudioSource audioSc;
     public AudioClip rangeAttackSound;
-
     public PlayerScript playerScript;
     public PauseMenu pauseMenu;
 
