@@ -13,6 +13,8 @@ namespace Enemigos
         public hipoAttack ataqueDistancia;
         private Vector3 attackPoint;
 
+        private Animator anim;
+
         // Start is called before the first frame update
         private void Start()
         {
@@ -20,6 +22,7 @@ namespace Enemigos
             player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
             //SetStats(maxHealth, attackValue, moveSpeed);
             SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
+            anim = GetComponent<Animator>();
         }
 
         // Update is called once per frame
@@ -38,7 +41,7 @@ namespace Enemigos
             switch (playerInRange)
             {
                 case false when enemyInRange && timeSinceLastAttack > attackCooldown:
-                    ThrowTeammate(); // lanza otro enemigo al jugador
+                    anim.SetTrigger("Attack3");// lanza otro enemigo al jugador
                     break;
                 case false when playerInRangeOfRangedAttack && timeSinceLastAttack > attackCooldown * 0.975f:
                     RangedAttack();
@@ -61,7 +64,7 @@ namespace Enemigos
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        private void ThrowTeammate()
+        public void ThrowTeammate()
         {
             GameObject teammate = FindClosest();
 
@@ -89,11 +92,10 @@ namespace Enemigos
 
         }
 
-        private void MeleeAttack()
+        public void MeleeAttack()
         {   
             cuerpo.AddForce((player.position - transform.position + new Vector3(0,2,0)).normalized * impulseForce, ForceMode.Impulse);
             timeSinceLastAttack = 0f;
-
         }
 
         private void RangedAttack()
@@ -106,9 +108,12 @@ namespace Enemigos
         {
             var position = transform.position;
             Vector3 directionAttack = (player.position - position).normalized;
+            anim.SetTrigger("Attack2");
             yield return new WaitForSeconds(0.4f);
+            anim.SetTrigger("Attack2");
             Instantiate(ataqueDistancia, (position + directionAttack*4), Quaternion.identity);
             yield return new WaitForSeconds(0.4f);
+            anim.SetTrigger("Attack2");
             Instantiate(ataqueDistancia, (position + directionAttack*8), Quaternion.identity);
             yield return new WaitForSeconds(0.4f);
             Instantiate(ataqueDistancia, (position + directionAttack*12), Quaternion.identity);

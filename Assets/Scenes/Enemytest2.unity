@@ -2510,6 +2510,8 @@ MonoBehaviour:
   isPaused: 0
   playerMovementScript: {fileID: 0}
   playerScript: {fileID: 0}
+  playerCrosshair: {fileID: 0}
+  thirdPersonCamera: {fileID: 0}
 --- !u!114 &757969471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3522,11 +3524,16 @@ MonoBehaviour:
   eggPrefab: {fileID: 2483889686047284692, guid: 7217d20546094d34e9c470ca939431f6, type: 3}
   playerPrefab: {fileID: 6128340443077888685, guid: b2c6d675712582e42bdf262226d21317, type: 3}
   terrain: {fileID: 224107502}
-  boundaryPrefab: {fileID: 6338841735866981439, guid: 859b338e9a31bcc468d7ff2b12049cb0, type: 3}
   minSpawn: 1
   maxSpawn: 2
   water: {fileID: 1497371992}
   lilyPrefab: {fileID: 8113710751482780531, guid: 8f58786c2b57dd94daf2e3a71a24d03c, type: 3}
+  grassPrefab: {fileID: 0}
+  rockPrefab_small: {fileID: 0}
+  rockPrefab_large: {fileID: 0}
+  bossPrefab: {fileID: 0}
+  grassNumber: 0
+  rockNumber: 0
   maxPads: 50
   treePrefab: {fileID: 100000, guid: 6b4b29e49f76c9f46b7f3594d299d8d9, type: 3}
   numberOfTrees: 25
@@ -3886,7 +3893,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrade:
     name: 
-    description: 
     type: 0
     value: 0
     rarity: 0
@@ -4297,7 +4303,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrade:
     name: 
-    description: 
     type: 0
     value: 0
     rarity: 0
@@ -4770,6 +4775,11 @@ MonoBehaviour:
   roundText: {fileID: 276039508}
   playerScript: {fileID: 0}
   upgradeManager: {fileID: 757969468}
+  nextRoundText: {fileID: 0}
+  bossRound: 0
+  boss: {fileID: 0}
+  resultText: {fileID: 0}
+  rollStartText: {fileID: 0}
 --- !u!4 &1512338442
 Transform:
   m_ObjectHideFlags: 0
@@ -5698,7 +5708,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrade:
     name: 
-    description: 
     type: 0
     value: 0
     rarity: 0
@@ -6483,7 +6492,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrade:
     name: 
-    description: 
     type: 0
     value: 0
     rarity: 0
