@@ -175,9 +175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Shot: {fileID: 5780863024583466758, guid: 53176acaaae3b6d46bb17e0f6fb6d97b, type: 3}
-  ShotSpeed: 12.26
+  ShotSpeed: 13
   localOffset: -0
-  shotRate: 8.1
+  shotRate: 4.9
   pauseRate: 10
-  pauseLength: 1.32
+  pauseLength: 2
   nextPauseTime: 0

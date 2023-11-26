@@ -64,6 +64,11 @@ public class ToungeTip : MonoBehaviour
             EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             enemyScript.TakeDamage(attackValue);
         }
+        if (other.gameObject.CompareTag("Boss"))
+        {
+            EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
+            enemyScript.TakeDamage(attackValue);
+        }
         if (!other.gameObject.CompareTag("Player")) StartReturn();
     }
 

@@ -22,6 +22,8 @@ public class EnemyBullet : MonoBehaviour
 
     // Especial
     public bool desviar;
+    public bool seDetieneTocarTerreno;
+    public bool desapareseTocarTerreno;
     public Vector3 desviar_dir = new Vector3(1f,0,0);
 
     private float duration;
@@ -61,6 +63,22 @@ public class EnemyBullet : MonoBehaviour
         else{
             Destroy(gameObject);
         }*/
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.CompareTag("Player")){
+            PlayerScript playerScript = other.gameObject.GetComponent<PlayerScript>();
+            playerScript.TakeDamage(Damage);
+            Destroy(gameObject);
+        } else if (other.collider.CompareTag("Terrain")){
+            if (seDetieneTocarTerreno){
+                RB.velocity = Vector3.zero;
+            }
+            if (desapareseTocarTerreno){
+                Destroy(this);
+            }
+        };
     }
 
     public void UpdateVector(Vector3 new_vector){

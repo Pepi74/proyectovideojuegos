@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f23c52a2fa53a4e47b3396ee1218ba45, type: 2}
+  - {fileID: 2100000, guid: d830e977390d34245aa462b193bbaaf2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,10 +113,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   base_speed: 2
   Damage: 1
-  lifeTime: 4
+  lifeTime: 2
   shooter: 1
   direction: {x: -1, y: 0, z: 0}
   desviar: 0
+  seDetieneTocarTerreno: 0
+  desapareseTocarTerreno: 1
   desviar_dir: {x: 0, y: 0, z: 0}
 --- !u!54 &2164149911528505469
 Rigidbody:

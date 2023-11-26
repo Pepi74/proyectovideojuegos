@@ -46,7 +46,6 @@ namespace Enemigos
         // ReSharper disable Unity.PerformanceAnalysis
         private void Attack()
         {   
-            Debug.Log("Atacando");
             cuerpo.AddForce((player.position - transform.position + new Vector3(0,1,0)).normalized * impulseForce, ForceMode.Impulse);
             timeSinceLastAttack = 0f;
             attackFinish = false;

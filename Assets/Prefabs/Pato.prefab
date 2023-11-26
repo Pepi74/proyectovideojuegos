@@ -540,6 +540,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 520
+  particulas: {fileID: 7119225756052772223, guid: 581f5495043480b48873f9073e13f704, type: 3}
 --- !u!54 &3960803417264006164
 Rigidbody:
   m_ObjectHideFlags: 0
