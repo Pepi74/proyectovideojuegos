@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
     public int roundNumber;
     public Spawner spawner;
     public Terrain terrain;
@@ -15,16 +14,23 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI roundText;
     public PlayerScript playerScript;
     public UpgradeManager upgradeManager;
-
+    public TextMeshProUGUI nextRoundText;
+    public bool bossRound;
+    public GameObject boss;
+    public TextMeshProUGUI resultText;
+    public TextMeshProUGUI rollStartText;
+    
     private void Start()
     {
         roundNumber = 1;
         terrainGenerator.GenerateTerrain(terrain.terrainData);
-        spawner.SpawnBoundaries();
+        //spawner.SpawnBoundaries();
         spawner.SpawnPlayer();
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
+        spawner.SpawnGrass();
+        spawner.SpawnRocks();
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerScript>();
         eggInteraction = player.GetComponent<EggInteraction>();
@@ -33,12 +39,24 @@ public class GameManager : MonoBehaviour
         roundText.text = "Round: " + roundNumber;
         upgradeManager = GameObject.Find("UI").GetComponent<UpgradeManager>();
         upgradeManager.RandomizeUpgrades();
+        nextRoundText = GameObject.Find("NextRoundText").GetComponent<TextMeshProUGUI>();
+        nextRoundText.gameObject.SetActive(false);
+        bossRound = false;
     }
 
     private void Update()
     {
+        if (bossRound)
+        {
+            if (boss != null) return;
+            bossRound = false;
+            playerScript.upgradePoints += 2;
+            return;
+        }
+        
         if (!AreAllEnemiesAndEggsDestroyed() || reSpawning) return;
         reSpawning = true;
+        StartCoroutine(StartRoundCountdown(5f));
         StartCoroutine(NextRound());
     }
     
@@ -56,13 +74,20 @@ public class GameManager : MonoBehaviour
     private IEnumerator NextRound()
     {
         yield return new WaitForSeconds(5f);
-        NextRoundChanges();
-        ReSpawnObjects();
-        reSpawning = false;
         roundNumber++;
         roundText.text = "Round: " + roundNumber;
         eggInteraction.enemyLevel++;
-        if (roundNumber % 2 == 1 && roundNumber != 1) playerScript.upgradePoints++;
+        NextRoundChanges();
+        if (roundNumber % 5 == 0)
+        {
+            BossObjects();
+        }
+        else
+        {
+            ReSpawnObjects();
+            reSpawning = false;
+            if (roundNumber % 2 == 1 && !bossRound) playerScript.upgradePoints++;
+        }
     }
 
     private void NextRoundChanges()
@@ -75,9 +100,11 @@ public class GameManager : MonoBehaviour
     {
         DestroyPreviousObject("Tree");
         DestroyPreviousObject("Lily");
-        DestroyPreviousObject("Boundary");
+        //DestroyPreviousObject("Boundary");
+        DestroyPreviousObject("Grass");
+        DestroyPreviousObject("Rock");
         terrainGenerator.GenerateTerrain(terrain.terrainData);
-        spawner.SpawnBoundaries();
+        //spawner.SpawnBoundaries();
     }
 
     private static void DestroyPreviousObject(string objectTag)
@@ -104,5 +131,87 @@ public class GameManager : MonoBehaviour
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
+        spawner.SpawnGrass();
+        spawner.SpawnRocks();
+    }
+
+    private void BossObjects()
+    {
+        spawner.SpawnLilyPads();
+        spawner.SpawnTrees();
+        spawner.SpawnGrass();
+        spawner.SpawnRocks();
+        StartCoroutine(RollD20BeforeBoss());
+    }
+    
+    private IEnumerator StartRoundCountdown(float countdownDuration)
+    {
+        float timer = countdownDuration;
+        nextRoundText.gameObject.SetActive(true);
+        while (timer > 0f)
+        {
+            UpdateRoundCountdownText(timer);
+            yield return new WaitForSeconds(1f);  // Wait for one second
+            timer--;
+        }
+        
+        nextRoundText.gameObject.SetActive(false);
+    }
+    
+    private void UpdateRoundCountdownText(float timeRemaining)
+    {
+        nextRoundText.text = "Next round in: " + ((int) timeRemaining);
+    }
+    
+    private static int RollD20()
+    {
+        return Random.Range(1, 21);
+    }
+    // ReSharper disable Unity.PerformanceAnalysis
+    private IEnumerator RollD20BeforeBoss()
+    {
+        const int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
+        float endTime = Time.time + randomNumbersDuration;
+        resultText.color = Color.white;
+        rollStartText.gameObject.SetActive(true);
+
+        resultText.gameObject.SetActive(true);
+        // Muestra numeros random antes del resultado final del d20.
+        while (Time.time < endTime)
+        {
+            int randomValue = Random.Range(1, 21);
+            resultText.text = randomValue.ToString();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // Resultado final.
+        int finalResult = RollD20();
+        string finalResultString = finalResult.ToString();
+        // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
+        resultText.color = finalResult switch
+        {
+            // Manejo del roll igual a 1
+            1 => Color.red,
+            // Manejo del roll entre 2 y 7
+            > 1 and <= 7 => new Color(1.0f, 0.44f, 0.0f),
+            // Manejo del roll entre 8 y 13
+            > 7 and <= 13 => Color.yellow,
+            // Manejo del roll entre 14 y 19
+            > 13 and <= 19 => Color.blue,
+            // Manejo del roll igual a 20
+            20 => Color.green,
+            _ => resultText.color
+        };
+
+        resultText.text = finalResultString;
+        int attackValue = 1 * eggInteraction.enemyLevel;
+		int health = (2 * eggInteraction.enemyLevel) - (finalResult / 2);
+        spawner.SpawnBoss(health, attackValue, eggInteraction.enemyLevel);
+        boss = GameObject.FindGameObjectWithTag("Boss");
+        bossRound = true;
+        reSpawning = false;
+        yield return new WaitForSeconds(2.0f);
+        resultText.gameObject.SetActive(false);
+        rollStartText.gameObject.SetActive(false);
     }
 }

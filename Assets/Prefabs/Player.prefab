@@ -1214,6 +1214,7 @@ MonoBehaviour:
   crocPrefab: {fileID: 1168888579996066459, guid: 91ea851e30a77a348bf21ba64aa05d5b, type: 3}
   porcupinePrefab: {fileID: 7686293423254546334, guid: 9f5d141780937f6478d94fa7ab66cb93, type: 3}
   skunkPrefab: {fileID: 3377477768389982605, guid: aff35b63d4a5ed9458086ca42d81987e, type: 3}
+  hippoPrefab: {fileID: 6551171268139589526, guid: fa0610dae9834594caf620afbe6d7164, type: 3}
 --- !u!114 &3688713152168778924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,6 +1903,7 @@ MonoBehaviour:
   meleeTimer: 0
   rangeAttackSound: {fileID: 8300000, guid: d20f27779e38f1b47a99f12e2b0f3099, type: 3}
   playerScript: {fileID: 3688713152168778924}
+  pauseMenu: {fileID: 0}
 --- !u!82 &2151144432957683880
 AudioSource:
   m_ObjectHideFlags: 0

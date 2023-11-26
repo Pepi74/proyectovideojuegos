@@ -19,6 +19,8 @@ namespace Enemigos
         private AudioSource audioSc;
         public AudioClip []quackSounds;
         public AudioClip groundHitSound;
+        private Animator anim;
+
         // Start is called before the first frame update
         private void Start()
         {
@@ -28,11 +30,13 @@ namespace Enemigos
             attackCooldown = Random.Range(5.5f, 6.5f);
             attackRange = 2f;
             audioSc = GetComponent<AudioSource>();
+            anim = GetComponent<Animator>();
         }
 
         // Update is called once per frame
         private void Update()
         {
+            CheckYValue();
             // Manejo enfriamiento del ataque
             timeSinceLastAttack += Time.deltaTime;
 
@@ -75,7 +79,7 @@ namespace Enemigos
                 attackFinish = false;
             
                 timeSinceLastAttack = 0.0f; // Resetea el timer
-
+                anim.SetTrigger("Attack");
             }
 
         }

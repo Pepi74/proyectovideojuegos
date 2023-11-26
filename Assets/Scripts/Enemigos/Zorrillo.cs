@@ -29,6 +29,7 @@ namespace Enemigos
         // Update is called once per frame
         private void Update()
         {
+            CheckYValue();
             bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
             timeSinceLastAttack += Time.deltaTime;

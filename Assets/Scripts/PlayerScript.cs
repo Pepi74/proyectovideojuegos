@@ -220,7 +220,7 @@ public class PlayerScript : MonoBehaviour
         attackValue++;
         maxHealth += 20;
         maxStamina += 10;
-        staminaRegenRate += 2;
+        staminaRegenRate += 1;
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         currentStamina = maxStamina;
@@ -242,30 +242,40 @@ public class PlayerScript : MonoBehaviour
         }
         levelUpText.gameObject.SetActive(false);
     }
-
-    public void SetUpgradeUIOpen(bool value)
-    {
-        upgradeUIOpen = value;
-    }
-
     public void ApplyUpgrade(Upgrade upgrade)
     {
         switch (upgrade.type)
         {
             case UpgradeType.LevelIncrease:
-                LevelUp();
-                upgradeManager.RandomizeUpgrades();
-                upgradePoints--;
+                switch (upgrade.value)
+                {
+                    case 1:
+                        LevelUp();
+                        upgradeManager.RandomizeUpgrades();
+                        upgradePoints--;
+                        break;
+                    case 2:
+                        LevelUp();
+                        LevelUp();
+                        upgradeManager.RandomizeUpgrades();
+                        upgradePoints--;
+                        break;
+                }
+
                 break;
             case UpgradeType.MaxHpIncrease:
                 maxHealth += upgrade.value;
+                currentHealth += upgrade.value;
                 healthBar.SetMaxHealth(maxHealth);
+                healthBar.SetHealth(currentHealth);
                 upgradeManager.RandomizeUpgrades();
                 upgradePoints--;
                 break;
             case UpgradeType.MaxStaminaIncrease:
                 maxStamina += upgrade.value;
+                currentStamina += upgrade.value;
                 staminaBar.SetMaxStamina(maxStamina);
+                staminaBar.SetStamina(currentStamina);
                 upgradeManager.RandomizeUpgrades();
                 upgradePoints--;
                 break;

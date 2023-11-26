@@ -18,6 +18,7 @@ namespace Enemigos
         // Start is called before the first frame update
         private void Start()
         {
+            
             cuerpo = GetComponent<Rigidbody>();
             player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag		
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
@@ -29,6 +30,7 @@ namespace Enemigos
         // Update is called once per frame
         private void Update()
         {
+            CheckYValue();
             // Manejo enfriamiento del ataque
             timeSinceLastAttack += Time.deltaTime;
 

@@ -11,8 +11,9 @@ TagManager:
   - ToungeBase
   - Tree
   - Lily
-  - Boundary
   - Boss
+  - Rock
+  - Grass
   layers:
   - Default
   - TransparentFX

@@ -1,3 +1,4 @@
+using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,13 +10,19 @@ public class Spawner : MonoBehaviour
     public GameObject playerPrefab;
     public Terrain terrain; // Referencia al terreno
     public readonly PlayerSpawnEvent onPlayerSpawned = new PlayerSpawnEvent();
-    public GameObject boundaryPrefab;
+    //public GameObject boundaryPrefab;
 
     public int minSpawn; // Cantidad minima de huevos que spawnearan
     public int maxSpawn; // Cantidad maxima de huevos que spawnearan
 
     public GameObject water;
     public GameObject lilyPrefab;
+    public GameObject grassPrefab;
+    public GameObject rockPrefab_small;
+    public GameObject rockPrefab_large;
+    public GameObject bossPrefab;
+    public int grassNumber;
+    public int rockNumber;
     public int maxPads;
 
     public GameObject treePrefab; // The tree prefab you want to add
@@ -28,14 +35,14 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < Random.Range(minSpawn, maxSpawn + 1); i++)
         {
-            float randomX = Random.Range(0f, terrainData.size.x - 2f);
-            float randomZ = Random.Range(0f, terrainData.size.z - 2f);
+            float randomX = Random.Range(15f, terrainData.size.x - 15f);
+            float randomZ = Random.Range(15f, terrainData.size.z - 15f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
             while (terrainHeight  + 0.5f < water.transform.position.y)
             {
-                randomX = Random.Range(0f, terrainData.size.x - 2f);
-                randomZ = Random.Range(0f, terrainData.size.z - 2f);
+                randomX = Random.Range(15f, terrainData.size.x - 15f);
+                randomZ = Random.Range(15f, terrainData.size.z - 15f);
                 terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
             }
 
@@ -56,7 +63,7 @@ public class Spawner : MonoBehaviour
         onPlayerSpawned.Invoke(player);
     }
 
-    public void SpawnBoundaries()
+    /*public void SpawnBoundaries()
     {
         var data = terrain.terrainData;
         Vector3 terrainSize = data.size;
@@ -82,7 +89,7 @@ public class Spawner : MonoBehaviour
             GameObject boundary = Instantiate(boundaryPrefab, position, Quaternion.identity);
             boundary.transform.localScale = position.z != terrainSize.z / 2 ? new Vector3(terrainSize.x, 50f, 4) : new Vector3(4, 50f, terrainSize.z);
         }
-    }
+    }*/
 
     public void SpawnLilyPads()
     {
@@ -131,14 +138,77 @@ public class Spawner : MonoBehaviour
         {
 
             // Choose a position for the tree within the terrain size
-            float randomX = Random.Range(0f, terrainData.size.x);
-            float randomZ = Random.Range(0f, terrainData.size.z);
+            float randomX = Random.Range(15f, terrainData.size.x - 15f);
+            float randomZ = Random.Range(15f, terrainData.size.z - 15f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
             Instantiate(treePrefab, spawnPosition, Quaternion.identity);
         }
+    }
+
+    public void SpawnGrass()
+    {
+        if (terrain == null || grassPrefab == null)
+        {
+            Debug.LogError("Terrain or grassPrefab not assigned!");
+            return;
+        }
+
+        TerrainData terrainData = terrain.terrainData;
+
+        for (int i = 0; i < grassNumber; i++)
+        {
+
+            // Choose a position for the tree within the terrain size
+            float randomX = Random.Range(0f, terrainData.size.x);
+            float randomZ = Random.Range(0f, terrainData.size.z);
+
+            float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
+            Instantiate(grassPrefab, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void SpawnRocks()
+    {
+        if (terrain == null || rockPrefab_small == null)
+        {
+            Debug.LogError("Terrain or rockPrefab_small not assigned!");
+            return;
+        }
+
+        TerrainData terrainData = terrain.terrainData;
+
+        for (int i = 0; i < rockNumber; i++)
+        {
+
+            // Choose a position for the tree within the terrain size
+            float randomX = Random.Range(0f, terrainData.size.x);
+            float randomZ = Random.Range(0f, terrainData.size.z);
+
+            float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight - 0.5f, randomZ);
+            Instantiate(i % 2 == 1 ? rockPrefab_large : rockPrefab_small, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void SpawnBoss(int health, int attackValue, int enemyLevel)
+    {
+        TerrainData terrainData = terrain.terrainData;
+        
+        float randomX = Random.Range(15f, terrainData.size.x - 15f);
+        float randomZ = Random.Range(15f, terrainData.size.z - 15f);
+
+        float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+        Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 3f, randomZ);
+        GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+        Hipopotamo hipopotamo = boss.GetComponent<Hipopotamo>();
+        hipopotamo.SetStats(health, attackValue, hipopotamo.moveSpeed, enemyLevel + 3);
     }
 
 }

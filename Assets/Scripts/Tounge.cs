@@ -19,18 +19,20 @@ public class Tounge : MonoBehaviour
     private AudioSource audioSc;
     public AudioClip rangeAttackSound;
     public PlayerScript playerScript;
+    public PauseMenu pauseMenu;
 
     private void Start()
     {
         audioSc = GetComponent<AudioSource>();
         fireTimer = 0; //inicializar timer
         if (Camera.main != null) cam = Camera.main.transform;
+        pauseMenu = GameObject.Find("UI").GetComponent<PauseMenu>();
     }
 
     private void Update()
     {
         //Iniciar ataque a rango
-        if (Input.GetMouseButton(0) && fireTimer <= 0f && canAttack && (int)playerScript.currentStamina > 0)
+        if (Input.GetMouseButton(0) && fireTimer <= 0f && canAttack && (int)playerScript.currentStamina > 0 && !pauseMenu.isPaused)
         {
             fireTimer = 1 / fireRate;
             meleeTimer = 0.3f;
@@ -39,7 +41,7 @@ public class Tounge : MonoBehaviour
             playerScript.StaminaChange(-10);
         }
         //Iniciar ataque Melee
-        if (Input.GetMouseButton(1) && meleeTimer <= 0f && canAttack)
+        if (Input.GetMouseButton(1) && meleeTimer <= 0f && canAttack && !pauseMenu.isPaused)
         {
             fireTimer = 0.3f;
             meleeTimer = 1 / meleeFireRate;

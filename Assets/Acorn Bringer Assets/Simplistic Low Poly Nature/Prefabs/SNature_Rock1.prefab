@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4366677257127757875}
   m_Layer: 6
   m_Name: SNature_Rock1
-  m_TagString: Terrain
+  m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
