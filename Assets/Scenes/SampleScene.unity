@@ -4266,9 +4266,10 @@ MonoBehaviour:
   rockNumber: 20
   maxPads: 50
   treePrefabs:
-  - {fileID: 100000, guid: 232d918e673de694d8a118b6efe0bf6f, type: 3}
-  - {fileID: 100000, guid: 6b4b29e49f76c9f46b7f3594d299d8d9, type: 3}
-  - {fileID: 100000, guid: 011ca9ca00b21594c8a16ee78d6a8c7c, type: 3}
+  - {fileID: 1051648788624220, guid: 6b14d45548d47914088fc51496a20a8e, type: 3}
+  - {fileID: 1095773145228200, guid: fac5acd5ad489214781636c608a0c628, type: 3}
+  - {fileID: 1326781941874506, guid: f900edf8c5b608246b6a17324ef82ac0, type: 3}
+  - {fileID: 1042598324542122, guid: be267edc7fa1b284ca7ab194ee3d831e, type: 3}
   numberOfTrees: 25
 --- !u!4 &1105825866
 Transform:
