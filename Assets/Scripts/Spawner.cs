@@ -1,6 +1,8 @@
+using System;
 using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class PlayerSpawnEvent : UnityEvent<GameObject> { }
 
@@ -25,7 +27,7 @@ public class Spawner : MonoBehaviour
     public int rockNumber;
     public int maxPads;
 
-    public GameObject treePrefab; // The tree prefab you want to add
+    public GameObject[] treePrefabs;
     public int numberOfTrees;
 
     // Manejo de spawn de huevos alrededor del terreno y player en el centro del terreno
@@ -121,7 +123,7 @@ public class Spawner : MonoBehaviour
 
     public void SpawnTrees()
     {
-        if (terrain == null || treePrefab == null)
+        if (terrain == null || treePrefabs == null)
         {
             Debug.LogError("Terrain or treePrefab not assigned!");
             return;
@@ -144,7 +146,10 @@ public class Spawner : MonoBehaviour
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
-            Instantiate(treePrefab, spawnPosition, Quaternion.identity);
+            int rng = Random.Range(0, 3);
+            
+            Instantiate(treePrefabs[rng], spawnPosition, Quaternion.identity);
+        
         }
     }
 
