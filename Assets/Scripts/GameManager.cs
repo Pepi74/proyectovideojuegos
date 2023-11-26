@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI rollStartText;
     public AudioClip bossTheme;
+    public AudioClip roundTheme;
     public AudioSource audioSource;
     
     private void Start()
@@ -44,6 +45,8 @@ public class GameManager : MonoBehaviour
         nextRoundText = GameObject.Find("NextRoundText").GetComponent<TextMeshProUGUI>();
         nextRoundText.gameObject.SetActive(false);
         bossRound = false;
+        audioSource.clip = roundTheme;
+        audioSource.Play();
     }
 
     private void Update()
@@ -52,6 +55,8 @@ public class GameManager : MonoBehaviour
         {
             if (boss != null) return;
             audioSource.Stop();
+            DestroyPreviousObject("Enemy");
+            audioSource.clip = roundTheme;
             bossRound = false;
             playerScript.upgradePoints += 2;
             return;
@@ -100,6 +105,7 @@ public class GameManager : MonoBehaviour
     {
         ReGenerateTerrain();
         MovePlayer();
+        if (!audioSource.isPlaying) audioSource.Play();
     }
 
     private void ReGenerateTerrain()
@@ -176,6 +182,7 @@ public class GameManager : MonoBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator RollD20BeforeBoss()
     {
+        audioSource.Stop();
         const int randomNumbersDuration = 2; // Duracion de numeros random antes del resultado final
         float endTime = Time.time + randomNumbersDuration;
         resultText.color = Color.white;

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6730988452277729156}
   m_Layer: 6
   m_Name: SNature_StickBlack
-  m_TagString: Terrain
+  m_TagString: Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
