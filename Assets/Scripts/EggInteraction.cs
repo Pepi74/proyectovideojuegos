@@ -144,25 +144,25 @@ public class EggInteraction : MonoBehaviour
             case 1:
                 enemyLevel++;
                 textMeshProText.color = Color.red;
-                numberOfEnemies = 6 + (roundNumber / 5);
+                numberOfEnemies = 6 + (roundNumber / 4);
                 speed = 9f;
                 break;
             // Manejo del roll entre 2 y 7
             case > 1 and <= 7:
                 textMeshProText.color = new Color(1.0f, 0.44f, 0.0f);
-                numberOfEnemies = Random.Range(4, 6 + (roundNumber / 5));
+                numberOfEnemies = Random.Range(4, 6 + (roundNumber / 4));
                 speed = 7f;
                 break;
             // Manejo del roll entre 8 y 13
             case > 7 and <= 13:
                 textMeshProText.color = Color.yellow;
-                numberOfEnemies = Random.Range(3, 5 + (roundNumber / 5));
+                numberOfEnemies = Random.Range(3, 5 + (roundNumber / 4));
                 speed = 6f;
                 break;
             // Manejo del roll entre 14 y 19
             case > 13 and <= 19:
                 textMeshProText.color = Color.blue;
-                numberOfEnemies = Random.Range(2, 4 + (roundNumber / 5));
+                numberOfEnemies = Random.Range(2, 4 + (roundNumber / 4));
                 speed = 4f;
                 healing = true;
                 healingValue = finalResult switch
@@ -211,7 +211,7 @@ public class EggInteraction : MonoBehaviour
     }
 
     // Manejo spawn de enemigos
-    private void SpawnEnemies(Vector3 spawnPosition, int numberOfEnemies, int health, int attackValue, float speed)
+    public void SpawnEnemies(Vector3 spawnPosition, int numberOfEnemies, int health, int attackValue, float speed)
     {
         float angleStep = 360f / numberOfEnemies;
 

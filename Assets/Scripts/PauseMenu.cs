@@ -12,6 +12,7 @@ public class PauseMenu : MonoBehaviour
     public PlayerScript playerScript;
     public GameObject playerCrosshair; // Por ahora el crosshair esta desactivado
     public ThirdPersonCamera thirdPersonCamera;
+    public AudioSource audioSource;
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class PauseMenu : MonoBehaviour
         playerCrosshair.SetActive(true);
         interactionUI.SetActive(true);
         thirdPersonCamera.SetCanMoveCamera(true);
+        audioSource.UnPause();
     }
 
     // Pausar juego
@@ -63,6 +65,7 @@ public class PauseMenu : MonoBehaviour
         playerCrosshair.SetActive(false);
         interactionUI.SetActive(false);
         thirdPersonCamera.SetCanMoveCamera(false);
+        audioSource.Pause();
     }
 
     // Reiniciar juego

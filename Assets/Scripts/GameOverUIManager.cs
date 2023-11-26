@@ -14,6 +14,8 @@ public class GameOverUIManager : MonoBehaviour
 
     public PauseMenu pauseMenu; // Referencia al script PauseMenu del menu de pausa
 
+    public AudioSource audioSource;
+
     // Inicializacion de botones
     private void Start()
     {
@@ -34,6 +36,7 @@ public class GameOverUIManager : MonoBehaviour
         else roundText.text = "You have survived " + roundNumber + " rounds!";
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        audioSource.Stop();
     }
 
     // Metodo para reiniciar el juego

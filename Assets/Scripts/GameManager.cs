@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public GameObject boss;
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI rollStartText;
+    public AudioClip bossTheme;
+    public AudioSource audioSource;
     
     private void Start()
     {
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
         if (bossRound)
         {
             if (boss != null) return;
+            audioSource.Stop();
             bossRound = false;
             playerScript.upgradePoints += 2;
             return;
@@ -79,7 +82,7 @@ public class GameManager : MonoBehaviour
         eggInteraction.enemyLevel++;
         spawner.maxSpawn++;
         NextRoundChanges();
-        if (roundNumber % 5 == 0)
+        if (roundNumber % 4 == 0)
         {
             BossObjects();
         }
@@ -87,7 +90,7 @@ public class GameManager : MonoBehaviour
         {
             ReSpawnObjects();
             reSpawning = false;
-            if (roundNumber % 2 != 1 || bossRound) yield break;
+            if (roundNumber % 2 != 0 || bossRound) yield break;
             playerScript.upgradePoints++;
             spawner.maxSpawn++;
         }
@@ -190,29 +193,54 @@ public class GameManager : MonoBehaviour
         // Resultado final.
         int finalResult = RollD20();
         string finalResultString = finalResult.ToString();
+        
+        int numberOfEnemies = 0;
+        float speed = 0f;
         // Iniciacion de variables que cambiaran dependiendo del resultado final del d20
-        resultText.color = finalResult switch
+        switch (finalResult)
         {
             // Manejo del roll igual a 1
-            1 => Color.red,
+            case 1:
+                resultText.color = Color.red;
+                numberOfEnemies = 7 + (roundNumber / 4);
+                speed = 9f;
+                break;
             // Manejo del roll entre 2 y 7
-            > 1 and <= 7 => new Color(1.0f, 0.44f, 0.0f),
+            case > 1 and <= 7:
+                resultText.color = new Color(1.0f, 0.44f, 0.0f);
+                numberOfEnemies = Random.Range(5, 7 + (roundNumber / 4));
+                speed = 7f;
+                break;
             // Manejo del roll entre 8 y 13
-            > 7 and <= 13 => Color.yellow,
+            case > 7 and <= 13:
+                resultText.color = Color.yellow;
+                numberOfEnemies = Random.Range(4, 6 + (roundNumber / 4));
+                speed = 6f;
+                break;
             // Manejo del roll entre 14 y 19
-            > 13 and <= 19 => Color.blue,
+            case > 13 and <= 19:
+                resultText.color = Color.blue;
+                numberOfEnemies = Random.Range(3, 5 + (roundNumber / 4));
+                speed = 4f;
+                break;
             // Manejo del roll igual a 20
-            20 => Color.green,
-            _ => resultText.color
-        };
+            case 20:
+                resultText.color = Color.green;
+                numberOfEnemies = 2;
+                speed = 2f;
+                break;
+        }
 
         resultText.text = finalResultString;
         int attackValue = 1 * eggInteraction.enemyLevel;
 		int health = (2 * eggInteraction.enemyLevel) - (finalResult / 2);
         spawner.SpawnBoss(health, attackValue, eggInteraction.enemyLevel);
         boss = GameObject.FindGameObjectWithTag("Boss");
+        eggInteraction.SpawnEnemies(boss.transform.position, numberOfEnemies, health, attackValue, speed);
         bossRound = true;
         reSpawning = false;
+        audioSource.clip = bossTheme;
+        audioSource.Play();
         yield return new WaitForSeconds(2.0f);
         resultText.gameObject.SetActive(false);
         rollStartText.gameObject.SetActive(false);
