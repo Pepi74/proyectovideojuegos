@@ -110,10 +110,8 @@ namespace Enemigos
             Vector3 directionAttack = (player.position - position).normalized;
             anim.SetTrigger("Attack2");
             yield return new WaitForSeconds(0.4f);
-            anim.SetTrigger("Attack2");
             Instantiate(ataqueDistancia, (position + directionAttack*4), Quaternion.identity);
             yield return new WaitForSeconds(0.4f);
-            anim.SetTrigger("Attack2");
             Instantiate(ataqueDistancia, (position + directionAttack*8), Quaternion.identity);
             yield return new WaitForSeconds(0.4f);
             Instantiate(ataqueDistancia, (position + directionAttack*12), Quaternion.identity);

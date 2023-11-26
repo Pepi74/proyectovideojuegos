@@ -3535,7 +3535,7 @@ MonoBehaviour:
   grassNumber: 0
   rockNumber: 0
   maxPads: 50
-  treePrefab: {fileID: 100000, guid: 6b4b29e49f76c9f46b7f3594d299d8d9, type: 3}
+  treePrefabs: []
   numberOfTrees: 25
 --- !u!4 &1105825866
 Transform:
