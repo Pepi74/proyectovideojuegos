@@ -363,6 +363,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 520
+  attackSound: {fileID: 8300000, guid: 1e577a412cc2f954ea8898cd003cfd47, type: 3}
 --- !u!95 &4305074482516812049
 Animator:
   serializedVersion: 5
