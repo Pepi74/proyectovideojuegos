@@ -266,8 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeSlider: {fileID: 1323482612}
-  tutorialScene: 0
-  gameMenuScene: 0
+  tutorialScene: 1
+  gameMenuScene: 1
 --- !u!4 &81494686
 Transform:
   m_ObjectHideFlags: 0
