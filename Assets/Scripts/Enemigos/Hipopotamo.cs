@@ -34,7 +34,7 @@ namespace Enemigos
 
             var position = transform.position;
             bool playerInRange = Physics.CheckSphere(position, attackRange, whatIsPlayer);
-            bool playerInRangeOfMeleeAttack = Physics.CheckSphere(position, attackRange * 0.75f, whatIsPlayer);
+            bool playerInRangeOfMeleeAttack = Physics.CheckSphere(position, attackRange * 0.9f, whatIsPlayer);
             bool playerInRangeOfRangedAttack = Physics.CheckSphere(position, attackRange + 5, whatIsPlayer);
             bool enemyInRange = Physics.CheckSphere(position, attackRange, whatIsEnemy);
 
