@@ -1,3 +1,4 @@
+using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +20,7 @@ public class Spawner : MonoBehaviour
     public GameObject grassPrefab;
     public GameObject rockPrefab_small;
     public GameObject rockPrefab_large;
+    public GameObject bossPrefab;
     public int grassNumber;
     public int rockNumber;
     public int maxPads;
@@ -192,6 +194,21 @@ public class Spawner : MonoBehaviour
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight - 0.5f, randomZ);
             Instantiate(i % 2 == 1 ? rockPrefab_large : rockPrefab_small, spawnPosition, Quaternion.identity);
         }
+    }
+
+    public void SpawnBoss(int health, int attackValue, int enemyLevel)
+    {
+        TerrainData terrainData = terrain.terrainData;
+        
+        float randomX = Random.Range(15f, terrainData.size.x - 15f);
+        float randomZ = Random.Range(15f, terrainData.size.z - 15f);
+
+        float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+        Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 3f, randomZ);
+        GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+        Hipopotamo hipopotamo = boss.GetComponent<Hipopotamo>();
+        hipopotamo.SetStats(health, attackValue, hipopotamo.moveSpeed, enemyLevel + 3);
     }
 
 }

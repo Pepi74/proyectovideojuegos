@@ -10,7 +10,6 @@ public class EggInteraction : MonoBehaviour
     public TextMeshProUGUI interactionText; // Texto de ui interaccion
     public TextMeshProUGUI resultText; // Texto de resultado d20
     public TextMeshProUGUI rollStartText; // Texto "Rolling D20...", iniciado en HandleInteraction
-    public GameObject enemyPrefab; // Prefab del enemigo
     public GameObject currentEgg; // Huevo que se interactua
     public PlayerScript playerScript; // Componente PlayerScript del jugador
     [SerializeField]
