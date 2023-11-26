@@ -144,8 +144,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Lv:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1f560a1b04d1df34ca6de7a08c30b89e, type: 2}
-  m_sharedMaterial: {fileID: 3919361461361329968, guid: 1f560a1b04d1df34ca6de7a08c30b89e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cef1462a6faae5b4280ebbc9279d00a9, type: 2}
+  m_sharedMaterial: {fileID: -684097036042090432, guid: cef1462a6faae5b4280ebbc9279d00a9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8222316bbc3393b4ebc8d2138b13bf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
+  moveSpeed: 4
   maxHealth: 15
   currentHealth: 0
   attackValue: 5
@@ -353,7 +353,7 @@ MonoBehaviour:
   attackCooldown: 0
   timeSinceLastAttack: 0
   isGrabbed: 0
-  attackRange: 9
+  attackRange: 5
   healthBar: {fileID: 2065536258014300259}
   enemyLevel: 1
   levelText: {fileID: 0}
@@ -463,8 +463,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Placeholder
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1f560a1b04d1df34ca6de7a08c30b89e, type: 2}
-  m_sharedMaterial: {fileID: 3919361461361329968, guid: 1f560a1b04d1df34ca6de7a08c30b89e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cef1462a6faae5b4280ebbc9279d00a9, type: 2}
+  m_sharedMaterial: {fileID: -684097036042090432, guid: cef1462a6faae5b4280ebbc9279d00a9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -923,7 +923,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8031772617545097534}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.503, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -975,7 +975,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8031772617813295890}
   m_LocalRotation: {x: -0, y: -0, z: 0.0018367881, w: 0.99999833}
-  m_LocalPosition: {x: -0, y: 0.37, z: 0}
+  m_LocalPosition: {x: -0, y: 0.449, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1027,7 +1027,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8031772618348948943}
   m_LocalRotation: {x: -0, y: -0, z: 0.0018367881, w: 0.99999833}
-  m_LocalPosition: {x: 0.002, y: -0.282, z: 0}
+  m_LocalPosition: {x: -0, y: 0.342, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

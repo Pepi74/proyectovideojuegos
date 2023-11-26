@@ -97,6 +97,8 @@ public class PlayerMovement : MonoBehaviour
         SpeedControl();
         StateHandler();
 
+        animator.SetFloat(YSpeed, rb.velocity.y);
+
         if (grounded) rb.drag = groundDrag;
         else rb.drag = 0;
     }
@@ -223,7 +225,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
             default:
                 state = MovementState.Air;
-                animator.SetFloat(YSpeed, rb.velocity.y);
                 break;
         }
     }

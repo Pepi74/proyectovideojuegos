@@ -13,6 +13,7 @@ namespace Enemigos
         private bool attackFinish = true;
         private bool attackPointSet;
         private Vector3 attackPoint;
+        public GameObject particulas;
         // Start is called before the first frame update
         private void Start()
         {
@@ -58,9 +59,9 @@ namespace Enemigos
 
             Vector3 distanceToPlayer = transform.position - attackPoint;
 
-            if (distanceToPlayer.magnitude < 1f){
+            if (distanceToPlayer.magnitude < 3f){
                 cuerpo.useGravity = true; cuerpo.isKinematic = false;
-                cuerpo.AddForce(-transform.up * 50);
+                cuerpo.AddForce(-transform.up * 80);
                 attackPointSet = false;
                 attackFinish = false;
             
@@ -81,6 +82,8 @@ namespace Enemigos
                 bool playerInRange = Physics.CheckSphere(transform.position, rangeStomp, whatIsPlayer);
                 if (playerInRange) playerScript.TakeDamage(attackValue);
                 attackFinish = true;
+                Instantiate(particulas, transform);
+                cuerpo.velocity = Vector3.zero;
             }
         }
 

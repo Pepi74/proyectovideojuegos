@@ -16,6 +16,11 @@ public class Spawner : MonoBehaviour
 
     public GameObject water;
     public GameObject lilyPrefab;
+    public GameObject grassPrefab;
+    public GameObject rockPrefab_small;
+    public GameObject rockPrefab_large;
+    public int grassNumber;
+    public int rockNumber;
     public int maxPads;
 
     public GameObject treePrefab; // The tree prefab you want to add
@@ -138,6 +143,59 @@ public class Spawner : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
             Instantiate(treePrefab, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void SpawnGrass()
+    {
+        if (terrain == null || grassPrefab == null)
+        {
+            Debug.LogError("Terrain or grassPrefab not assigned!");
+            return;
+        }
+
+        TerrainData terrainData = terrain.terrainData;
+
+        for (int i = 0; i < grassNumber; i++)
+        {
+
+            // Choose a position for the tree within the terrain size
+            float randomX = Random.Range(0f, terrainData.size.x);
+            float randomZ = Random.Range(0f, terrainData.size.z);
+
+            float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
+            Instantiate(grassPrefab, spawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void SpawnRocks()
+    {
+        if (terrain == null || rockPrefab_small == null)
+        {
+            Debug.LogError("Terrain or rockPrefab_small not assigned!");
+            return;
+        }
+
+        TerrainData terrainData = terrain.terrainData;
+
+        for (int i = 0; i < rockNumber; i++)
+        {
+
+            // Choose a position for the tree within the terrain size
+            float randomX = Random.Range(0f, terrainData.size.x);
+            float randomZ = Random.Range(0f, terrainData.size.z);
+
+            float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight - 0.5f, randomZ);
+            if (i % 2 == 1) {
+                Instantiate(rockPrefab_large, spawnPosition, Quaternion.identity);
+            } else {
+                Instantiate(rockPrefab_small, spawnPosition, Quaternion.identity);
+            }
+            
         }
     }
 
