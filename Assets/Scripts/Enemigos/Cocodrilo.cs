@@ -11,6 +11,10 @@ namespace Enemigos
 
         private bool attackFinish = true;
         private Vector3 attackPoint;
+        public ParticleSystem exclamationEffect;
+        public TrailRenderer trailEffect;
+        private AudioSource audioSc;
+        public AudioClip []attackSounds;
         // Start is called before the first frame update
         private void Start()
         {
@@ -19,6 +23,7 @@ namespace Enemigos
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
             attackCooldown = Random.Range(4.5f,5.5f);
             attackRange = 5f;
+            audioSc = GetComponent<AudioSource>();
         }
 
         // Update is called once per frame
@@ -30,7 +35,12 @@ namespace Enemigos
             bool playerInRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
             if (!playerInRange) Chase();
-            if (timeSinceLastAttack >= attackCooldown && (playerInRange && attackFinish)) Attack(); // Ataca
+            if (timeSinceLastAttack >= attackCooldown && (playerInRange && attackFinish)) {
+                Instantiate(exclamationEffect,transform);
+                Instantiate(trailEffect,transform);
+                audioSc.PlayOneShot(attackSounds[Random.Range(0,attackSounds.Length)]);
+                Attack(); // Ataca
+            }
             CheckDistance();
         }
 
@@ -40,6 +50,7 @@ namespace Enemigos
             Vector3 moveDirection = (playerPosition - transform.position).normalized;
             transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));
             attackFinish = true;
+
 
         }
 

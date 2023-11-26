@@ -121,10 +121,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  terrainLayer:
-    serializedVersion: 2
-    m_Bits: 64
   player: {fileID: 0}
+  audioSc: {fileID: 0}
+  hitEnemySound: {fileID: 8300000, guid: c1aec2cded4be054d95f166a88256774, type: 3}
 --- !u!120 &-4755755723539337053
 LineRenderer:
   m_ObjectHideFlags: 0

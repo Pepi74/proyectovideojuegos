@@ -14,6 +14,11 @@ namespace Enemigos
         private bool attackPointSet;
         private Vector3 attackPoint;
         public GameObject particulas;
+        public ParticleSystem exclamationEffect;
+        public TrailRenderer attackTrail;
+        private AudioSource audioSc;
+        public AudioClip []quackSounds;
+        public AudioClip groundHitSound;
         // Start is called before the first frame update
         private void Start()
         {
@@ -22,6 +27,7 @@ namespace Enemigos
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
             attackCooldown = Random.Range(5.5f, 6.5f);
             attackRange = 2f;
+            audioSc = GetComponent<AudioSource>();
         }
 
         // Update is called once per frame
@@ -50,6 +56,9 @@ namespace Enemigos
             if (!attackPointSet) {
                 attackPoint = player.position + new Vector3(0,10,0);
                 attackPointSet = true;
+                Instantiate(exclamationEffect, transform);
+                Instantiate(attackTrail,transform);
+                audioSc.PlayOneShot(quackSounds[Random.Range(0,quackSounds.Length)]);
             }
         
             if (attackPointSet) {
@@ -83,6 +92,7 @@ namespace Enemigos
                 if (playerInRange) playerScript.TakeDamage(attackValue);
                 attackFinish = true;
                 Instantiate(particulas, transform);
+                audioSc.PlayOneShot(groundHitSound);
                 cuerpo.velocity = Vector3.zero;
             }
         }
