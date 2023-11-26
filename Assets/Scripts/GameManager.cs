@@ -82,6 +82,8 @@ public class GameManager : MonoBehaviour
         DestroyPreviousObject("Tree");
         DestroyPreviousObject("Lily");
         //DestroyPreviousObject("Boundary");
+        DestroyPreviousObject("Grass");
+        DestroyPreviousObject("Rock");
         terrainGenerator.GenerateTerrain(terrain.terrainData);
         //spawner.SpawnBoundaries();
     }
@@ -110,6 +112,8 @@ public class GameManager : MonoBehaviour
         spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
+        spawner.SpawnGrass();
+        spawner.SpawnRocks();
     }
     
     private IEnumerator StartRoundCountdown(float countdownDuration)

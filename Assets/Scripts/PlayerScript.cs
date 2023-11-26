@@ -253,9 +253,21 @@ public class PlayerScript : MonoBehaviour
         switch (upgrade.type)
         {
             case UpgradeType.LevelIncrease:
-                LevelUp();
-                upgradeManager.RandomizeUpgrades();
-                upgradePoints--;
+                switch (upgrade.value)
+                {
+                    case 1:
+                        LevelUp();
+                        upgradeManager.RandomizeUpgrades();
+                        upgradePoints--;
+                        break;
+                    case 2:
+                        LevelUp();
+                        LevelUp();
+                        upgradeManager.RandomizeUpgrades();
+                        upgradePoints--;
+                        break;
+                }
+
                 break;
             case UpgradeType.MaxHpIncrease:
                 maxHealth += upgrade.value;
