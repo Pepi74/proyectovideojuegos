@@ -38,7 +38,7 @@ public class ToungeTip : MonoBehaviour
                 StartReturn();
             }
 
-            if (Physics.SphereCast(transform.position, 0.6f, transform.forward, out _, 0.1f, terrainLayerMask))
+            if (Physics.Raycast(transform.position, transform.forward, 1f,  terrainLayerMask))
             {
                 StartReturn();
             }

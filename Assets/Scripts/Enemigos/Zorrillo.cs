@@ -12,6 +12,9 @@ namespace Enemigos
         private Transform controllerDown;
         private bool attackStarted;
         // Start is called before the first frame update
+        private AudioSource audioSc;
+        public AudioClip attackSound;
+
         private void Start()
         {
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
@@ -20,6 +23,7 @@ namespace Enemigos
             controllerDown = this.gameObject.transform.GetChild(3);
             attackCooldown = Random.Range(2.5f, 3.5f);
             attackRange = 9f;
+            audioSc = GetComponent<AudioSource>();
         }
 
         // Update is called once per frame
@@ -43,6 +47,7 @@ namespace Enemigos
                         Chase();
                         break;
                     case true:
+                        audioSc.PlayOneShot(attackSound);  
                         Attack();
                         break;
                 }

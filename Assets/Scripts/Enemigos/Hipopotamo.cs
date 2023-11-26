@@ -10,7 +10,7 @@ namespace Enemigos
 
         public LayerMask whatIsPlayer;
         public LayerMask whatIsEnemy;
-        public hipoAttack ataqueDistancia;
+        public HipoAttack ataqueDistancia;
         private Vector3 attackPoint;
 
         private Animator anim;

@@ -13,7 +13,7 @@ namespace Enemigos
         private bool attackFinish = true;
         private bool attackPointSet;
         private Vector3 attackPoint;
-        public GameObject particulas;
+        public ParticleSystem particulas;
         public ParticleSystem exclamationEffect;
         public TrailRenderer attackTrail;
         private AudioSource audioSc;
@@ -96,7 +96,7 @@ namespace Enemigos
                 if (playerInRange) playerScript.TakeDamage(attackValue);
                 attackFinish = true;
                 Instantiate(particulas, transform);
-                audioSc.PlayOneShot(groundHitSound);
+                audioSc.PlayOneShot(groundHitSound,0.35f);
                 cuerpo.velocity = Vector3.zero;
             }
         }

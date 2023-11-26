@@ -541,7 +541,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 520
-  particulas: {fileID: 7119225756052772223, guid: 581f5495043480b48873f9073e13f704, type: 3}
+  particulas: {fileID: 7772620210976107611, guid: f0ef2cd44f6e0be4cbc1188f60a7ce6d, type: 3}
   exclamationEffect: {fileID: 5394103674511417995, guid: d4ecd3fbba40aab448fde4329674c496, type: 3}
   attackTrail: {fileID: 7713608079162143025, guid: 8f836ba451dea91478793025c507ea9f, type: 3}
   quackSounds:

@@ -27,6 +27,9 @@ public class EggInteraction : MonoBehaviour
     public GameObject porcupinePrefab;
     public GameObject skunkPrefab;
 
+    public int roundNumber;
+    public GameManager gameManager;
+
     private void Start()
     {
         interacting = false;
@@ -38,6 +41,8 @@ public class EggInteraction : MonoBehaviour
         rollStartText.gameObject.SetActive(false);
         resultText = GameObject.Find("ResultText").GetComponent<TextMeshProUGUI>();
         resultText.gameObject.SetActive(false);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        roundNumber = gameManager.roundNumber;
     }
 
     private void Update()
@@ -139,25 +144,25 @@ public class EggInteraction : MonoBehaviour
             case 1:
                 enemyLevel++;
                 textMeshProText.color = Color.red;
-                numberOfEnemies = 12;
+                numberOfEnemies = 6 + (roundNumber / 5);
                 speed = 9f;
                 break;
             // Manejo del roll entre 2 y 7
             case > 1 and <= 7:
                 textMeshProText.color = new Color(1.0f, 0.44f, 0.0f);
-                numberOfEnemies = Random.Range(9, 12 - finalResult / 2);
+                numberOfEnemies = Random.Range(4, 6 + (roundNumber / 5));
                 speed = 7f;
                 break;
             // Manejo del roll entre 8 y 13
             case > 7 and <= 13:
                 textMeshProText.color = Color.yellow;
-                numberOfEnemies = Random.Range(6, 9 - finalResult / 4);
+                numberOfEnemies = Random.Range(3, 5 + (roundNumber / 5));
                 speed = 6f;
                 break;
             // Manejo del roll entre 14 y 19
             case > 13 and <= 19:
                 textMeshProText.color = Color.blue;
-                numberOfEnemies = Random.Range(2, 6 - finalResult / 8);
+                numberOfEnemies = Random.Range(2, 4 + (roundNumber / 5));
                 speed = 4f;
                 healing = true;
                 healingValue = finalResult switch
