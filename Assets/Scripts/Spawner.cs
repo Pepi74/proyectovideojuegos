@@ -1,4 +1,3 @@
-using System;
 using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
@@ -89,7 +88,7 @@ public class Spawner : MonoBehaviour
         foreach (Vector3 position in boundaryPositions)
         {
             GameObject boundary = Instantiate(boundaryPrefab, position, Quaternion.identity);
-            boundary.transform.localScale = position.z != terrainSize.z / 2 ? new Vector3(terrainSize.x, 50f, 4) : new Vector3(4, 50f, terrainSize.z);
+            boundary.transform.localScale = position.z != terrainSize.z / 2 ? new Vector3(terrainSize.x, 50f, 20f) : new Vector3(20f, 50f, terrainSize.z);
         }
     }*/
 
@@ -146,7 +145,7 @@ public class Spawner : MonoBehaviour
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
             Vector3 spawnPosition = new Vector3(randomX, terrainHeight, randomZ);
-            int rng = Random.Range(0, 3);
+            int rng = Random.Range(0, treePrefabs.Length);
             
             Instantiate(treePrefabs[rng], spawnPosition, Quaternion.identity);
         
