@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
         roundNumber++;
         roundText.text = "Round: " + roundNumber;
         eggInteraction.enemyLevel++;
+        spawner.maxSpawn++;
         NextRoundChanges();
         if (roundNumber % 5 == 0)
         {
@@ -86,7 +87,9 @@ public class GameManager : MonoBehaviour
         {
             ReSpawnObjects();
             reSpawning = false;
-            if (roundNumber % 2 == 1 && !bossRound) playerScript.upgradePoints++;
+            if (roundNumber % 2 != 1 || bossRound) yield break;
+            playerScript.upgradePoints++;
+            spawner.maxSpawn++;
         }
     }
 
