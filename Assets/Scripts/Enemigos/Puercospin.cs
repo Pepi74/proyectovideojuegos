@@ -10,6 +10,9 @@ namespace Enemigos
         private Transform controllerMid;
         private Transform controllerDown;
         // Start is called before the first frame update
+        private AudioSource audioSc;
+        public AudioClip []attackSounds;
+        private float audioAttackCD;
         private void Start()
         {
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
@@ -18,6 +21,8 @@ namespace Enemigos
             controllerDown = this.gameObject.transform.GetChild(3);
             attackCooldown = Random.Range(4.5f, 5.5f);
             attackRange = 6f;
+            audioSc = GetComponent<AudioSource>();
+            audioAttackCD = 0.25f;
         }
 
         // Update is called once per frame
@@ -32,10 +37,16 @@ namespace Enemigos
                     break;
                 case true:
                     Attack();
+                    if(audioAttackCD <= 0){
+                        audioSc.PlayOneShot(attackSounds[Random.Range(0,attackSounds.Length)]);
+                        audioAttackCD = 0.25f;
+                    }
                     break;
             }
 
             CheckDistance();
+
+            audioAttackCD -= Time.deltaTime;
 
         }
         // Emitter amount cantidad de emisores
@@ -58,7 +69,7 @@ namespace Enemigos
             up.emitterAmount = cantidadEspinas;
             middle.emitterAmount = cantidadEspinas;
             down.emitterAmount = cantidadEspinas;
-
+            
         }
     }
 }
