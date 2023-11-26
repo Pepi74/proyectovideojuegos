@@ -25,6 +25,7 @@ namespace Enemigos
         // Update is called once per frame
         private void Update()
         {
+            CheckYValue();
             // Manejo enfriamiento del ataque
             timeSinceLastAttack += Time.deltaTime;
 

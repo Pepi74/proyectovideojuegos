@@ -116,4 +116,12 @@ public class EnemyScript : MonoBehaviour
             transform.Translate(direction.normalized * ((minDistance - distance) * Time.deltaTime), Space.World);
         }
     }
+
+    protected void CheckYValue()
+    {
+        if (transform.position.y < -100)
+        {
+            Die();
+        }
+    }
 }   
