@@ -1,3 +1,4 @@
+using System.Linq;
 using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,14 +41,16 @@ public class Spawner : MonoBehaviour
             float randomZ = Random.Range(15f, terrainData.size.z - 15f);
 
             float terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
-            while (terrainHeight  + 0.5f < water.transform.position.y)
+            Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 0.5f, randomZ);
+            
+            while (terrainHeight  + 0.5f < water.transform.position.y || SpawnBlocked(spawnPosition))
             {
                 randomX = Random.Range(15f, terrainData.size.x - 15f);
                 randomZ = Random.Range(15f, terrainData.size.z - 15f);
                 terrainHeight = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+                spawnPosition = new Vector3(randomX, terrainHeight + 0.5f, randomZ);
             }
 
-            Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 0.5f, randomZ);
             Instantiate(eggPrefab, spawnPosition, Quaternion.identity);
         }
     }
@@ -215,4 +218,10 @@ public class Spawner : MonoBehaviour
         hipopotamo.SetStats(health, attackValue, hipopotamo.moveSpeed, enemyLevel + 3);
     }
 
+    private bool SpawnBlocked(Vector3 position)
+    {
+        if (!Physics.Raycast(position, Vector3.up, out var hit, Mathf.Infinity))
+            return false;
+        return hit.collider.CompareTag("Rock") || hit.collider.CompareTag("Tree");
+    }
 }

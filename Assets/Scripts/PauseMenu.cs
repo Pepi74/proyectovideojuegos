@@ -78,7 +78,8 @@ public class PauseMenu : MonoBehaviour
     // Salir del juego
     public void ExitGame()
     {
-        Application.Quit();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
     }
 
     // Metodo que setea el estado del menu game over

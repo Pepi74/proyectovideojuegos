@@ -16,10 +16,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartGameScene()
     {
-        if (PlayerPrefs.GetInt("TutorialCompleted")==1)
-            SceneManager.LoadScene(gameMenuScene);
-        else
-            SceneManager.LoadScene(tutorialScene);
+        SceneManager.LoadScene(gameMenuScene);
     }
     public void QuitGame()
     {

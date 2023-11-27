@@ -2881,6 +2881,8 @@ MonoBehaviour:
   roundText: {fileID: 1078132179}
   pauseMenu: {fileID: 757969470}
   audioSource: {fileID: 1512338443}
+  cam: {fileID: 0}
+  thirdPersonCamera: {fileID: 0}
 --- !u!114 &757969470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4264,7 +4266,7 @@ MonoBehaviour:
   rockPrefab_large: {fileID: 1074482753184668, guid: e86571f2f1251004b98a744302eca0b1, type: 3}
   bossPrefab: {fileID: 6551171268139589526, guid: fa0610dae9834594caf620afbe6d7164, type: 3}
   grassNumber: 100
-  rockNumber: 20
+  rockNumber: 25
   maxPads: 50
   treePrefabs:
   - {fileID: 1051648788624220, guid: 6b14d45548d47914088fc51496a20a8e, type: 3}
@@ -6132,7 +6134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4af93bbc4da4fe40a5e5c2f9e7aa4ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundNumber: 3
+  roundNumber: 1
   spawner: {fileID: 1105825865}
   terrain: {fileID: 224107502}
   terrainGenerator: {fileID: 224107505}

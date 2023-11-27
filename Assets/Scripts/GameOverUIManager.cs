@@ -16,12 +16,16 @@ public class GameOverUIManager : MonoBehaviour
 
     public AudioSource audioSource;
 
+    public Camera cam;
+    public ThirdPersonCamera thirdPersonCamera;
+
     // Inicializacion de botones
     private void Start()
     {
         restartButton.onClick.AddListener(RestartGame);
         exitButton.onClick.AddListener(ExitGame);
-        roundNumber = GameObject.Find("GameManager").GetComponent<GameManager>().roundNumber;
+        cam = Camera.main;
+        if (cam != null) thirdPersonCamera = cam.GetComponent<ThirdPersonCamera>();
     }
 
     // Muestra la pantalla de game over
@@ -32,11 +36,13 @@ public class GameOverUIManager : MonoBehaviour
         Time.timeScale = 0f;
         pauseMenu.SetGameOverMenuState(true);
         roundText.color = Color.red;
+        roundNumber = GameObject.Find("GameManager").GetComponent<GameManager>().roundNumber;
         if(roundNumber == 1) roundText.text = "You have survived " + roundNumber + " round!";
         else roundText.text = "You have survived " + roundNumber + " rounds!";
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         audioSource.Stop();
+        thirdPersonCamera.SetCanMoveCamera(false);
     }
 
     // Metodo para reiniciar el juego
@@ -49,6 +55,6 @@ public class GameOverUIManager : MonoBehaviour
     // Metodo para salir del juego
     private static void ExitGame()
     {
-        Application.Quit(); // Exit the game
+        SceneManager.LoadScene(0); // Exit the game to main menu
     }
 }
