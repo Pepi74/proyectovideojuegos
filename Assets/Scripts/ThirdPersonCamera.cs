@@ -46,7 +46,7 @@ public class ThirdPersonCamera : MonoBehaviour
         spawner.onPlayerSpawned.AddListener(SetPlayerReference);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!canMoveCamera) return;
         if (player == null) return;
