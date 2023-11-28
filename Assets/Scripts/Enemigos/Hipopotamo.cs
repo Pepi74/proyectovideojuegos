@@ -14,6 +14,9 @@ namespace Enemigos
         private Vector3 attackPoint;
 
         private Animator anim;
+        private static readonly int Attack1 = Animator.StringToHash("Attack1");
+        private static readonly int Attack2 = Animator.StringToHash("Attack2");
+        private static readonly int Attack3 = Animator.StringToHash("Attack3");
 
         // Start is called before the first frame update
         private void Start()
@@ -41,15 +44,22 @@ namespace Enemigos
             switch (playerInRange)
             {
                 case false when enemyInRange && timeSinceLastAttack > attackCooldown:
-                    anim.SetTrigger("Attack3");// lanza otro enemigo al jugador
+                {
+                    anim.SetTrigger(Attack3);// lanza otro enemigo al jugador
                     break;
+                }
                 case false when playerInRangeOfRangedAttack && timeSinceLastAttack > attackCooldown * 0.975f:
                     RangedAttack();
                     break;
                 default:
                 {
-                    if (playerInRangeOfMeleeAttack && timeSinceLastAttack >= attackCooldown *0.9f) MeleeAttack(); // Ataca
+                    if (playerInRangeOfMeleeAttack && timeSinceLastAttack >= attackCooldown *0.9f)
+                    {
+                        //MeleeAttack(); // Ataca
+                        anim.SetTrigger(Attack1);
+                    }           
                     else if (!playerInRange) Chase(); // persigue al jugador
+
                     break;
                 }
             }
@@ -75,7 +85,7 @@ namespace Enemigos
             timeSinceLastAttack = 0f;
         }
 
-        public GameObject FindClosest()
+        private GameObject FindClosest()
         {
             float distanceToClosestFruit = Mathf.Infinity;
             GameObject closestFruit = null;
@@ -108,7 +118,7 @@ namespace Enemigos
         {
             var position = transform.position;
             Vector3 directionAttack = (player.position - position).normalized;
-            anim.SetTrigger("Attack2");
+            anim.SetTrigger(Attack2);
             yield return new WaitForSeconds(0.4f);
             Instantiate(ataqueDistancia, (position + directionAttack*4), Quaternion.identity);
             yield return new WaitForSeconds(0.4f);

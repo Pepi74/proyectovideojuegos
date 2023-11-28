@@ -29,11 +29,11 @@ public class GameManager : MonoBehaviour
         terrainGenerator.GenerateTerrain(terrain.terrainData);
         //spawner.SpawnBoundaries();
         spawner.SpawnPlayer();
-        spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
         spawner.SpawnGrass();
         spawner.SpawnRocks();
+        spawner.SpawnEggs();
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerScript>();
         eggInteraction = player.GetComponent<EggInteraction>();
@@ -140,11 +140,11 @@ public class GameManager : MonoBehaviour
 
     private void ReSpawnObjects()
     {
-        spawner.SpawnEggs();
         spawner.SpawnLilyPads();
         spawner.SpawnTrees();
         spawner.SpawnGrass();
         spawner.SpawnRocks();
+        spawner.SpawnEggs();
     }
 
     private void BossObjects()

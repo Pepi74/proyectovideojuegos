@@ -15,6 +15,8 @@ namespace Enemigos
         public TrailRenderer trailEffect;
         private AudioSource audioSc;
         public AudioClip []attackSounds;
+
+        public Animator anim;
         // Start is called before the first frame update
         private void Start()
         {
@@ -25,6 +27,7 @@ namespace Enemigos
             attackCooldown = Random.Range(4.5f,5.5f);
             attackRange = 5f;
             audioSc = GetComponent<AudioSource>();
+            anim = GetComponent<Animator>();
         }
 
         // Update is called once per frame
@@ -60,6 +63,7 @@ namespace Enemigos
         private void Attack()
         {   
             cuerpo.AddForce((player.position - transform.position + new Vector3(0,1,0)).normalized * impulseForce, ForceMode.Impulse);
+            anim.SetTrigger("atk");
             timeSinceLastAttack = 0f;
             attackFinish = false;
 

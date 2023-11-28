@@ -14,6 +14,7 @@ namespace Enemigos
         // Start is called before the first frame update
         private AudioSource audioSc;
         public AudioClip attackSound;
+        public Animator anim;
 
         private void Start()
         {
@@ -24,6 +25,7 @@ namespace Enemigos
             attackCooldown = Random.Range(2.5f, 3.5f);
             attackRange = 9f;
             audioSc = GetComponent<AudioSource>();
+            anim = GetComponent<Animator>();
         }
 
         // Update is called once per frame
@@ -36,7 +38,7 @@ namespace Enemigos
 
             if (attackStarted) {
                 if (timeSinceLastAttack >= aguante){
-                    Chase();
+                    attackStarted = false;
                     timeSinceLastAttack = 0;
                 } 
             } else
@@ -79,7 +81,7 @@ namespace Enemigos
             down.emitterAmount = cantidadEmitters;
         
             attackStarted = true;
-
+            anim.SetTrigger("atk");
         }
 
     }

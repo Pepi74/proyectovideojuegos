@@ -27,7 +27,7 @@ public class EnemyScript : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player").transform; // Encuentra al jugador por el tag
     }
 
-    private void Update()
+    /*private void Update()
     {
         // Persigue al jugador
         if (player != null)
@@ -46,7 +46,7 @@ public class EnemyScript : MonoBehaviour
             timeSinceLastAttack = 0.0f; // Resetea el timer
         }
         
-    }
+    }*/
 
     // Inicializacion de variables (desde las variables del resultado del d20)
     public void SetStats(int health, int attack, float speed, int level)
@@ -101,7 +101,7 @@ public class EnemyScript : MonoBehaviour
     {
         // Find all enemies in the scene
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        const float minDistance = 5f;
+        const float minDistance = 2f;
 
         foreach (GameObject enemy in enemies)
         {

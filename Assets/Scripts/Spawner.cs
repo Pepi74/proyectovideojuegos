@@ -1,4 +1,3 @@
-using System.Linq;
 using Enemigos;
 using UnityEngine;
 using UnityEngine.Events;
@@ -215,10 +214,10 @@ public class Spawner : MonoBehaviour
         Vector3 spawnPosition = new Vector3(randomX, terrainHeight + 3f, randomZ);
         GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
         Hipopotamo hipopotamo = boss.GetComponent<Hipopotamo>();
-        hipopotamo.SetStats(health, attackValue, hipopotamo.moveSpeed, enemyLevel + 3);
+        hipopotamo.SetStats(health + (4 * (enemyLevel + 7)), attackValue, hipopotamo.moveSpeed, enemyLevel + 7);
     }
 
-    private bool SpawnBlocked(Vector3 position)
+    private static bool SpawnBlocked(Vector3 position)
     {
         if (!Physics.Raycast(position, Vector3.up, out var hit, Mathf.Infinity))
             return false;

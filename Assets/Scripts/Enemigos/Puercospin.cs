@@ -13,6 +13,7 @@ namespace Enemigos
         private AudioSource audioSc;
         public AudioClip []attackSounds;
         private float audioAttackCD;
+        public Animator anim;
         private void Start()
         {
             //SetStats(maxHealth, attackValue, moveSpeed, enemyLevel);
@@ -23,6 +24,7 @@ namespace Enemigos
             attackRange = 6f;
             audioSc = GetComponent<AudioSource>();
             audioAttackCD = 0.25f;
+            anim = GetComponent<Animator>();
         }
 
         // Update is called once per frame
@@ -70,6 +72,7 @@ namespace Enemigos
             up.emitterAmount = cantidadEspinas;
             middle.emitterAmount = cantidadEspinas;
             down.emitterAmount = cantidadEspinas;
+            anim.SetTrigger("atk");
             
         }
     }
