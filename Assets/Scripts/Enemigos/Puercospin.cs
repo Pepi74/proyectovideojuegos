@@ -58,8 +58,12 @@ namespace Enemigos
         private void Chase() 
         {
             Vector3 playerPosition = player.position;
-            Vector3 moveDirection = (playerPosition - transform.position).normalized;
-            transform.Translate(moveDirection * (moveSpeed * Time.deltaTime));        
+            var position = transform.position;
+            Vector3 moveDirection = (playerPosition - position).normalized;
+            Transform transform1;
+            (transform1 = transform).Translate(moveDirection * (moveSpeed * Time.deltaTime), Space.World);
+            transform1.eulerAngles = new Vector3(0f, transform1.eulerAngles.y, 0f);
+            transform.LookAt(player);
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
