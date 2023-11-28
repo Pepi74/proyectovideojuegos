@@ -55,8 +55,6 @@ namespace Enemigos
             Transform transform1;
             (transform1 = transform).Translate(moveDirection * (moveSpeed * Time.deltaTime), Space.World);
             transform1.eulerAngles = new Vector3(0f, transform1.eulerAngles.y, 0f);
-            transform.LookAt(player);
-
         }
 
         private void Attack()
