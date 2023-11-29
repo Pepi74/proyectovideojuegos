@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33632437743802640}
   - component: {fileID: 23219311614264364}
   - component: {fileID: 4035053536356746959}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: SNature_Rock2
   m_TagString: Rock
   m_Icon: {fileID: 0}

@@ -60,6 +60,7 @@ namespace Enemigos
             Vector3 playerPosition = player.position;
             var position = transform.position;
             Vector3 moveDirection = (playerPosition - position).normalized;
+            AvoidObstacles(ref moveDirection);
             Transform transform1;
             (transform1 = transform).Translate(moveDirection * (moveSpeed * Time.deltaTime), Space.World);
             transform1.eulerAngles = new Vector3(0f, transform1.eulerAngles.y, 0f);

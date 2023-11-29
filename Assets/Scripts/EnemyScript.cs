@@ -84,4 +84,28 @@ public class EnemyScript : MonoBehaviour
             Die();
         }
     }
+    
+    protected void AvoidObstacles(ref Vector3 moveDirection)
+    {
+        const float avoidRayLength = 5f;
+        const float avoidRaySpread = 45f;
+        const float maxAvoidDistance = 2f;
+        const float avoidWeight = 5f;
+
+        int layerMask = ~(1 << LayerMask.NameToLayer("Terrain"));
+
+        for (float angle = -avoidRaySpread; angle <= avoidRaySpread; angle += avoidRaySpread / 2f)
+        {
+            Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * moveDirection;
+            Ray ray = new Ray(transform.position, rayDirection);
+
+            if (!Physics.Raycast(ray, out var hit, avoidRayLength, layerMask) ||
+                (!hit.collider.CompareTag("Tree") && !hit.collider.CompareTag("Rock"))) continue;
+            if (!(hit.normal.y > 0.5f)) continue;
+            float distanceToObstacle = Mathf.Clamp01(hit.distance / maxAvoidDistance);
+            moveDirection += avoidWeight * distanceToObstacle * hit.normal;
+        }
+
+        moveDirection.Normalize();
+    }
 }   
