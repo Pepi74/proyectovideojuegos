@@ -1235,7 +1235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 128
   height: 128
-  depth: 12
+  depth: 10
   scale: 5
   offsetX: 100
   offsetY: 100
