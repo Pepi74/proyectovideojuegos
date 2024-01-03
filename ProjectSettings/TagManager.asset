@@ -14,6 +14,7 @@ TagManager:
   - Boss
   - Rock
   - Grass
+  - MapLimit
   layers:
   - Default
   - TransparentFX
